@@ -1,5 +1,13 @@
 
-export default function Main() {
+import { Container, Body } from '../../components/layouts';
 
-    return <div>Main Page</div>;
+
+export default function Main() {
+    return (
+        <Container>
+            <Body>
+                <div>Main Page</div>
+            </Body>
+        </Container>
+    );
 };

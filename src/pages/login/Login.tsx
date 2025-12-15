@@ -1,5 +1,13 @@
 
+import { Container, Body } from '../../components/layouts';
+
 export default function Login() {
 
-    return <div>Login Page</div>;
+    return (
+        <Container>
+            <Body>
+                <div>Login Page</div>
+            </Body>
+        </Container>
+    );
 };
