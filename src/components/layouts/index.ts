@@ -1,3 +1,4 @@
 
-export { default as Container } from "./container/Container";
-export { default as Body } from "./body/Body";
+export { default as Container } from "./Container";
+export { default as Body } from "./Body";
+export { default as Footer } from "./Footer";

@@ -1,0 +1,35 @@
+.buttonEnabled,
+.buttonDisabled {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  height: 52px;
+}
+
+.buttonEnabled {
+  background: #0077ff;
+  color: #ffffff;
+}
+
+.buttonDisabled {
+  background: #0077ff;
+  opacity: 0.6;
+  color: #ffffff;
+}
+
+.buttonEnabled:active {
+  transform: scale(0.99);
+}
+
+/* @media (max-width: 480px) {
+  .buttonEnabled,
+  .buttonDisabled {
+    padding: 14px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+} */
