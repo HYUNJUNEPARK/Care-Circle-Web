@@ -1,14 +1,17 @@
 import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { signInWithEmail } from '../../features/firebase/auth/emailAuth';
 import { Container, Body, Footer } from '../../components/layouts';
 import Button from '../../components/buttons/Button';
 import Input from '../../components/inputs/Input';
-import { signInWithEmail } from '../../auth/emailAuth';
+import { PATH } from '../../constants/paths';
 
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,7 +37,7 @@ export default function Login() {
             const email = userCredential.user.email;
             console.log('사용자 UID:', uid, '이메일:', email);
             
-
+            navigate(PATH.MAIN, { replace: true });
         } catch (error) {
             console.error('로그인 실패:', error);
             alert('로그인 실패');

@@ -2,7 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 import { PATH } from "../../constants/paths";
-import { auth } from "../../auth/firebase";
+import { auth } from "../../features/firebase/firebase";
 
 export default function Init() {
     const navigate = useNavigate();
