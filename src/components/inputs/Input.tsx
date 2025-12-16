@@ -1,9 +1,12 @@
 import React from "react";
-import styles from "./PasswordInput.module.css";
+import styles from "./Input.module.css";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { TiDelete } from "react-icons/ti";
 
-interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export type InputType = "plaintext" | "password";
+
+interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    inputType: InputType;
     id: string;
     label: string;
     placeholder: string;
@@ -13,7 +16,8 @@ interface PasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement>
     setShow?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function PasswordInput({
+function Input({
+    inputType,
     id,
     label,
     placeholder,
@@ -22,14 +26,15 @@ function PasswordInput({
     show,
     setShow,
     ...rest
-}: PasswordInputProps) {
+}: InputProps) {
     return (
         <div className={styles.inputGroup}>
             <label htmlFor={id} className={styles.label}>{label}</label>
             <div className={styles.inputGroupInner}>
+                {/* 인풋 필드 */}
                 <input
                     id={id}
-                    type={show ? "text" : "password"}
+                    type={show || inputType === "plaintext" ? "text" : "password"}
                     placeholder={placeholder}
                     value={value}
                     onChange={onChange}
@@ -66,4 +71,4 @@ function PasswordInput({
     );
 }
 
-export default PasswordInput;
+export default Input;

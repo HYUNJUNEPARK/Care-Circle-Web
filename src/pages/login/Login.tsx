@@ -1,13 +1,9 @@
 
 import { Container, Body, Footer } from '../../components/layouts';
 import { useState } from 'react';
-import { AiOutlineEye } from "react-icons/ai";
-import { GiMedicines } from "react-icons/gi";
-import { MdOutlineMail } from "react-icons/md";
 import { FiLock } from "react-icons/fi";
-import { AiOutlineEyeInvisible } from "react-icons/ai";
 import Button from '../../components/buttons/Button';
-import PasswordInput from '../../components/inputs/PasswordInput';
+import Input from '../../components/inputs/Input';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -19,8 +15,9 @@ export default function Login() {
         e.preventDefault();
         setIsLoading(true);
 
-
-        //TODO 여기서 로그인 API 호출
+        /**
+         * 여기서 로그인 API 호출
+         */
 
         // 로그인 로직 시뮬레이션
         setTimeout(() => {
@@ -36,35 +33,26 @@ export default function Login() {
                 {/* 로고 영역 */}
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg">
-                        <GiMedicines className="w-8 h-8 text-white" />
+                        <FiLock className="w-8 h-8 text-white" />
                     </div>
                 </div>
 
                 {/* 로그인 폼 */}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* 이메일 입력 */}
-                    <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                            이메일
-                        </label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <MdOutlineMail className="h-5 w-5 text-gray-400" />
-                            </div>
-                            <input
-                                id="email"
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="block w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                                placeholder="your@email.com"
-                                required
-                            />
-                        </div>
-                    </div>
+                    <Input
+                        inputType='plaintext'
+                        id="email"
+                        label={"이메일"}
+                        placeholder="your@email.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        type='email'
+                    />
 
                     {/* 비밀번호 입력 */}
-                    <PasswordInput
+                    <Input
+                        inputType='password'
                         id="password"
                         label={"비밀번호"}
                         placeholder="••••••••"
@@ -72,6 +60,7 @@ export default function Login() {
                         onChange={e => setPassword(e.target.value)}
                         show={showPassword}
                         setShow={setShowPassword}
+                        type='password'
                     />
 
                     {/* 비밀번호 찾기 */}
