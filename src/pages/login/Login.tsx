@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { FiLock } from "react-icons/fi";
 import { Container, Body, Footer } from '../../components/layouts';
 import Button from '../../components/buttons/Button';
 import Input from '../../components/inputs/Input';
@@ -47,15 +46,8 @@ export default function Login() {
     return (
         <Container>
             <Body>
-                {/* 로고 영역 */}
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4 shadow-lg">
-                        <FiLock className="w-8 h-8 text-white" />
-                    </div>
-                </div>
-
                 {/* 로그인 폼 */}
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6 mt-16">
                     {/* 이메일 입력 */}
                     <Input
                         inputType='plaintext'
@@ -77,11 +69,10 @@ export default function Login() {
                         onChange={e => setPassword(e.target.value)}
                         show={showPassword}
                         setShow={setShowPassword}
-                        type='password'
                     />
 
                     {/* 비밀번호 찾기 */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-14">
                         <label className="flex items-center">
                             <input
                                 type="checkbox"
