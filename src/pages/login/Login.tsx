@@ -60,7 +60,6 @@ export default function Login() {
                         onChange={e => setPassword(e.target.value)}
                         show={showPassword}
                         setShow={setShowPassword}
-                        type='password'
                     />
 
                     {/* 비밀번호 찾기 */}
