@@ -1,9 +1,9 @@
-
-import { Container, Body, Footer } from '../../components/layouts';
 import { useState } from 'react';
 import { FiLock } from "react-icons/fi";
+import { Container, Body, Footer } from '../../components/layouts';
 import Button from '../../components/buttons/Button';
 import Input from '../../components/inputs/Input';
+import { signInWithEmail } from '../../auth/emailAuth';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -13,18 +13,35 @@ export default function Login() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        signIn(email, password)
+    };
+
+    /**
+     * 이메일/비밀번호 로그인
+     */
+    const signIn = async (id: string, password: string) => {
         setIsLoading(true);
 
-        /**
-         * 여기서 로그인 API 호출
-         */
+        try {
+            const userCredential = await signInWithEmail(id, password);
+            console.log('로그인 성공:', userCredential.user);
 
-        // 로그인 로직 시뮬레이션
-        setTimeout(() => {
-            console.log('로그인 시도:', { email, password });
+            //TODO uid 로 서버쪽에서 조회하고
+            // 있다면 메인페이지 이동
+            // 없다면 회원가입 페이지로 이동, 
+
+            const uid = userCredential.user.uid;
+            const email = userCredential.user.email;
+            console.log('사용자 UID:', uid, '이메일:', email);
+            
+
+        } catch (error) {
+            console.error('로그인 실패:', error);
+            alert('로그인 실패');
+        } finally {
             setIsLoading(false);
-            alert('로그인 성공!');
-        }, 1500);
+        }
     };
 
     return (
