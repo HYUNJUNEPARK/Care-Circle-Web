@@ -7,7 +7,7 @@ import { MdOutlineMail } from "react-icons/md";
 import { FiLock } from "react-icons/fi";
 import { AiOutlineEyeInvisible } from "react-icons/ai";
 import Button from '../../components/buttons/Button';
-
+import PasswordInput from '../../components/inputs/PasswordInput';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -64,36 +64,15 @@ export default function Login() {
                     </div>
 
                     {/* 비밀번호 입력 */}
-                    <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                            비밀번호
-                        </label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <FiLock className="h-5 w-5 text-gray-400" />
-                            </div>
-                            <input
-                                id="password"
-                                type={showPassword ? 'text' : 'password'}
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="block w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
-                                placeholder="••••••••"
-                                required
-                            />
-                            <button
-                                type="button"
-                                onClick={() => setShowPassword(!showPassword)}
-                                className="absolute inset-y-0 right-0 pr-4 flex items-center"
-                            >
-                                {showPassword ? (
-                                    <AiOutlineEye className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                                ) : (
-                                    <AiOutlineEyeInvisible className="h-5 w-5 text-gray-400 hover:text-gray-600" />
-                                )}
-                            </button>
-                        </div>
-                    </div>
+                    <PasswordInput
+                        id="password"
+                        label={"비밀번호"}
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        show={showPassword}
+                        setShow={setShowPassword}
+                    />
 
                     {/* 비밀번호 찾기 */}
                     <div className="flex items-center justify-between">
@@ -113,10 +92,7 @@ export default function Login() {
                     <Button
                         loading={isLoading}
                         loadingText='로그인 중'
-                        buttonText='로그인'
-                    >
-                        로그인
-                    </Button>
+                        buttonText='로그인' />
                 </form>
 
                 {/* 소셜 로그인 */}

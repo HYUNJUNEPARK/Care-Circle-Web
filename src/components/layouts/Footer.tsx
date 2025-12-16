@@ -21,8 +21,8 @@ function Footer({
 }
 
 const footerStyle: React.CSSProperties = {
-  paddingTop: 20,
-  paddingBottom: 20,
+  paddingTop: 12,
+  paddingBottom: 12,
 };
 
 export default Footer;
