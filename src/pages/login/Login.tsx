@@ -5,6 +5,7 @@ import { Container, Body, Footer } from '../../components/layouts';
 import Button from '../../components/buttons/Button';
 import Input from '../../components/inputs/Input';
 import { PATH } from '../../constants/paths';
+import { syncMeToServer } from '../../features/api/authApi';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -27,16 +28,15 @@ export default function Login() {
 
         try {
             const userCredential = await signInWithEmail(id, password);
-            console.log('로그인 성공:', userCredential.user);
+            console.log('Firebase 로그인 성공:', userCredential.user);
 
-            //TODO uid 로 서버쪽에서 조회하고
-            // 있다면 메인페이지 이동
-            // 없다면 회원가입 페이지로 이동, 
+            //파이어베이스 토큰
+            const idToken = await userCredential.user.getIdToken();
 
-            const uid = userCredential.user.uid;
-            const email = userCredential.user.email;
-            console.log('사용자 UID:', uid, '이메일:', email);
-            
+            //백엔드에서 토큰 겁증 및 회원 정보 동기화
+            await syncMeToServer(idToken);
+
+            //페이지 이동
             navigate(PATH.MAIN, { replace: true });
         } catch (error) {
             console.error('로그인 실패:', error);
