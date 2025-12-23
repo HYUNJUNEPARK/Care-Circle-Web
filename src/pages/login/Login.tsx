@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { signInWithEmail } from '../../features/firebase/auth/emailAuth';
-import { Container, Body, Footer } from '../../components/layouts';
+import { Container, Body, Footer, Topbar } from '../../components/layouts';
 import Button from '../../components/buttons/Button';
 import Input from '../../components/inputs/Input';
 import { PATH } from '../../constants/paths';
@@ -48,9 +48,11 @@ export default function Login() {
 
     return (
         <Container>
+            <Topbar title='로그인'/>
+
             <Body>
                 {/* 로그인 폼 */}
-                <form onSubmit={handleSubmit} className="space-y-6 mt-16">
+                <form onSubmit={handleSubmit} className="space-y-6 mt-8">
                     {/* 이메일 입력 */}
                     <Input
                         inputType='plaintext'
@@ -106,7 +108,7 @@ export default function Login() {
                         </div>
                     </div>
 
-                    <div className="mt-6 grid grid-cols-2 gap-3">
+                    <div className="mt-6 grid grid-cols-1 gap-3">
                         <button
                             type="button"
                             className="w-full inline-flex justify-center items-center py-3 px-4 border border-gray-300 rounded-xl bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
@@ -119,6 +121,7 @@ export default function Login() {
                             </svg>
                             Google
                         </button>
+
                         <button
                             type="button"
                             className="w-full inline-flex justify-center items-center py-3 px-4 border border-gray-300 rounded-xl bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
@@ -139,11 +142,11 @@ export default function Login() {
                         계정이 없으신가요?
                     </span>
 
-                    <span className="text-sm font-medium text-blue-600 hover:text-blue-500">
-                        회원가입
-                    </span>
-                </div>
-            </Footer>
-        </Container>
+                    <span className="text-sm font-medium text-blue-600 hover:text-blue-500" onClick={()=>navigate(PATH.SIGN_UP)}>
+                    회원가입
+                </span>
+            </div>
+        </Footer>
+        </Container >
     );
 };

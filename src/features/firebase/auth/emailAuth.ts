@@ -10,7 +10,7 @@ export async function signUpWithEmail(email: string, password: string) {
 }
 
 /**
- * firebase 이메일/비밀번호 로그인
+ * 이메일/비밀번호 로그인
  */
 export async function signInWithEmail(email: string, password: string): Promise<UserCredential> {
     try {

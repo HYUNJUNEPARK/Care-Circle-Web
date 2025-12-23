@@ -8,15 +8,21 @@ export async function syncMeToServer(idToken: string | null) {
         throw new Error("로그인 상태가 아닙니다.");
     }
 
-    const res = await apiClient.post( //url, body, headers
-        `/api/users/sync`,
-        {},
-        {
+    const res = await apiClient.post(
+        `/api/users/sync`, //url
+        {}, //body
+        { //headers
             headers: {
                 Authorization: `Bearer ${idToken}`,
             },
         });
 
     console.log('API 응답:', res.data);
+}
 
+/**
+ * 이메일 유효성 체크
+ */
+export async function checkValidEmail(email: string) {
+    return apiClient.get(`/api/users/exists?email=${email}`)
 }

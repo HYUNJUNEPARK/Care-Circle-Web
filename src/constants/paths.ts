@@ -3,4 +3,5 @@ export const PATH = {
     ROOT: '/',
     LOGIN: '/login',
     MAIN: '/main',
+    SIGN_UP: '/signup'
 };
