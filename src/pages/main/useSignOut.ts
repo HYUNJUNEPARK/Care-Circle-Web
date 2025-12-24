@@ -10,12 +10,11 @@ function useSignOut() {
 
     const userSignOut = async () => {
         try {
-
+            // FB 로그아웃
             await signOut(auth)
 
-            //로그아웃 성공 시 페이지 이동
+            // 로그아웃 성공 시 페이지 이동
             navigate(PATH.ROOT, { replace: true });
-
         } catch (e) {
             setError(e as Error);
         } finally {

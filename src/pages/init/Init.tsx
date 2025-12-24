@@ -9,7 +9,7 @@ export default function Init() {
 
     useEffect(() => {
         const user = auth.currentUser;
-        const path = user ? PATH.MAIN : PATH.LOGIN;
+        const path = user ? PATH.MAIN : PATH.SIGN_IN;
         navigate(path, { replace: true });
     }, []);
 

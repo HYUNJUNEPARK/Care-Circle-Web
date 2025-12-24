@@ -11,10 +11,10 @@ function useEmailSignIn() {
         try {
             setLoading(true);
 
-            // 1.FB 서버 로그인
+            // FB 서버 로그인
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
-            // 2.백엔드에서 토큰 겁증 및 회원 정보 동기화
+            // 백엔드에서 토큰 겁증 및 회원 정보 동기화
             const idToken = await userCredential.user.getIdToken();
             const isSuccess = await syncMeToServer(idToken);
 

@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, signOut, type UserCredential,} from "firebase/auth";
+import { createUserWithEmailAndPassword, type UserCredential,} from "firebase/auth";
 import { auth } from "./authClient";
 
 /**
@@ -25,6 +25,6 @@ export async function signUpWithEmail(email: string, password: string): Promise<
 /**
  * 로그아웃
  */
-export async function logout() {
-    await signOut(auth);
-}
+// export async function logout() {
+//     await signOut(auth);
+// }

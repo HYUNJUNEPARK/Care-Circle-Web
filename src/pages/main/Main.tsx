@@ -8,7 +8,6 @@ export default function Main() {
     const { user, isLoggedIn } = useAuth();
     const { userSignOut, error } = useSignOut();
 
-
     useEffect(() => {
         if (!isLoggedIn) {
             //setMe(null);

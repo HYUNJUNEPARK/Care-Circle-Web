@@ -13,7 +13,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path={PATH.ROOT} element={<Init />} />
-        <Route path={PATH.LOGIN} element={<Login />} />
+        <Route path={PATH.SIGN_IN} element={<Login />} />
         <Route path={PATH.MAIN} element={<Main />} />
         <Route path={PATH.NOT_FOUND} element={<NotFound />} />
         <Route path={PATH.SIGN_UP} element={<SignUp />} />
