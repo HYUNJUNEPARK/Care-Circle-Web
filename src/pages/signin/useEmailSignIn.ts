@@ -26,7 +26,6 @@ function useEmailSignIn() {
             // 서버 동기화 성공
             return true
         } catch (e) {
-            console.error("error", e)
             setError(e as Error);
         } finally {
             setLoading(false);

@@ -6,15 +6,11 @@ import { auth } from "../../features/auth/authClient";
 
 export default function Init() {
     const navigate = useNavigate();
-    
-    const movePage = () => {
+
+    useEffect(() => {
         const user = auth.currentUser;
         const path = user ? PATH.MAIN : PATH.LOGIN;
         navigate(path, { replace: true });
-    }
-
-    useEffect(() => {
-        movePage();
     }, []);
 
     return (
