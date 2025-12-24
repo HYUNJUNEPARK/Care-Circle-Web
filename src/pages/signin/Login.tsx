@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { signInWithEmail } from '../../features/firebase/auth/emailAuth';
+import { signInWithEmail } from '../../features/firebase/emailAuth';
 import { Container, Body, Footer, Topbar } from '../../components/layouts';
 import Button from '../../components/buttons/Button';
 import Input from '../../components/inputs/Input';
@@ -28,7 +28,6 @@ export default function Login() {
 
         try {
             const userCredential = await signInWithEmail(id, password);
-            console.log('Firebase 로그인 성공:', userCredential.user);
 
             //파이어베이스 토큰
             const idToken = await userCredential.user.getIdToken();

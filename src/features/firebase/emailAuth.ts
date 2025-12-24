@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, type UserCredential,} from "firebase/auth";
-import { auth } from "../firebase";
+import { auth } from "./authClient";
 
 /**
  * 회원가입
