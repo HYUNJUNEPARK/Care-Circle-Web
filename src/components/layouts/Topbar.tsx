@@ -14,7 +14,7 @@ function Topbar({
      * 버튼이 없을 때도 레이아웃 폭을 유지하는 placeholder
      */
     function DummyIcon() {
-        return <div style={{ width: 28, height: 28 }} />
+        return <div style={{ width: 24, height: 24 }} />
     }
 
     return (
@@ -22,7 +22,7 @@ function Topbar({
             {/* 좌측 영역 */}
             <div style={{ ...iconContainer }}>
                 {onBack ? (
-                    <IoIosArrowBack size={28} onClick={onBack} />
+                    <IoIosArrowBack size={24} onClick={onBack} />
                 ) : (
                     <DummyIcon />
                 )}
@@ -34,7 +34,7 @@ function Topbar({
             {/* 우측 영역 */}
             <div style={{ ...iconContainer, justifyContent: "flex-end" }}>
                 {onClose ? (
-                    <IoClose size={28} onClick={onClose} />
+                    <IoClose size={24} onClick={onClose} />
                 ) : (
                     <DummyIcon />
                 )}

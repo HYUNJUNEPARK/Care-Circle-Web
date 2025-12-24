@@ -1,7 +1,7 @@
 export const PATH = {
     NOT_FOUND: '*',
     ROOT: '/',
-    LOGIN: '/login',
+    LOGIN: '/signin',
     MAIN: '/main',
     SIGN_UP: '/signup'
 };

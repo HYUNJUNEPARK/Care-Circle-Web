@@ -21,6 +21,22 @@ export async function syncMeToServer(idToken: string | null) {
 }
 
 /**
+ * 회원 정보 등록
+ */
+// export async function signin(idToken: string) {
+//     const res = await apiClient.post(
+//         `/api/users/signin`, //url
+//         {}, //body
+//         { //headers
+//             headers: {
+//                 Authorization: `Bearer ${idToken}`,
+//             },
+//         });
+
+//     console.log('API 응답:', res.data);
+// }
+
+/**
  * 이메일 유효성 체크
  */
 export async function checkValidEmail(email: string) {

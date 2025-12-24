@@ -4,6 +4,8 @@ import { useState, useMemo } from 'react';
 import Button from '../../components/buttons/Button';
 import { useNavigate } from "react-router-dom";
 import useEmailValidation from './useEmailValidation'
+import { signUpWithEmail } from '../../features/firebase/auth/emailAuth';
+import { syncMeToServer } from '../../features/api/authApi';
 
 export default function Signup() {
     const navigate = useNavigate();
@@ -20,7 +22,21 @@ export default function Signup() {
      * 비밀번호 일치 여부
      */
     const passwordMatchingStatus = useMemo(() => {
-        if (!passwordConfirm) return { result: false, show: false, text: "비밀번호가 일치하지 않습니다.", };
+        if (!passwordConfirm) {
+            return {
+                result: false,
+                show: false,
+                text: "",
+            };
+        }
+
+        if (password.length < 6) {
+            return {
+                result: false,
+                show: true,
+                text: "비밀번호는 최소 6자리 이상으로 설정해 주세요.",
+            };
+        }
 
         const result = (password === passwordConfirm);
         return {
@@ -37,15 +53,33 @@ export default function Signup() {
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!passwordMatchingStatus.result || !email) return
+        if (!passwordMatchingStatus.result || !emailCheckResult.result) return
 
         signup(email, password)
     };
 
-    const signup = (id: string, password: string) => {
-        //TODO 회원 가입 API 추가
+    /**
+     * 
+     */
+    const signup = async (id: string, password: string) => {
+        try {
+            setIsLoading(true)
 
-        alert("ABC")
+            //Auth 서버 등록
+            const res = await signUpWithEmail(id, password)
+            const idToken = await res.user.getIdToken()
+
+            console.log("auth 서버", idToken)
+
+            //Core 서버 등록
+            await syncMeToServer(idToken)
+
+            alert("회원 가입 성공")
+        } catch (e) {
+            console.log(`Error`, e)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (

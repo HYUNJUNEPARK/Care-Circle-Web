@@ -1,7 +1,7 @@
 import './App.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PATH } from './constants/paths';
-import Login from './pages/login/Login';
+import Login from './pages/signin/Login';
 import Main from './pages/main/Main';
 import Init from './pages/init/Init';
 import NotFound from './pages/notfound/NotFound';

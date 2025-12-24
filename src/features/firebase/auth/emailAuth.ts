@@ -4,9 +4,9 @@ import { auth } from "../firebase";
 /**
  * 회원가입
  */
-export async function signUpWithEmail(email: string, password: string) {
+export async function signUpWithEmail(email: string, password: string): Promise<UserCredential> {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+    return userCredential;
 }
 
 /**
