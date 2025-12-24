@@ -1,57 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import { signInWithEmail } from '../../features/firebase/emailAuth';
 import { Container, Body, Footer, Topbar } from '../../components/layouts';
 import Button from '../../components/buttons/Button';
 import Input from '../../components/inputs/Input';
 import { PATH } from '../../constants/paths';
-import { syncMeToServer } from '../../features/api/authApi';
+import useEmailSignIn from './useEmailSignIn';
+
 
 export default function Login() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    const { emailSignIn, isLoading, error } = useEmailSignIn()
+    
+    /**
+     * 로그인 처리
+     */
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        signIn(email, password)
-    };
+        const isSuccess = await emailSignIn(email, password);
 
-    /**
-     * 이메일/비밀번호 로그인
-     */
-    const signIn = async (id: string, password: string) => {
-        setIsLoading(true);
-
-        try {
-            const userCredential = await signInWithEmail(id, password);
-
-            //파이어베이스 토큰
-            const idToken = await userCredential.user.getIdToken();
-
-            //백엔드에서 토큰 겁증 및 회원 정보 동기화
-            await syncMeToServer(idToken);
-
-            //페이지 이동
+        if (isSuccess) {
             navigate(PATH.MAIN, { replace: true });
-        } catch (error) {
-            console.error('로그인 실패:', error);
-            alert('로그인 실패');
-        } finally {
-            setIsLoading(false);
         }
     };
 
+    /**
+     * 로그인 예외 처리
+     */
+    useEffect(() => {
+        if (!error) return;
+        console.log("로그인 에러", error)
+        alert("로그인 실패")
+    }, [error]);
+
     return (
         <Container>
-            <Topbar title='로그인'/>
+            <Topbar title='로그인' />
 
             <Body>
                 {/* 로그인 폼 */}
-                <form onSubmit={handleSubmit} className="space-y-6 mt-8">
+                <form onSubmit={handleLogin} className="space-y-6 mt-8">
                     {/* 이메일 입력 */}
                     <Input
                         inputType='plaintext'
@@ -141,11 +132,11 @@ export default function Login() {
                         계정이 없으신가요?
                     </span>
 
-                    <span className="text-sm font-medium text-blue-600 hover:text-blue-500" onClick={()=>navigate(PATH.SIGN_UP)}>
-                    회원가입
-                </span>
-            </div>
-        </Footer>
+                    <span className="text-sm font-medium text-blue-600 hover:text-blue-500" onClick={() => navigate(PATH.SIGN_UP)}>
+                        회원가입
+                    </span>
+                </div>
+            </Footer>
         </Container >
     );
 };

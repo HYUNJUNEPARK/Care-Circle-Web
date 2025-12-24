@@ -1,10 +1,9 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth } from "../firebase/authClient";
+import { auth } from "./authClient";
 
 type AuthContextValue = {
     user: User | null;
-    initializing: boolean;
     isLoggedIn: boolean;
 };
 
@@ -12,19 +11,17 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const [initializing, setInitializing] = useState(true);
 
     useEffect(() => {
-        const unsub = onAuthStateChanged(auth, (u) => {
-            setUser(u);
-            setInitializing(false);
+        const unsub = onAuthStateChanged(auth, (userInfo) => {
+            setUser(userInfo);
         });
         return () => unsub();
     }, []);
 
     const value = useMemo<AuthContextValue>(
-        () => ({ user, initializing, isLoggedIn: !!user }),
-        [user, initializing]
+        () => ({ user, isLoggedIn: !!user }),
+        [user]
     );
 
     return (

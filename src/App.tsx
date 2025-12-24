@@ -5,7 +5,7 @@ import Login from './pages/signin/Login';
 import Main from './pages/main/Main';
 import Init from './pages/init/Init';
 import NotFound from './pages/notfound/NotFound';
-import Signup from './pages/signup/signup';
+import SignUp from './pages/signup/signUp';
 
 function App() {
 
@@ -16,7 +16,7 @@ function App() {
         <Route path={PATH.LOGIN} element={<Login />} />
         <Route path={PATH.MAIN} element={<Main />} />
         <Route path={PATH.NOT_FOUND} element={<NotFound />} />
-        <Route path={PATH.SIGN_UP} element={<Signup />} />
+        <Route path={PATH.SIGN_UP} element={<SignUp />} />
       </Routes>
     </BrowserRouter>
   )

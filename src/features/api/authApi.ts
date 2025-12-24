@@ -2,8 +2,10 @@ import { apiClient } from "./apiClient";
 
 /**
  * 서버와 사용자 동기화
+ * 
+ * @returns true 동기화 성공, false 동기화 실패
  */
-export async function syncMeToServer(idToken: string | null) {
+export async function syncMeToServer(idToken: string | null): Promise<Boolean> {
     if (!idToken) {
         throw new Error("로그인 상태가 아닙니다.");
     }
@@ -16,25 +18,8 @@ export async function syncMeToServer(idToken: string | null) {
                 Authorization: `Bearer ${idToken}`,
             },
         });
-
-    console.log('API 응답:', res.data);
+    return Boolean(res.data.success)
 }
-
-/**
- * 회원 정보 등록
- */
-// export async function signin(idToken: string) {
-//     const res = await apiClient.post(
-//         `/api/users/signin`, //url
-//         {}, //body
-//         { //headers
-//             headers: {
-//                 Authorization: `Bearer ${idToken}`,
-//             },
-//         });
-
-//     console.log('API 응답:', res.data);
-// }
 
 /**
  * 이메일 유효성 체크

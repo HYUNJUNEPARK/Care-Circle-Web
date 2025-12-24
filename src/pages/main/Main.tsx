@@ -1,10 +1,10 @@
 
 import { Container, Body } from '../../components/layouts';
-import { useAuth } from "../../features/firebase/AuthProvider";
-import { useEffect, useState } from "react";
+import { useAuth } from "../../features/auth/AuthProvider";
+import { useEffect } from "react";
 
 export default function Main() {
-    const { user, initializing, isLoggedIn } = useAuth();
+    const { user, isLoggedIn } = useAuth();
 
     useEffect(() => {
         if (!isLoggedIn) {

@@ -4,10 +4,10 @@ import { useState, useMemo } from 'react';
 import Button from '../../components/buttons/Button';
 import { useNavigate } from "react-router-dom";
 import useEmailValidation from './useEmailValidation'
-import { signUpWithEmail } from '../../features/firebase/emailAuth';
+import { signUpWithEmail } from '../../features/auth/emailAuth';
 import { syncMeToServer } from '../../features/api/authApi';
 
-export default function Signup() {
+export default function SignUp() {
     const navigate = useNavigate();
 
     const [email, setEmail] = useState('');
