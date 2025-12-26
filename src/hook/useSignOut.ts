@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { signOut } from "firebase/auth";
-import { auth } from "../../features/auth/authClient";
+import { auth } from "../features/auth/authClient";
 import { useNavigate } from "react-router-dom";
-import { PATH } from '../../constants/paths';
+import { PATH } from '../constants/paths';
 
 /**
  * 로그아웃

@@ -65,7 +65,7 @@ export async function changeStatus(
     const res = await apiClient.patch(
         `${userApiUrl}/status`, //url
         {
-           status : userStatus  //body
+            status: userStatus  //body
         },
         {                       //headers
             headers: {
@@ -74,4 +74,28 @@ export async function changeStatus(
         });
 
     return Boolean(res.data.success);
+}
+
+/**
+ * 로그인 사용자 정보 로딩
+ */
+export async function getLoginUserInfo(
+    idToken: string | undefined | null,
+) {
+    if (!idToken) {
+        throw new Error("idToken is null.");
+    }
+
+    const res = await apiClient.get(
+        `${userApiUrl}/logged-in`,
+        {
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        }
+    );
+
+    return res.data.data;
+
+    //return apiClient.get(`${userApiUrl}/logged-in`);
 }

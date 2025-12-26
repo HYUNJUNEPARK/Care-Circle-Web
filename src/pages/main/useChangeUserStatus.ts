@@ -2,7 +2,7 @@ import { useState } from "react";
 import { changeStatus } from "../../features/api/authApi";
 import type { UserStatusType } from "../../types/UserStatusType";
 import { useAuth } from "../../features/auth/AuthProvider";
-import useSignOut from './useSignOut';
+import useSignOut from '../../hook/useSignOut';
 
 /**
  * 회원 상태 수정

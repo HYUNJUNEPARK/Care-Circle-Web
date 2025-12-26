@@ -2,11 +2,8 @@
 import { Container, Body } from '../../components/layouts';
 import { useAuth } from "../../features/auth/AuthProvider";
 import { useEffect } from "react";
-
 import { delelteUserByUid } from '../../features/api/authApi';
-
-
-import useSignOut from './useSignOut';
+import useSignOut from '../../hook/useSignOut';
 import useChangeUserStatus from './useChangeUserStatus';
 
 export default function Main() {
