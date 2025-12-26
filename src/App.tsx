@@ -6,6 +6,7 @@ import Main from './pages/main/Main';
 import Init from './pages/init/Init';
 import NotFound from './pages/notfound/NotFound';
 import SignUp from './pages/signup/signUp';
+import NotActive from './pages/notactive/NotActive';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
         <Route path={PATH.MAIN} element={<Main />} />
         <Route path={PATH.NOT_FOUND} element={<NotFound />} />
         <Route path={PATH.SIGN_UP} element={<SignUp />} />
+        <Route path={PATH.NOT_ACTIVE} element={<NotActive />} />
       </Routes>
     </BrowserRouter>
   )

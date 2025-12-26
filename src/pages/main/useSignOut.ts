@@ -4,6 +4,9 @@ import { auth } from "../../features/auth/authClient";
 import { useNavigate } from "react-router-dom";
 import { PATH } from '../../constants/paths';
 
+/**
+ * 로그아웃
+ */
 function useSignOut() {
     const navigate = useNavigate();
     const [error, setError] = useState<Error | null>(null);
@@ -15,9 +18,8 @@ function useSignOut() {
 
             // 로그아웃 성공 시 페이지 이동
             navigate(PATH.ROOT, { replace: true });
-        } catch (e) {
-            setError(e as Error);
-        } finally {
+        } catch (error) {
+            setError(error as Error);
         }
     }
 

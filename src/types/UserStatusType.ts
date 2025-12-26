@@ -1,0 +1,1 @@
+export type UserStatusType = 'ACTIVE' | 'INACTIVE' | 'BLOCKED' | 'DELETED';

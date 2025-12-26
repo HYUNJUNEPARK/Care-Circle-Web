@@ -1,4 +1,5 @@
 import { apiClient } from "./apiClient";
+import type { UserStatusType } from "../../types/UserStatusType";
 
 const userApiUrl = `/api/users`
 
@@ -14,8 +15,8 @@ export async function syncMeToServer(idToken: string | undefined | null): Promis
 
     const res = await apiClient.post(
         `${userApiUrl}/sync`, //url
-        {}, //body
-        { //headers
+        {},                   //body
+        {                     //headers
             headers: {
                 Authorization: `Bearer ${idToken}`,
             },
@@ -32,7 +33,7 @@ export async function checkValidEmail(email: string) {
 }
 
 /**
- * 회원탈퇴
+ * 회원탈퇴(영구 삭제)
  */
 export async function delelteUserByUid(idToken: string | undefined | null): Promise<Boolean> {
     if (!idToken) {
@@ -41,7 +42,32 @@ export async function delelteUserByUid(idToken: string | undefined | null): Prom
 
     const res = await apiClient.delete(
         `${userApiUrl}`, //url
-        { //headers
+        {                //headers
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        });
+
+    return Boolean(res.data.success);
+}
+
+/**
+ * 회원 상태 변경
+ */
+export async function changeStatus(
+    idToken: string | undefined | null,
+    userStatus: UserStatusType
+): Promise<Boolean> {
+    if (!idToken) {
+        throw new Error("idToken is null.");
+    }
+
+    const res = await apiClient.patch(
+        `${userApiUrl}/status`, //url
+        {
+           status : userStatus  //body
+        },
+        {                       //headers
             headers: {
                 Authorization: `Bearer ${idToken}`,
             },

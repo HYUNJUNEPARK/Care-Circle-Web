@@ -2,20 +2,23 @@
 import { Container, Body } from '../../components/layouts';
 import { useAuth } from "../../features/auth/AuthProvider";
 import { useEffect } from "react";
-import useSignOut from './useSignOut';
 
 import { delelteUserByUid } from '../../features/api/authApi';
+
+
+import useSignOut from './useSignOut';
+import useChangeUserStatus from './useChangeUserStatus';
 
 export default function Main() {
     const { user, isLoggedIn } = useAuth();
     const { userSignOut, error } = useSignOut();
+    const { changeUserStatus, error: changeStatusError } = useChangeUserStatus();
 
+    //
     useEffect(() => {
         if (!isLoggedIn) {
             //setMe(null);
             //navigate(-1);
-
-
             return;
         }
 
@@ -28,21 +31,24 @@ export default function Main() {
 
     useEffect(() => {
         if (!error) return
-
         alert(`${error.message}`)
     }, [error]);
 
-    const delelteUser = async() => {
+    useEffect(() => {
+        if (!changeStatusError) return
+        alert(`${changeStatusError.message}`)
+    }, [changeStatusError]);
+
+
+    const delelteUser = async () => {
         const idToken = await user?.getIdToken();
 
         const isSuccess = await delelteUserByUid(idToken);
 
-        if(isSuccess === true) {
+        if (isSuccess === true) {
             alert(`회원탈퇴 성공`);
         }
-
     }
-
 
     return (
         <Container>
@@ -58,6 +64,10 @@ export default function Main() {
                 <button onClick={userSignOut}>로그아웃</button>
 
                 <button onClick={delelteUser}>회원탈퇴</button>
+
+                <button onClick={async () => {
+                    await changeUserStatus('INACTIVE');
+                }}>비활성</button>
 
             </Body>
         </Container>
