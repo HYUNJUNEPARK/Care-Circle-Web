@@ -40,7 +40,7 @@ export async function delelteUserByUid(idToken: string | undefined | null): Prom
     }
 
     const res = await apiClient.delete(
-        `${userApiUrl}/${idToken}`, //url
+        `${userApiUrl}`, //url
         { //headers
             headers: {
                 Authorization: `Bearer ${idToken}`,
