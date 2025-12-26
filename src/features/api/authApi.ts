@@ -3,6 +3,22 @@ import type { UserStatusType } from "../../types/UserStatusType";
 
 const userApiUrl = `/api/users`
 
+export async function getAllUsers(idToken: string | undefined | null) {
+    if (!idToken) {
+        throw new Error("idToken is null.");
+    }
+
+    const res = await apiClient.get(
+        `${userApiUrl}`, //url
+        {                     //headers
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        });
+
+    return res.data.data;
+}
+
 /**
  * 서버와 사용자 동기화
  * 
