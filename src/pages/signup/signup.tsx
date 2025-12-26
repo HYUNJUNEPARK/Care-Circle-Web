@@ -63,22 +63,22 @@ export default function SignUp() {
      */
     const signup = async (id: string, password: string) => {
         try {
-            setIsLoading(true)
+            setIsLoading(true);
 
             //Auth 서버 등록
-            const res = await signUpWithEmail(id, password)
-            const idToken = await res.user.getIdToken()
+            const res = await signUpWithEmail(id, password);
+            const idToken = await res.user.getIdToken();
 
-            console.log("auth 서버", idToken)
+            console.log("auth 서버", idToken);
 
             //Core 서버 등록
-            await syncMeToServer(idToken)
+            await syncMeToServer(idToken);
 
-            alert("회원 가입 성공")
+            alert("회원 가입 성공");
         } catch (e) {
-            console.log(`Error`, e)
+            console.log(`Error`, e);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
     }
 
