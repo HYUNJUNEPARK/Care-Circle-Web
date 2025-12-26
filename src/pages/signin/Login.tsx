@@ -4,26 +4,22 @@ import { Container, Body, Footer, Topbar } from '../../components/layouts';
 import Button from '../../components/buttons/Button';
 import Input from '../../components/inputs/Input';
 import { PATH } from '../../constants/paths';
-import useEmailSignIn from './useEmailSignIn';
+import useSignInByEmail from './useSignInByEmail';
 
 export default function Login() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const { emailSignIn, isLoading, error } = useEmailSignIn();
+    const { signInByEmail, isLoading, error } = useSignInByEmail();
     
     /**
      * 로그인 처리
      */
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const isSuccess = await emailSignIn(email, password);
-
-        if (isSuccess) {
-            navigate(PATH.MAIN, { replace: true });
-        }
+        await signInByEmail(email, password);
     };
 
     /**
@@ -41,7 +37,7 @@ export default function Login() {
 
             <Body>
                 {/* 로그인 폼 */}
-                <form onSubmit={handleLogin} className="space-y-6 mt-8">
+                <form onSubmit={handleSignIn} className="space-y-6 mt-8">
                     {/* 이메일 입력 */}
                     <Input
                         inputType='plaintext'

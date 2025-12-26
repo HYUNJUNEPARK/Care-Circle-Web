@@ -1,18 +1,34 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../features/auth/authClient"
+import { syncMeToServer } from '../../features/api/authApi';
+import { useNavigate } from "react-router-dom";
+import { PATH } from '../../constants/paths';
 
-function useEmailSignUp() {
+/**
+ * 회원 가입
+ */
+function useSignUpByEmail() {
+    const navigate = useNavigate();
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
     const emailSignUp = async (email: string, password: string) => {
         try {
             setLoading(true);
-            //계정 생성
+
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            //계정 정보 리턴
-            return userCredential;
+
+            const idToken = await userCredential?.user?.getIdToken();
+
+            if (!idToken) {
+                setError(Error('idToken is invalid'));
+                return;
+            }
+
+            await syncMeToServer(idToken);
+
+            navigate(PATH.ROOT, { replace: true });
         } catch (error) {
             setError(error as Error);
         } finally {
@@ -27,4 +43,4 @@ function useEmailSignUp() {
     }
 }
 
-export default useEmailSignUp;
+export default useSignUpByEmail;

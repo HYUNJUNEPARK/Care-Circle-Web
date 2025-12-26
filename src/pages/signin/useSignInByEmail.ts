@@ -4,12 +4,12 @@ import { auth } from "../../features/auth/authClient";
 import { useNavigate } from "react-router-dom";
 import { PATH } from '../../constants/paths';
 
-function useEmailSignIn() {
+function useSignInByEmail() {
     const navigate = useNavigate();
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    const emailSignIn = async (email: string, password: string) => {
+    const signInByEmail = async (email: string, password: string) => {
         try {
             setLoading(true);
 
@@ -25,10 +25,10 @@ function useEmailSignIn() {
     }
 
     return {
-        emailSignIn,
+        signInByEmail,
         isLoading,
         error,
     }
 }
 
-export default useEmailSignIn;
+export default useSignInByEmail;

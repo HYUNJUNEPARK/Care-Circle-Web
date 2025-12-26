@@ -5,7 +5,7 @@ import Login from './pages/signin/Login';
 import Main from './pages/main/Main';
 import Init from './pages/init/Init';
 import NotFound from './pages/notfound/NotFound';
-import SignUp from './pages/signup/signUp';
+import SignUp from './pages/signup/SignUp';
 import NotActive from './pages/notactive/NotActive';
 import Admin from './pages/admin/Admin';
 

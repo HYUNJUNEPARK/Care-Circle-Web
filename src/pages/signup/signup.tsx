@@ -1,11 +1,10 @@
 import { Container, Body, Footer, Topbar } from '../../components/layouts';
 import Input from '../../components/inputs/Input';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Button from '../../components/buttons/Button';
 import { useNavigate } from "react-router-dom";
 import useEmailValidation from './useEmailValidation'
-import { signUpWithEmail } from '../../features/auth/emailAuth';
-import { syncMeToServer } from '../../features/api/authApi';
+import useSignUpByEmail from './useSignUpByEmail';
 
 export default function SignUp() {
     const navigate = useNavigate();
@@ -15,8 +14,15 @@ export default function SignUp() {
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
     const { emailCheckResult } = useEmailValidation(email);
+    const { emailSignUp, isLoading, error } = useSignUpByEmail();
+
+    useEffect(() => {
+        if (!error) return;
+        console.log("회웝가입 에러", error)
+        alert("회원가입 실패")
+    }, [error]);
+
 
     /**
      * 비밀번호 일치 여부
@@ -46,41 +52,18 @@ export default function SignUp() {
         };
     }, [password, passwordConfirm]);
 
-
     /**
-     * 
+     * 로그인 핸들러
      */
-    const handleSignup = async (e: React.FormEvent) => {
+    const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (!passwordMatchingStatus.result || !emailCheckResult.result) return
 
-        signup(email, password)
+        //signup(email, password)
+        await emailSignUp(email, password)
+
     };
-
-    /**
-     * 
-     */
-    const signup = async (id: string, password: string) => {
-        try {
-            setIsLoading(true);
-
-            //Auth 서버 등록
-            const res = await signUpWithEmail(id, password);
-            const idToken = await res.user.getIdToken();
-
-            console.log("auth 서버", idToken);
-
-            //Core 서버 등록
-            await syncMeToServer(idToken);
-
-            alert("회원 가입 성공");
-        } catch (e) {
-            console.log(`Error`, e);
-        } finally {
-            setIsLoading(false);
-        }
-    }
 
     return (
         <Container>
@@ -153,7 +136,7 @@ export default function SignUp() {
             <Footer>
                 {/* 회원가입 버튼 */}
                 <Button
-                    onClick={handleSignup}
+                    onClick={handleSignUp}
                     loading={isLoading}
                     loadingText='회원가입 중'
                     buttonText='회원가입' />

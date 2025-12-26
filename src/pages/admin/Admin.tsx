@@ -15,7 +15,7 @@ export default function Admin() {
 
         (async () => {
         })();
-    }, [isLoggedIn]);``
+    }, [isLoggedIn]);
 
     useEffect(() => {
         if (!error) return
