@@ -31,9 +31,9 @@
 .button.selected {
     border: 1px solid #dbeafe;
     background-color: #eff6ff;
-    color: #2563eb;
+    color: var(--color-primary-color);
 }
 
 .button:hover:not(.selected) {
-    background-color: #f9fafb;
+    background-color: #e6e6e7;
 }

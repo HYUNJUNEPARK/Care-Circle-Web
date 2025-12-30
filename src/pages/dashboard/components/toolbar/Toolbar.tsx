@@ -5,6 +5,8 @@ import { IoIosMenu } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 import useSignOut from '../../../../hook/useSignOut';
 import { useAuth } from "../../../../features/auth/AuthProvider"
+import { useAlert } from "../../../../components/alert/AlertProvider"
+import strings from "../../../../res/strings"
 
 function Toolbar({
   sidebarOpen,
@@ -13,9 +15,10 @@ function Toolbar({
   sidebarOpen: boolean,
   setSidebarOpen: (v: boolean) => void
 }) {
-  //const { user, isLoggedIn } = useAuth();
-  const { user } = useAuth();
-  const dropdownItems = [`${user?.email}`, `로그아웃`];
+  const { showAlert } = useAlert();
+
+  const { user } = useAuth(); //const { user, isLoggedIn } = useAuth();
+  const dropdownItems = [`${user?.email}`, strings.signOut];
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const userButtonRef = useRef<HTMLButtonElement>(null);
   const { userSignOut, error } = useSignOut();
@@ -25,7 +28,13 @@ function Toolbar({
     switch (index) {
       case 0: break; //이메일
       case 1: { //로그아웃
-        userSignOut();
+        showAlert({
+          title: strings.signOut,
+          message: null,
+          onConfirmAction: () => {
+            userSignOut();
+          }
+        });
       }
     }
     setDropdownOpen(false);

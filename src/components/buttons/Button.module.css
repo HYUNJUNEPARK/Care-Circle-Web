@@ -11,12 +11,12 @@
 }
 
 .buttonEnabled {
-  background: #0077ff;
+  background: var(--color-primary-color);
   color: #ffffff;
 }
 
 .buttonDisabled {
-  background: #0077ff;
+  background: var(--color-primary-color);
   opacity: 0.6;
   color: #ffffff;
 }
@@ -24,12 +24,3 @@
 .buttonEnabled:active {
   transform: scale(0.99);
 }
-
-/* @media (max-width: 480px) {
-  .buttonEnabled,
-  .buttonDisabled {
-    padding: 14px;
-    font-size: 15px;
-    border-radius: 10px;
-  }
-} */

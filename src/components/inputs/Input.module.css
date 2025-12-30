@@ -42,7 +42,7 @@
     flex: 1;
     padding: 0px 66px 0px 16px; /* 오른쪽 패딩을 늘려 버튼 두 개 공간 확보 */
     font-size: 1rem;
-    border: 1px solid var(--color-gray-3);
+    border: 1px solid;
     border-radius: 8px;
     outline: none;
     transition: border-color 0.2s;

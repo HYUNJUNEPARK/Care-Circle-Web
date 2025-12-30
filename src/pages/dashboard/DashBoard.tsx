@@ -1,10 +1,10 @@
 //import { useAuth } from '../../contexts/AuthContext';
 //import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import Toolbar from '../components/toolbar/Toolbar';
-import Sidebar from '../components/sidebar/Sidebar';
-import Content from './Content';
-import type { SideMenuItem } from '../../../types/SideMenuItem';
+import Toolbar from './components/toolbar/Toolbar';
+import Sidebar from './components/sidebar/Sidebar';
+import Content from './contents/Content';
+import type { SideMenuItem } from '../../types/SideMenuItem';
 
 import { TbLayoutDashboard } from "react-icons/tb";
 import { FiShoppingCart } from "react-icons/fi";
@@ -13,7 +13,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { LuUserRound } from "react-icons/lu";
 import { FiFileText } from "react-icons/fi";
 
-export default function DashBoardMain() {
+export default function DashBoard() {
     const [selectedMenu, setSelectedMenu] = useState('dashboard');
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const sideMenuItems: SideMenuItem[] = [

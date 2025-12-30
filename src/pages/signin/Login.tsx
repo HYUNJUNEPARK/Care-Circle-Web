@@ -5,6 +5,7 @@ import Button from '../../components/buttons/Button';
 import Input from '../../components/inputs/Input';
 import { PATH } from '../../constants/paths';
 import useSignInByEmail from './useSignInByEmail';
+import strings from '../../res/strings'
 
 export default function Login() {
     const navigate = useNavigate();
@@ -34,8 +35,8 @@ export default function Login() {
     return (
         <CenterLayout>
             <Container>
-                <Topbar title='로그인' />
-
+                <Topbar title= {strings.signIn} />
+                
                 <Body>
                     {/* 로그인 폼 */}
                     <form onSubmit={handleSignIn} className="space-y-6 mt-8">
@@ -80,7 +81,7 @@ export default function Login() {
                         <Button
                             loading={isLoading}
                             loadingText='로그인 중'
-                            buttonText='로그인' />
+                            buttonText={strings.signIn} />
                     </form>
 
                     {/* 소셜 로그인 */}

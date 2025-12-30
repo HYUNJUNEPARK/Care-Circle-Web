@@ -24,7 +24,7 @@
   .userButton {
       width: 2.2rem;
       height: 2.2rem;
-      background-color: #3b82f6;
+      background-color: var(--color-primary-color);
       border-radius: 50%;
       display: flex;
       align-items: center;

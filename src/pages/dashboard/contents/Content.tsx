@@ -1,5 +1,4 @@
-// import UsersContent from './UserContent';
-import UsersContent from '../UserContent';
+import UsersContent from './user/UserContent';
 import ProductsContent from './ProductsContent';
 import ReportsContent from './ReportsContent';
 import AnalyticsContent from './AnalyticsContent';
