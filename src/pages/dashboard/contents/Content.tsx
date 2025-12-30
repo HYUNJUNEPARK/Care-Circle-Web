@@ -1,9 +1,9 @@
 import UsersContent from './user/UserContent';
-import ProductsContent from './ProductsContent';
-import ReportsContent from './ReportsContent';
-import AnalyticsContent from './AnalyticsContent';
-import SettingsContent from './SettingsContent';
-import DashboardContent from './DashboardContent';
+import ProductsContent from './products/ProductsContent';
+import ReportsContent from './report/ReportsContent';
+import AnalyticsContent from './analytics/AnalyticsContent';
+import SettingsContent from './settings/SettingsContent';
+import DashboardContent from './dashboard/DashboardContent';
 
 function Content({ selectedMenu }: { selectedMenu: string }) {
     switch (selectedMenu) {
