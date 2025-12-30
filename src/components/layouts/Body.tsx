@@ -21,7 +21,7 @@ function Body({
 
 const bodyStyle: React.CSSProperties = {
   flex: 1,
-  minHeight: "calc(100vh - 180px)" // minHeight: "90vh",  min-height: calc(100vh - 96px);
+  minHeight: "calc(97vh - 42px - 62px)", //97vh - Topbar - Footer
 };
 
 export default Body;

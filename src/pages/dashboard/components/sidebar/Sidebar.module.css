@@ -1,0 +1,39 @@
+.sidebar {
+    height: 100vh;
+    background-color: white;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-right: 1px solid #e5e7eb;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    width: 0;
+}
+
+.sidebarOpen {
+    width: 16rem;
+}
+
+.button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: transparent;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.button.selected {
+    border: 1px solid #dbeafe;
+    background-color: #eff6ff;
+    color: #2563eb;
+}
+
+.button:hover:not(.selected) {
+    background-color: #f9fafb;
+}

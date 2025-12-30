@@ -44,7 +44,7 @@ export default function Init() {
             //일반 사용자, 관리자 분기
             if (role === 'ADMIN') {
                 //관리자 페이지 이동
-                navigate(PATH.ADMIN, { replace: true });
+                navigate(PATH.DASH_BOARD, { replace: true });
                 return;
             }
 

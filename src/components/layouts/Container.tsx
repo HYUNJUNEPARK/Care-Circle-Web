@@ -23,12 +23,12 @@ function Container({
 }
 
 const containerStyle: React.CSSProperties = {
-    width: "min(100%, 420px)",
+    width: "min(100%, 360px)",
     padding: 16,
     boxShadow: "0 10px 40px rgba(0, 0, 0, 0.08)",
     display: "flex",
     backgroundColor: "#fff",
-    flexDirection: "column",
+    flexDirection: "column"
 };
 
 export default Container;
