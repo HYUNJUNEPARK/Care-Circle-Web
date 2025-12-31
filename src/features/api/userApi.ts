@@ -1,22 +1,40 @@
-import { apiClient } from "./apiClient";
-import type { UserStatusType } from "../../types/UserStatusType";
+import { apiClient } from './apiClient';
+import type { UserStatusType } from '../../types/UserStatusType';
+import type { UserInfo } from '../../types/UserInfo'
+import type { RemoteUserInfo } from '../../types/RemoteUserInfo'
 
 const userApiUrl = `/api/users`
 
-export async function getAllUsers(idToken: string | undefined | null) {
+/**
+ * 전체 사용자 조회
+ */
+export async function getAllUsers(idToken: string | undefined | null): Promise<UserInfo[]> {
     if (!idToken) {
         throw new Error("idToken is null.");
     }
 
     const res = await apiClient.get(
         `${userApiUrl}`, //url
-        {                     //headers
+        {                //headers
             headers: {
                 Authorization: `Bearer ${idToken}`,
             },
-        });
+        }
+    );
 
-    return res.data.data;
+    const remoteUsers = res.data.data as RemoteUserInfo[]
+
+    const users: UserInfo[] = remoteUsers.map(user => ({
+        uid: user.uid,
+        email: user.email,
+        role: user.role,
+        status: user.status,
+        createdAt: user.created_at,
+        updatedAt: user.updated_at,
+        lastLoginAt: user.last_login_at
+    }))
+
+    return users;
 }
 
 /**
@@ -36,7 +54,8 @@ export async function syncMeToServer(idToken: string | undefined | null): Promis
             headers: {
                 Authorization: `Bearer ${idToken}`,
             },
-        });
+        }
+    );
 
     return Boolean(res.data.success);
 }
@@ -62,7 +81,8 @@ export async function delelteUserByUid(idToken: string | undefined | null): Prom
             headers: {
                 Authorization: `Bearer ${idToken}`,
             },
-        });
+        }
+    );
 
     return Boolean(res.data.success);
 }
@@ -72,7 +92,8 @@ export async function delelteUserByUid(idToken: string | undefined | null): Prom
  */
 export async function changeStatus(
     idToken: string | undefined | null,
-    userStatus: UserStatusType
+    uid: string,
+    userStatus: UserStatusType,
 ): Promise<Boolean> {
     if (!idToken) {
         throw new Error("idToken is null.");
@@ -81,13 +102,15 @@ export async function changeStatus(
     const res = await apiClient.patch(
         `${userApiUrl}/status`, //url
         {
+            uid: uid,
             status: userStatus  //body
         },
         {                       //headers
             headers: {
                 Authorization: `Bearer ${idToken}`,
             },
-        });
+        }
+    );
 
     return Boolean(res.data.success);
 }
@@ -112,6 +135,4 @@ export async function getLoginUserInfo(
     );
 
     return res.data.data;
-
-    //return apiClient.get(`${userApiUrl}/logged-in`);
 }

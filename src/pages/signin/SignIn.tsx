@@ -7,7 +7,7 @@ import { PATH } from '../../constants/paths';
 import useSignInByEmail from './useSignInByEmail';
 import strings from '../../res/strings'
 
-export default function Login() {
+export default function SignIn() {
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -68,13 +68,13 @@ export default function Login() {
                             <label className="flex items-center">
                                 <input
                                     type="checkbox"
-                                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                    className="ml-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                                 />
-                                <span className="ml-2 text-sm text-gray-600">로그인 유지</span>
+                                <span className="ml-2 text-sm text-gray-600">아이디 기억하기</span>
                             </label>
-                            <div className="text-sm font-medium text-blue-600 hover:text-blue-500">
+                            {/* <div className="text-sm font-medium text-blue-600 hover:text-blue-500">
                                 비밀번호 찾기
-                            </div>
+                            </div> */}
                         </div>
 
                         {/* 로그인 버튼 */}

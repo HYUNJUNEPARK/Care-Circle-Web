@@ -1,17 +1,29 @@
 import Input from '../../../../components/inputs/Input';
 import { useState, useEffect } from 'react';
 import styles from "./UserContent.module.css";
+import useAllUsers from './useAllUsers';
+import useChangeUserStatus from './useChangeUserStatus';
 
 export default function UsersContent() {
+  const { fetchAllUsers, users, isLoading, error } = useAllUsers();
+  const { changeUserStatus, isLoading: isStatusLoading, error: statusError } = useChangeUserStatus();
 
   const [searchUser, setSearchUser] = useState('');
+  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입일', '수정일', '마지막 로그인'];
 
-  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입일', '수정일', '마지막 로그인']
+  useEffect(() => {
+    fetchAllUsers();
+  }, []);
 
-  const users = [
-    { uid: "IsMbDvqC8CW5mge0B4MClqn8e4W2", email: 'kim@example.com', role: '관리자', status: '활성', createAt: '2025-12-12', updateAt: '2025-12-12', lastLoginAt: '2026-01-01' },
-    { uid: "IsMbDvqC8CW5mge0B4MClqn8e4W2", email: 'lee@example.com', role: '사용자', status: '비활성', createAt: '2025-12-12', updateAt: '2025-12-12', lastLoginAt: '2026-01-01' },
-  ];
+  useEffect(() => {
+    if (!error) return
+    alert(`${error.message}`)
+  }, [error]);
+
+  useEffect(() => {
+    if (!statusError) return
+    alert(`${statusError.message}`)
+  }, [statusError]);
 
   return (
     <div>
@@ -58,24 +70,61 @@ export default function UsersContent() {
 
             {/* 테이블 바디 */}
             <tbody>
-              {users.map((u, i) => (
-                <tr key={i}>
-                  <td className={styles.td}>{u.email}</td>
-                  <td className={styles.td}>{u.uid}</td>
-                  <td className={styles.td}>{u.role}</td>
+              {users?.map((user, index) => (
+                <tr key={index}>
+                  <td className={styles.td}>{user.email}</td>
+                  <td className={styles.td}>{user.uid}</td>
+                  <td className={styles.td}>{user.role}</td>
 
                   <td className={styles.td}>
-                    <span className={styles.statusDisplay}>{u.status}</span>
+                    <span className={styles.statusDisplay}>{user.status}</span>
                   </td>
 
                   <td className={styles.td}>
-                    <button className={styles.roleButton} style={{backgroundColor:"#59b3eeff" }}>비밀번호 초기화</button>
-                    <button className={styles.roleButton} style={{marginLeft:"10px", backgroundColor:"#e83e3eff" }}>계정 삭제</button>
+                    <button
+                      className={styles.roleButton}
+                      style={{ backgroundColor: "#59b3eeff" }}
+                      onClick={() => {
+
+                      }}>비밀번호 초기화
+                    </button>
+
+                    <button
+                      className={styles.roleButton}
+                      style={{ margin: "4px", backgroundColor: "#42d49aff" }}
+                      onClick={async () => {
+                        await changeUserStatus(user.uid, 'ACTIVE');
+                      }}>활성화
+                    </button>
+
+                    <button
+                      className={styles.roleButton}
+                      style={{ margin: "4px", backgroundColor: "#7d7d7dff" }}
+                      onClick={async () => {
+                        await changeUserStatus(user.uid, 'INACTIVE');
+                      }}>비활성화
+                    </button>
+
+                    <button
+                      className={styles.roleButton}
+                      style={{ margin: "4px", backgroundColor: "#fe6334" }}
+                      onClick={async () => {
+                        await changeUserStatus(user.uid, 'BLOCKED');
+                      }}>계정 정지
+                    </button>
+
+                    <button
+                      className={styles.roleButton}
+                      style={{ margin: "4px", backgroundColor: "#ff0000ff" }}
+                      onClick={async () => {
+                        await changeUserStatus(user.uid, 'DELETED');
+                      }}>계정 삭제
+                    </button>
                   </td>
 
-                  <td className={styles.td}>{u.createAt}</td>
-                  <td className={styles.td}>{u.updateAt}</td>
-                  <td className={styles.td}>{u.lastLoginAt}</td>
+                  <td className={styles.td}>{user.createdAt}</td>
+                  <td className={styles.td}>{user.updatedAt}</td>
+                  <td className={styles.td}>{user.lastLoginAt}</td>
                 </tr>
               ))}
             </tbody>

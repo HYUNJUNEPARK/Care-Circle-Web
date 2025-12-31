@@ -2,9 +2,9 @@
 import { Container, Body } from '../../components/layouts';
 import { useAuth } from "../../features/auth/AuthProvider";
 import { useEffect } from "react";
-import { delelteUserByUid } from '../../features/api/authApi';
+import { delelteUserByUid } from '../../features/api/userApi';
 import useSignOut from '../../hook/useSignOut';
-import useChangeUserStatus from './useChangeUserStatus';
+import useChangeUserStatus from '../dashboard/contents/user/useChangeUserStatus';
 
 export default function Main() {
     const { user, isLoggedIn } = useAuth();
@@ -62,9 +62,9 @@ export default function Main() {
 
                 <button onClick={delelteUser}>회원탈퇴</button>
 
-                <button onClick={async () => {
+                {/* <button onClick={async () => {
                     await changeUserStatus('INACTIVE');
-                }}>비활성</button>
+                }}>비활성</button> */}
 
             </Body>
         </Container>

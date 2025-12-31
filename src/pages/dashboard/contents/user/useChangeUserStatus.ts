@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { changeStatus } from "../../features/api/authApi";
-import type { UserStatusType } from "../../types/UserStatusType";
-import { useAuth } from "../../features/auth/AuthProvider";
-import useSignOut from '../../hook/useSignOut';
+import { changeStatus } from "../../../../features/api/userApi";
+import type { UserStatusType } from "../../../../types/UserStatusType";
+import { useAuth } from "../../../../features/auth/AuthProvider";
+//import useSignOut from '../../../../hook/useSignOut';
 
 /**
  * 회원 상태 수정
@@ -11,23 +11,20 @@ function useChangeUserStatus() {
     const { user } = useAuth();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
-    const { userSignOut, } = useSignOut();
+    //const { userSignOut, } = useSignOut();
 
-    const changeUserStatus = async (status: UserStatusType) => {
+    const changeUserStatus = async (uid: string, status: UserStatusType) => {
         try {
             setLoading(true);
 
             const idToken = await user?.getIdToken();
 
-            const isSuccess = await changeStatus(idToken, status);
+            await changeStatus(idToken, uid, status);
 
-            if (isSuccess) {
-                userSignOut()
-            }
         } catch (error) {
             setError(error as Error);
         } finally {
-            setLoading(false); 
+            setLoading(false);
         }
     }
 

@@ -3,7 +3,7 @@ import { Container, Body } from '../../components/layouts';
 import { useAuth } from "../../features/auth/AuthProvider";
 import { useEffect, useState } from "react";
 import useSignOut from '../../hook/useSignOut';
-import { getAllUsers } from '../../features/api/authApi';
+import { getAllUsers } from '../../features/api/userApi';
 
 
 export default function Admin() {
@@ -44,7 +44,7 @@ export default function Admin() {
         <Container>
             <Body>
                 <div>Admin Page</div>
-                
+
                 <p>{user?.email}</p>
                 <p className='mt-12'>{user?.uid}</p>
 

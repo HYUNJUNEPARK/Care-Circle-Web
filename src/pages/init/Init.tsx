@@ -4,8 +4,8 @@ import LoadingSpinner from '../../components/spinner/LoadingSpinner';
 import { useEffect } from 'react';
 import { PATH } from "../../constants/paths";
 import { auth } from "../../features/auth/authClient";
-import { syncMeToServer } from '../../features/api/authApi';
-import { getLoginUserInfo } from '../../features/api/authApi';
+import { syncMeToServer } from '../../features/api/userApi';
+import { getLoginUserInfo } from '../../features/api/userApi';
 import useSignOut from '../../hook/useSignOut';
 
 export default function Init() {

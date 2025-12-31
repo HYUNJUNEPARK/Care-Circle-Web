@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../features/auth/authClient"
-import { syncMeToServer } from '../../features/api/authApi';
+import { syncMeToServer } from '../../features/api/userApi';
 import { useNavigate } from "react-router-dom";
 import { PATH } from '../../constants/paths';
 
