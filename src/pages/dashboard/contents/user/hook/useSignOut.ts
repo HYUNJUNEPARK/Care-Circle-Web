@@ -1,23 +1,22 @@
 import { useState } from 'react';
-import type { UserInfo } from '../../../../types/UserInfo'
-import { useAuth } from "../../../../features/auth/AuthProvider";
-import { getAllUsers } from '../../../../features/api/userApi';
+import { useAuth } from "../../../../../features/auth/AuthProvider";
+import { signOut } from '../../../../../features/api/userApi';
 
-function useAllUsers() {
+/**
+ * 로그아웃
+ */
+function useSignOut() {
     const { user } = useAuth();
-    const [users, setUsers] = useState<UserInfo[]>();
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    const fetchAllUsers = async () => {
+    const signOutByUid = async (uid: string) => {
         try {
             setLoading(true);
 
             const idToken = await user?.getIdToken();
 
-            const users = await getAllUsers(idToken);
-
-            setUsers(users);
+            await signOut(idToken, uid)
         } catch (error) {
             setError(error as Error)
         } finally {
@@ -26,12 +25,11 @@ function useAllUsers() {
     }
     
     return {
-        fetchAllUsers,
-        users,
+        signOutByUid,
         isLoading,
         error
     }
 
 }
 
-export default useAllUsers;
+export default useSignOut;

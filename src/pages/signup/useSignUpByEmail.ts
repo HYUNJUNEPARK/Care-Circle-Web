@@ -20,7 +20,6 @@ function useSignUpByEmail() {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
             const idToken = await userCredential?.user?.getIdToken();
-
             if (!idToken) {
                 setError(Error('idToken is invalid'));
                 return;

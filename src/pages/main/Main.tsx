@@ -4,12 +4,12 @@ import { useAuth } from "../../features/auth/AuthProvider";
 import { useEffect } from "react";
 import { delelteUserByUid } from '../../features/api/userApi';
 import useSignOut from '../../hook/useSignOut';
-import useChangeUserStatus from '../dashboard/contents/user/useChangeUserStatus';
+// import useChangeUserStatus from '../dashboard/contents/user/hook/useChangeUserStatus';
 
 export default function Main() {
     const { user, isLoggedIn } = useAuth();
     const { userSignOut, error } = useSignOut();
-    const { changeUserStatus, error: changeStatusError } = useChangeUserStatus();
+    // const { changeUserStatus, error: changeStatusError } = useChangeUserStatus();
 
     //
     useEffect(() => {
@@ -31,10 +31,10 @@ export default function Main() {
         alert(`${error.message}`)
     }, [error]);
 
-    useEffect(() => {
-        if (!changeStatusError) return
-        alert(`${changeStatusError.message}`)
-    }, [changeStatusError]);
+    // useEffect(() => {
+    //     if (!changeStatusError) return
+    //     alert(`${changeStatusError.message}`)
+    // }, [changeStatusError]);
 
 
     const delelteUser = async () => {

@@ -31,7 +31,8 @@ export async function getAllUsers(idToken: string | undefined | null): Promise<U
         status: user.status,
         createdAt: user.created_at,
         updatedAt: user.updated_at,
-        lastLoginAt: user.last_login_at
+        lastLoginAt: user.last_login_at,
+        logoutAt: user.logout_at
     }))
 
     return users;
@@ -59,6 +60,30 @@ export async function syncMeToServer(idToken: string | undefined | null): Promis
 
     return Boolean(res.data.success);
 }
+
+/**
+ * 로그아웃
+ */
+export async function signOut(idToken: string | undefined | null, uid: string) {
+    if (!idToken) {
+        throw new Error("idToken is null.");
+    }
+
+    const res = await apiClient.post(
+        `${userApiUrl}/sign-out`, //url
+        {                         //body
+            uid: uid
+        },
+        {                         //headers
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        }
+    );
+
+    return Boolean(res.data.success);
+}
+
 
 /**
  * 이메일 유효성 체크
@@ -101,9 +126,9 @@ export async function changeStatus(
 
     const res = await apiClient.patch(
         `${userApiUrl}/status`, //url
-        {
+        {                       //body
             uid: uid,
-            status: userStatus  //body
+            status: userStatus
         },
         {                       //headers
             headers: {
@@ -135,4 +160,30 @@ export async function getLoginUserInfo(
     );
 
     return res.data.data;
+}
+
+/**
+ * 비밀번호 초기화
+ */
+export async function resetPassword(
+    idToken: string | undefined | null,
+    uid: string,
+): Promise<Boolean> {
+    if (!idToken) {
+        throw new Error("idToken is null.");
+    }
+
+    const res = await apiClient.post(
+        `${userApiUrl}/reset`, //url
+        {                      //body
+            uid: uid
+        },
+        {                      //headers
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        }
+    );
+
+    return Boolean(res.data.success);
 }

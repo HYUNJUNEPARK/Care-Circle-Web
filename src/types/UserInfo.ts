@@ -6,4 +6,5 @@ export interface UserInfo {
     createdAt: string;
     updatedAt: string;
     lastLoginAt: string;
+    logoutAt: string;
 }

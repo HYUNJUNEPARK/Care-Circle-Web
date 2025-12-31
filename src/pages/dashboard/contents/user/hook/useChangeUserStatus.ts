@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { changeStatus } from "../../../../features/api/userApi";
-import type { UserStatusType } from "../../../../types/UserStatusType";
-import { useAuth } from "../../../../features/auth/AuthProvider";
-//import useSignOut from '../../../../hook/useSignOut';
+import { changeStatus } from "../../../../../features/api/userApi";
+import type { UserStatusType } from "../../../../../types/UserStatusType";
+import { useAuth } from "../../../../../features/auth/AuthProvider";
 
 /**
  * 회원 상태 수정
@@ -11,7 +10,6 @@ function useChangeUserStatus() {
     const { user } = useAuth();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
-    //const { userSignOut, } = useSignOut();
 
     const changeUserStatus = async (uid: string, status: UserStatusType) => {
         try {

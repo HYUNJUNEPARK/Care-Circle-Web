@@ -1,29 +1,44 @@
 import Input from '../../../../components/inputs/Input';
 import { useState, useEffect } from 'react';
 import styles from "./UserContent.module.css";
-import useAllUsers from './useAllUsers';
-import useChangeUserStatus from './useChangeUserStatus';
+import useAllUsers from './hook/useAllUsers';
+import useChangeUserStatus from './hook/useChangeUserStatus';
+import useResetPassword from './hook/useResetPassword';
+import useSignOut from './hook/useSignOut';
 
 export default function UsersContent() {
-  const { fetchAllUsers, users, isLoading, error } = useAllUsers();
+  const { fetchAllUsers, users, isLoading: isUserLoading, error: userError } = useAllUsers();
   const { changeUserStatus, isLoading: isStatusLoading, error: statusError } = useChangeUserStatus();
+  const { reset, isLoading: isResetLoading, error: resetError } = useResetPassword();
+  const { signOutByUid, isLoading: isSignOutLoading, error: signOutError } = useSignOut();
 
   const [searchUser, setSearchUser] = useState('');
-  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입일', '수정일', '마지막 로그인'];
+  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '수정', '로그인', '로그아웃', '비밀번호 초기화',];
 
   useEffect(() => {
     fetchAllUsers();
   }, []);
 
   useEffect(() => {
-    if (!error) return
-    alert(`${error.message}`)
-  }, [error]);
+    if (!userError) return
+    alert(`${userError.message}`)
+  }, [userError]);
 
   useEffect(() => {
     if (!statusError) return
     alert(`${statusError.message}`)
   }, [statusError]);
+
+  useEffect(() => {
+    if (!resetError) return
+    alert(`${resetError.message}`)
+  }, [resetError]);
+
+  useEffect(() => {
+    if (!signOutError) return
+    alert(`${signOutError.message}`)
+  }, [signOutError]);
+
 
   return (
     <div>
@@ -80,50 +95,75 @@ export default function UsersContent() {
                     <span className={styles.statusDisplay}>{user.status}</span>
                   </td>
 
+
+
+
+
+
                   <td className={styles.td}>
-                    <button
-                      className={styles.roleButton}
-                      style={{ backgroundColor: "#59b3eeff" }}
-                      onClick={() => {
+                      {/* 비밀번호 초기화 */}
+                      <button
+                        className={styles.roleButton}
+                        style={{ backgroundColor: "#59b3eeff" }}
+                        onClick={async () => {
+                          await reset(user.uid)
+                        }}>비밀번호 초기화
+                      </button>
 
-                      }}>비밀번호 초기화
-                    </button>
+                      {/* 로그아웃 버튼 */}
+                      <button
+                        className={styles.roleButton}
+                        style={{ margin: "4px", backgroundColor: "#b957f6ff" }}
+                        onClick={async () => {
+                          await signOutByUid(user.uid);
+                        }}>로그아웃
+                      </button>
 
-                    <button
-                      className={styles.roleButton}
-                      style={{ margin: "4px", backgroundColor: "#42d49aff" }}
-                      onClick={async () => {
-                        await changeUserStatus(user.uid, 'ACTIVE');
-                      }}>활성화
-                    </button>
-
-                    <button
-                      className={styles.roleButton}
-                      style={{ margin: "4px", backgroundColor: "#7d7d7dff" }}
-                      onClick={async () => {
-                        await changeUserStatus(user.uid, 'INACTIVE');
-                      }}>비활성화
-                    </button>
-
-                    <button
-                      className={styles.roleButton}
-                      style={{ margin: "4px", backgroundColor: "#fe6334" }}
-                      onClick={async () => {
-                        await changeUserStatus(user.uid, 'BLOCKED');
-                      }}>계정 정지
-                    </button>
-
-                    <button
-                      className={styles.roleButton}
-                      style={{ margin: "4px", backgroundColor: "#ff0000ff" }}
-                      onClick={async () => {
-                        await changeUserStatus(user.uid, 'DELETED');
-                      }}>계정 삭제
-                    </button>
+                      {/* 활성화 버튼 */}
+                      {user.status !== 'ACTIVE' &&
+                        <button
+                          className={styles.roleButton}
+                          style={{ margin: "4px", backgroundColor: "#42d49aff" }}
+                          onClick={async () => {
+                            await changeUserStatus(user.uid, 'ACTIVE');
+                          }}>활성화
+                        </button>
+                      }
+                      {/* 비활성화 버튼 */}
+                      {user.status !== 'INACTIVE' &&
+                        <button
+                          className={styles.roleButton}
+                          style={{ margin: "4px", backgroundColor: "#7d7d7dff" }}
+                          onClick={async () => {
+                            await changeUserStatus(user.uid, 'INACTIVE');
+                          }}>비활성화
+                        </button>
+                      }
+                      {/* 계정 정지 버튼 */}
+                      {user.status !== 'BLOCKED' &&
+                        <button
+                          className={styles.roleButton}
+                          style={{ margin: "4px", backgroundColor: "#fe6334" }}
+                          onClick={async () => {
+                            await changeUserStatus(user.uid, 'BLOCKED');
+                          }}>계정 정지
+                        </button>
+                      }
+                      {/* 계정 삭제 버튼 */}
+                      {user.status !== 'DELETED' &&
+                        <button
+                          className={styles.roleButton}
+                          style={{ margin: "4px", backgroundColor: "#ff0000ff" }}
+                          onClick={async () => {
+                            await changeUserStatus(user.uid, 'DELETED');
+                          }}>계정 삭제
+                        </button>
+                      }
                   </td>
-
                   <td className={styles.td}>{user.createdAt}</td>
                   <td className={styles.td}>{user.updatedAt}</td>
+                  <td className={styles.td}>{user.lastLoginAt}</td>
+                  <td className={styles.td}>{user.logoutAt}</td>
                   <td className={styles.td}>{user.lastLoginAt}</td>
                 </tr>
               ))}
