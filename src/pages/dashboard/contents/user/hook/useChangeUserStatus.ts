@@ -13,7 +13,7 @@ function useChangeUserStatus() {
 
     const changeUserStatus = async (uid: string, status: UserStatusType) => {
         if (isLoading) {
-            console.info('This request is already in progress.')
+            console.info('This request is already in progress.');
             return;
         }
 

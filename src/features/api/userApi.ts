@@ -4,6 +4,7 @@ import type { UserInfo } from '../../types/UserInfo'
 import type { RemoteUserInfo } from '../../types/RemoteUserInfo'
 import type ChangeUserStatusResponse from '../../types/remote/changeStatusResponse';
 import type SignOutResponse from '../../types/remote/SignOutResponse';
+import type ResetPasswordResponse from '../../types/remote/ResetPasswordResponse';
 
 const userApiUrl = `/api/users`
 
@@ -34,7 +35,8 @@ export async function getAllUsers(idToken: string | undefined | null): Promise<U
         createdAt: user.created_at,
         updatedAt: user.updated_at,
         lastLoginAt: user.last_login_at ?? '-',
-        logoutAt: user.logout_at ?? '-'
+        logoutAt: user.logout_at ?? '-',
+        passwordResetAt: user.password_reset_at ?? "-"
     }))
 
     return users;
@@ -171,7 +173,7 @@ export async function getLoginUserInfo(
 export async function resetPassword(
     idToken: string | undefined | null,
     uid: string,
-): Promise<Boolean> {
+): Promise<ResetPasswordResponse> {
     if (!idToken) {
         throw new Error("idToken is null.");
     }
@@ -188,5 +190,6 @@ export async function resetPassword(
         }
     );
 
-    return Boolean(res.data.success);
+    const data = (res.data) as ResetPasswordResponse;
+    return data;
 }

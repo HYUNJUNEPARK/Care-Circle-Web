@@ -91,7 +91,32 @@ export default function UsersContent() {
       //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
       setUsers(prev =>
         prev.map(user =>
-          user.uid === rUid ? { ...user, logoutAt: logoutAt } : user
+          (user.uid === rUid) ? { ...user, logoutAt: logoutAt } : user
+        )
+      );
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      hideLoading();
+    }
+  }
+
+  //비밀번호 초기화
+  const resetPasword = async (uid: string) => {
+    try {
+      showLoading();
+
+      const res = await reset(uid)
+      const rUid = res?.uid;
+      const resetAt = res?.timeStamp;
+      if (!res || !rUid || !resetAt) {
+        throw new Error("response is invalid");
+      }
+
+      //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
+      setUsers(prev =>
+        prev.map(user =>
+          (user.uid === rUid) ? { ...user, passwordResetAt: resetAt } : user
         )
       );
     } catch (error) {
@@ -243,12 +268,12 @@ export default function UsersContent() {
                         className={styles.roleButton}
                         style={{ backgroundColor: "#59b3eeff" }}
                         onClick={async () => {
-                          reset(user.uid)
+                          resetPasword(user.uid);
                         }}>비밀번호 초기화
                       </button>
                       {/* 비밀번호 초기화 시간 */}
                       <div style={{ textAlign: 'center', marginTop: '2px' }}>
-                        {user.lastLoginAt}
+                        {user.passwordResetAt}
                       </div>
                     </div>
                   </td>

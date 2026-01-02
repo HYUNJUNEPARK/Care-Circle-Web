@@ -12,7 +12,7 @@ function useSignOut() {
 
     const signOutByUid = async (uid: string) => {
         if (isLoading) {
-            console.info('This request is already in progress.')
+            console.info('This request is already in progress.');
             return;
         }
 
