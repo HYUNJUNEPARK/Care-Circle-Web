@@ -5,7 +5,7 @@ import useAllUsers from './hook/useAllUsers';
 import useChangeUserStatus from './hook/useChangeUserStatus';
 import useResetPassword from './hook/useResetPassword';
 import useSignOut from './hook/useSignOut';
-import { useLoading } from '../../../../components/loading/loading/LoadingProvider';
+import useLoading from '../../../../components/loading/loading/useLoading';
 
 export default function UsersContent() {
   const { fetchAllUsers, users, isLoading: isUserLoading, error: userError } = useAllUsers();
@@ -44,11 +44,7 @@ export default function UsersContent() {
     alert(`${signOutError.message}`)
   }, [signOutError]);
 
-
-
-
   useEffect(() => {
-
     const tt = async () => {
       showLoading();
       try {
@@ -63,9 +59,6 @@ export default function UsersContent() {
     }
 
     tt();
-
-
-
 
   }, []);
 

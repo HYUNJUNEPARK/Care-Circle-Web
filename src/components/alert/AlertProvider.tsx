@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, type ReactNode, useCallback, useMemo, useState } from 'react';
 import CustomAlert from './CustomAlert';
 import strings from '../../res/strings';
 
@@ -23,7 +23,7 @@ type AlertContextValue = {
     closeAlert: () => void;
 };
 
-const AlertContext = createContext<AlertContextValue | undefined>(undefined);
+export const AlertContext = createContext<AlertContextValue | undefined>(undefined);
 
 const noop = () => { };
 
@@ -103,14 +103,14 @@ export function AlertProvider({ children }: { children: ReactNode }) {
     );
 }
 
-export function useAlert() {
-    const context = useContext(AlertContext);
+// export function useAlert() {
+//     const context = useContext(AlertContext);
 
-    if (!context) {
-        throw new Error('useAlert must be used within an AlertProvider');
-    }
+//     if (!context) {
+//         throw new Error('useAlert must be used within an AlertProvider');
+//     }
 
-    return context;
-}
+//     return context;
+// }
 
-export default AlertContext;
+//export default AlertContext;

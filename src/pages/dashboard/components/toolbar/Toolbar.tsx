@@ -5,7 +5,7 @@ import { IoIosMenu } from "react-icons/io";
 import { FaRegUser } from "react-icons/fa";
 import useSignOut from '../../../../hook/useSignOut';
 import { useAuth } from "../../../../features/auth/AuthProvider"
-import { useAlert } from "../../../../components/alert/AlertProvider"
+import useAlert from "../../../../components/alert/useAlert"
 import strings from "../../../../res/strings"
 
 function Toolbar({
