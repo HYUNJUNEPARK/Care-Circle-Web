@@ -13,6 +13,8 @@ export default function UsersContent() {
   const { changeUserStatus, error: statusError } = useChangeUserStatus();
   const { reset, error: resetError } = useResetPassword();
   const { signOutByUid, error: signOutError } = useSignOut();
+
+
   const { showLoading, hideLoading } = useLoading();
   const [searchUser, setSearchUser] = useState('');
   const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '수정', '로그인', '로그아웃', '비밀번호 초기화'];
@@ -56,15 +58,16 @@ export default function UsersContent() {
       const res = await changeUserStatus(uid, status)!;
       const rUid = res?.uid;
       const newStatus = res?.status;
-      if (!res || !rUid || !newStatus) {
+      const updateAt = res?.timeStamp;
+      if (!res || !rUid || !newStatus || !updateAt) {
         throw new Error("response is invalid");
       }
 
       //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
-      setUsers(prev => 
+      setUsers(prev =>
         prev.map(user =>
-          user.uid === rUid ? {...user, status: newStatus} : user
-        )  
+          user.uid === rUid ? { ...user, status: newStatus, updatedAt: updateAt } : user
+        )
       );
     } catch (error) {
       console.error('Error:', error);
@@ -72,6 +75,47 @@ export default function UsersContent() {
       hideLoading();
     }
   }
+
+  //로그아웃
+  const signOut = async (uid: string) => {
+    try {
+      showLoading();
+
+      const res = await signOutByUid(uid);
+      const rUid = res?.uid;
+      const logoutAt = res?.timeStamp;
+      if (!res || !rUid || !logoutAt) {
+        throw new Error("response is invalid");
+      }
+
+      //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
+      setUsers(prev =>
+        prev.map(user =>
+          user.uid === rUid ? { ...user, logoutAt: logoutAt } : user
+        )
+      );
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      hideLoading();
+    }
+  }
+
+  const getStatusClass = (status: string) => {
+    try {
+      const statusType = status as UserStatusType
+      switch (statusType) {
+        case "ACTIVE": return styles.active;
+        case "INACTIVE": return styles.inactive;
+        case "BLOCKED": return styles.blocked;
+        case "DELETED": return styles.deleted;
+        default: return "";
+      }
+    } catch (error) {
+      console.error('getStatusClass error', error);
+      return "";
+    }
+  };
 
   return (
     <div>
@@ -122,14 +166,10 @@ export default function UsersContent() {
                   <td className={styles.td}>{user.email}</td>
                   <td className={styles.td}>{user.uid}</td>
                   <td className={styles.td}>{user.role}</td>
-
+                  {/* 사용자 상태 */}
                   <td className={styles.td}>
-
-                    <span className={styles.statusDisplay}>{user.status}</span>
-
-                    
+                    <span className={`${styles.statusDisplay} ${getStatusClass(user.status)}`}>{user.status}</span>
                   </td>
-
                   <td className={styles.td}>
                     {/* 활성화 버튼 */}
                     {user.status !== 'ACTIVE' &&
@@ -186,7 +226,7 @@ export default function UsersContent() {
                         className={styles.roleButton}
                         style={{ backgroundColor: "#b957f6ff" }}
                         onClick={() => {
-                          signOutByUid(user.uid);
+                          signOut(user.uid);
                         }}>로그아웃
                       </button>
                       {/* 로그아웃 시간 */}

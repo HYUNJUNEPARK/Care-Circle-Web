@@ -2,7 +2,8 @@ import { apiClient } from './apiClient';
 import type { UserStatusType } from '../../types/UserStatusType';
 import type { UserInfo } from '../../types/UserInfo'
 import type { RemoteUserInfo } from '../../types/RemoteUserInfo'
-import type ChangeUserStatus from '../../types/remote/changeStatusResponse';
+import type ChangeUserStatusResponse from '../../types/remote/changeStatusResponse';
+import type SignOutResponse from '../../types/remote/SignOutResponse';
 
 const userApiUrl = `/api/users`
 
@@ -65,7 +66,7 @@ export async function syncMeToServer(idToken: string | undefined | null): Promis
 /**
  * 로그아웃
  */
-export async function signOut(idToken: string | undefined | null, uid: string) {
+export async function signOut(idToken: string | undefined | null, uid: string): Promise<SignOutResponse> {
     if (!idToken) {
         throw new Error("idToken is null.");
     }
@@ -82,9 +83,9 @@ export async function signOut(idToken: string | undefined | null, uid: string) {
         }
     );
 
-    return Boolean(res.data.success);
+    const data = (res.data) as SignOutResponse;
+    return data 
 }
-
 
 /**
  * 이메일 유효성 체크
@@ -120,7 +121,7 @@ export async function changeStatus(
     idToken: string | undefined | null,
     uid: string,
     userStatus: UserStatusType,
-): Promise<ChangeUserStatus> {
+): Promise<ChangeUserStatusResponse> {
     if (!idToken) {
         throw new Error("idToken is null.");
     }
@@ -138,7 +139,7 @@ export async function changeStatus(
         }
     );
 
-    const data = (res.data) as ChangeUserStatus;
+    const data = (res.data) as ChangeUserStatusResponse;
     return data;
 }
 

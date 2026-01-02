@@ -11,19 +11,23 @@ function useSignOut() {
     const [error, setError] = useState<Error | null>(null);
 
     const signOutByUid = async (uid: string) => {
+        if (isLoading) {
+            console.info('This request is already in progress.')
+            return;
+        }
+
         try {
             setLoading(true);
-
             const idToken = await user?.getIdToken();
-
-            await signOut(idToken, uid)
+            const res = await signOut(idToken, uid);
+            return res;
         } catch (error) {
             setError(error as Error)
         } finally {
             setLoading(false);
         }
     }
-    
+
     return {
         signOutByUid,
         isLoading,
