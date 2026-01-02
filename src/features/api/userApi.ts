@@ -1,8 +1,8 @@
 import { apiClient } from './apiClient';
 import type { UserStatusType } from '../../types/UserStatusType';
 import type { UserInfo } from '../../types/UserInfo'
-import type { RemoteUserInfo } from '../../types/RemoteUserInfo'
-import type ChangeUserStatusResponse from '../../types/remote/changeStatusResponse';
+import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo'
+import type ChangeUserStatusResponse from '../../types/remote/ChangeStatusResponse';
 import type SignOutResponse from '../../types/remote/SignOutResponse';
 import type ResetPasswordResponse from '../../types/remote/ResetPasswordResponse';
 

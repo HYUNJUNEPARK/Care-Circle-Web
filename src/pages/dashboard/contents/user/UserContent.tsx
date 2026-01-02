@@ -7,6 +7,7 @@ import useResetPassword from './hook/useResetPassword';
 import useSignOut from './hook/useSignOut';
 import useLoading from '../../../../components/loading/loading/useLoading';
 import type { UserStatusType } from '../../../../types/UserStatusType';
+import { wrapBySpace } from '../../../../utils/formatter';
 
 export default function UsersContent() {
   const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
@@ -17,7 +18,7 @@ export default function UsersContent() {
 
   const { showLoading, hideLoading } = useLoading();
   const [searchUser, setSearchUser] = useState('');
-  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '수정', '로그인', '로그아웃', '비밀번호 초기화'];
+  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '상태 수정', '로그인', '로그아웃', '비밀번호 초기화'];
 
   //사용자 관리 페이지 마운트 시, 사용자 리스트 조회
   useEffect(() => {
@@ -238,13 +239,25 @@ export default function UsersContent() {
                     }
                   </td>
                   {/* 가입일 */}
-                  <td className={styles.td}>{user.createdAt}</td>
+                  <td className={styles.td}>
+                    <span className={styles.dateDisplay}>
+                      {wrapBySpace(user.createdAt)}
+                    </span>
+                  </td>
                   {/* 수정일 */}
-                  <td className={styles.td}>{user.updatedAt}</td>
+                  <td className={styles.td}>
+                    <span className={styles.dateDisplay}>
+                      {wrapBySpace(user.updatedAt)}
+                    </span>
+                  </td>
                   {/* 로그인 */}
-                  <td className={styles.td}>{user.lastLoginAt}</td>
+                  <td className={styles.td}>
+                    <span className={styles.dateDisplay}>
+                      {wrapBySpace(user.lastLoginAt)}
+                    </span>
+                  </td>
                   {/* 로그아웃 */}
-                  <td className={styles.td} >
+                  <td className={styles.td} style={{ verticalAlign: "top" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                       {/* 로그아웃 버튼 */}
                       <button
@@ -255,13 +268,13 @@ export default function UsersContent() {
                         }}>로그아웃
                       </button>
                       {/* 로그아웃 시간 */}
-                      <div style={{ textAlign: 'center', marginTop: '2px' }}>
-                        {user.logoutAt}
+                      <div className={styles.dateDisplay}>
+                        {wrapBySpace(user.logoutAt)}
                       </div>
                     </div>
                   </td>
                   {/* 비밀번호 초기화 */}
-                  <td className={styles.td} >
+                  <td className={styles.td} style={{ verticalAlign: "top" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                       {/* 비밀번호 버튼 */}
                       <button
@@ -272,9 +285,9 @@ export default function UsersContent() {
                         }}>비밀번호 초기화
                       </button>
                       {/* 비밀번호 초기화 시간 */}
-                      <div style={{ textAlign: 'center', marginTop: '2px' }}>
-                        {user.passwordResetAt}
-                      </div>
+                      <span className={styles.dateDisplay}>
+                        {wrapBySpace(user.passwordResetAt)}
+                      </span>
                     </div>
                   </td>
                 </tr>
