@@ -12,13 +12,16 @@ function useChangeUserStatus() {
     const [isLoading, setLoading] = useState<Boolean>(false);
 
     const changeUserStatus = async (uid: string, status: UserStatusType) => {
+        if (isLoading) {
+            console.info('This request is already in progress.')
+            return;
+        }
+
         try {
             setLoading(true);
-
             const idToken = await user?.getIdToken();
-
-            await changeStatus(idToken, uid, status);
-
+            const res = await changeStatus(idToken, uid, status);
+            return res
         } catch (error) {
             setError(error as Error);
         } finally {

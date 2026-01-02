@@ -2,6 +2,7 @@ import { apiClient } from './apiClient';
 import type { UserStatusType } from '../../types/UserStatusType';
 import type { UserInfo } from '../../types/UserInfo'
 import type { RemoteUserInfo } from '../../types/RemoteUserInfo'
+import type ChangeUserStatus from '../../types/remote/changeStatusResponse';
 
 const userApiUrl = `/api/users`
 
@@ -31,8 +32,8 @@ export async function getAllUsers(idToken: string | undefined | null): Promise<U
         status: user.status,
         createdAt: user.created_at,
         updatedAt: user.updated_at,
-        lastLoginAt: user.last_login_at,
-        logoutAt: user.logout_at
+        lastLoginAt: user.last_login_at ?? '-',
+        logoutAt: user.logout_at ?? '-'
     }))
 
     return users;
@@ -119,7 +120,7 @@ export async function changeStatus(
     idToken: string | undefined | null,
     uid: string,
     userStatus: UserStatusType,
-): Promise<Boolean> {
+): Promise<ChangeUserStatus> {
     if (!idToken) {
         throw new Error("idToken is null.");
     }
@@ -137,7 +138,8 @@ export async function changeStatus(
         }
     );
 
-    return Boolean(res.data.success);
+    const data = (res.data) as ChangeUserStatus;
+    return data;
 }
 
 /**

@@ -6,22 +6,26 @@ import useChangeUserStatus from './hook/useChangeUserStatus';
 import useResetPassword from './hook/useResetPassword';
 import useSignOut from './hook/useSignOut';
 import useLoading from '../../../../components/loading/loading/useLoading';
+import type { UserStatusType } from '../../../../types/UserStatusType';
 
 export default function UsersContent() {
-  const { fetchAllUsers, users, isLoading: isUserLoading, error: userError } = useAllUsers();
-  const { changeUserStatus, isLoading: isStatusLoading, error: statusError } = useChangeUserStatus();
-  const { reset, isLoading: isResetLoading, error: resetError } = useResetPassword();
-  const { signOutByUid, isLoading: isSignOutLoading, error: signOutError } = useSignOut();
-
-
+  const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
+  const { changeUserStatus, error: statusError } = useChangeUserStatus();
+  const { reset, error: resetError } = useResetPassword();
+  const { signOutByUid, error: signOutError } = useSignOut();
   const { showLoading, hideLoading } = useLoading();
-
-
   const [searchUser, setSearchUser] = useState('');
-  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '수정', '로그인', '로그아웃', '비밀번호 초기화',];
+  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '수정', '로그인', '로그아웃', '비밀번호 초기화'];
 
+  //사용자 관리 페이지 마운트 시, 사용자 리스트 조회
   useEffect(() => {
-    fetchAllUsers();
+    const fetchUsers = async () => {
+      showLoading();
+      await fetchAllUsers();
+      hideLoading();
+    }
+
+    fetchUsers();
   }, []);
 
   useEffect(() => {
@@ -44,25 +48,30 @@ export default function UsersContent() {
     alert(`${signOutError.message}`)
   }, [signOutError]);
 
-  useEffect(() => {
-    const tt = async () => {
+  //사용사 상태 변경(활성화, 비활성화, 계정정지, 계정 삭제)
+  const changeStatus = async (uid: string, status: UserStatusType) => {
+    try {
       showLoading();
-      try {
-        // 비동기 작업 시뮬레이션
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        alert('작업 완료!');
-      } catch (error) {
-        console.error('Error:', error);
-      } finally {
-        hideLoading();
+
+      const res = await changeUserStatus(uid, status)!;
+      const rUid = res?.uid;
+      const newStatus = res?.status;
+      if (!res || !rUid || !newStatus) {
+        throw new Error("response is invalid");
       }
+
+      //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
+      setUsers(prev => 
+        prev.map(user =>
+          user.uid === rUid ? {...user, status: newStatus} : user
+        )  
+      );
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      hideLoading();
     }
-
-    tt();
-
-  }, []);
-
-
+  }
 
   return (
     <div>
@@ -106,7 +115,6 @@ export default function UsersContent() {
                 ))}
               </tr>
             </thead>
-
             {/* 테이블 바디 */}
             <tbody>
               {users?.map((user, index) => (
@@ -116,36 +124,20 @@ export default function UsersContent() {
                   <td className={styles.td}>{user.role}</td>
 
                   <td className={styles.td}>
+
                     <span className={styles.statusDisplay}>{user.status}</span>
+
+                    
                   </td>
 
-
                   <td className={styles.td}>
-                    {/* 비밀번호 초기화 */}
-                    <button
-                      className={styles.roleButton}
-                      style={{ backgroundColor: "#59b3eeff" }}
-                      onClick={async () => {
-                        await reset(user.uid)
-                      }}>비밀번호 초기화
-                    </button>
-
-                    {/* 로그아웃 버튼 */}
-                    <button
-                      className={styles.roleButton}
-                      style={{ margin: "4px", backgroundColor: "#b957f6ff" }}
-                      onClick={async () => {
-                        await signOutByUid(user.uid);
-                      }}>로그아웃
-                    </button>
-
                     {/* 활성화 버튼 */}
                     {user.status !== 'ACTIVE' &&
                       <button
                         className={styles.roleButton}
-                        style={{ margin: "4px", backgroundColor: "#42d49aff" }}
-                        onClick={async () => {
-                          await changeUserStatus(user.uid, 'ACTIVE');
+                        style={{ margin: "4px", backgroundColor: "#119762ff" }}
+                        onClick={() => {
+                          changeStatus(user.uid, 'ACTIVE');
                         }}>활성화
                       </button>
                     }
@@ -153,9 +145,9 @@ export default function UsersContent() {
                     {user.status !== 'INACTIVE' &&
                       <button
                         className={styles.roleButton}
-                        style={{ margin: "4px", backgroundColor: "#7d7d7dff" }}
-                        onClick={async () => {
-                          await changeUserStatus(user.uid, 'INACTIVE');
+                        style={{ margin: "4px", backgroundColor: "#00a9bfff" }}
+                        onClick={() => {
+                          changeStatus(user.uid, 'INACTIVE');
                         }}>비활성화
                       </button>
                     }
@@ -164,8 +156,8 @@ export default function UsersContent() {
                       <button
                         className={styles.roleButton}
                         style={{ margin: "4px", backgroundColor: "#fe6334" }}
-                        onClick={async () => {
-                          await changeUserStatus(user.uid, 'BLOCKED');
+                        onClick={() => {
+                          changeStatus(user.uid, 'BLOCKED');
                         }}>계정 정지
                       </button>
                     }
@@ -174,17 +166,52 @@ export default function UsersContent() {
                       <button
                         className={styles.roleButton}
                         style={{ margin: "4px", backgroundColor: "#ff0000ff" }}
-                        onClick={async () => {
-                          await changeUserStatus(user.uid, 'DELETED');
+                        onClick={() => {
+                          changeStatus(user.uid, 'DELETED');
                         }}>계정 삭제
                       </button>
                     }
                   </td>
+                  {/* 가입일 */}
                   <td className={styles.td}>{user.createdAt}</td>
+                  {/* 수정일 */}
                   <td className={styles.td}>{user.updatedAt}</td>
+                  {/* 로그인 */}
                   <td className={styles.td}>{user.lastLoginAt}</td>
-                  <td className={styles.td}>{user.logoutAt}</td>
-                  <td className={styles.td}>{user.lastLoginAt}</td>
+                  {/* 로그아웃 */}
+                  <td className={styles.td} >
+                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      {/* 로그아웃 버튼 */}
+                      <button
+                        className={styles.roleButton}
+                        style={{ backgroundColor: "#b957f6ff" }}
+                        onClick={() => {
+                          signOutByUid(user.uid);
+                        }}>로그아웃
+                      </button>
+                      {/* 로그아웃 시간 */}
+                      <div style={{ textAlign: 'center', marginTop: '2px' }}>
+                        {user.logoutAt}
+                      </div>
+                    </div>
+                  </td>
+                  {/* 비밀번호 초기화 */}
+                  <td className={styles.td} >
+                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      {/* 비밀번호 버튼 */}
+                      <button
+                        className={styles.roleButton}
+                        style={{ backgroundColor: "#59b3eeff" }}
+                        onClick={async () => {
+                          reset(user.uid)
+                        }}>비밀번호 초기화
+                      </button>
+                      {/* 비밀번호 초기화 시간 */}
+                      <div style={{ textAlign: 'center', marginTop: '2px' }}>
+                        {user.lastLoginAt}
+                      </div>
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

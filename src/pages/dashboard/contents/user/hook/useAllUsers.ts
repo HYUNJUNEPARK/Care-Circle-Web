@@ -8,7 +8,7 @@ import { getAllUsers } from '../../../../../features/api/userApi';
  */
 function useAllUsers() {
     const { user } = useAuth();
-    const [users, setUsers] = useState<UserInfo[]>();
+    const [users, setUsers] = useState<UserInfo[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
@@ -30,6 +30,7 @@ function useAllUsers() {
     
     return {
         fetchAllUsers,
+        setUsers,
         users,
         isLoading,
         error
