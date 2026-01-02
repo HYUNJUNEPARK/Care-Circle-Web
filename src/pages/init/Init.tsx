@@ -1,6 +1,6 @@
 
 import { useNavigate } from "react-router-dom";
-import LoadingSpinner from '../../components/spinner/LoadingSpinner';
+import LoadingSpinner from '../../components/loading/spinner/LoadingSpinner';
 import { useEffect } from 'react';
 import { PATH } from "../../constants/paths";
 import { auth } from "../../features/auth/authClient";

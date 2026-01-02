@@ -5,12 +5,17 @@ import useAllUsers from './hook/useAllUsers';
 import useChangeUserStatus from './hook/useChangeUserStatus';
 import useResetPassword from './hook/useResetPassword';
 import useSignOut from './hook/useSignOut';
+import { useLoading } from '../../../../components/loading/loading/LoadingProvider';
 
 export default function UsersContent() {
   const { fetchAllUsers, users, isLoading: isUserLoading, error: userError } = useAllUsers();
   const { changeUserStatus, isLoading: isStatusLoading, error: statusError } = useChangeUserStatus();
   const { reset, isLoading: isResetLoading, error: resetError } = useResetPassword();
   const { signOutByUid, isLoading: isSignOutLoading, error: signOutError } = useSignOut();
+
+
+  const { showLoading, hideLoading } = useLoading();
+
 
   const [searchUser, setSearchUser] = useState('');
   const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '수정', '로그인', '로그아웃', '비밀번호 초기화',];
@@ -38,6 +43,32 @@ export default function UsersContent() {
     if (!signOutError) return
     alert(`${signOutError.message}`)
   }, [signOutError]);
+
+
+
+
+  useEffect(() => {
+
+    const tt = async () => {
+      showLoading();
+      try {
+        // 비동기 작업 시뮬레이션
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        alert('작업 완료!');
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        hideLoading();
+      }
+    }
+
+    tt();
+
+
+
+
+  }, []);
+
 
 
   return (
@@ -96,69 +127,65 @@ export default function UsersContent() {
                   </td>
 
 
-
-
-
-
                   <td className={styles.td}>
-                      {/* 비밀번호 초기화 */}
+                    {/* 비밀번호 초기화 */}
+                    <button
+                      className={styles.roleButton}
+                      style={{ backgroundColor: "#59b3eeff" }}
+                      onClick={async () => {
+                        await reset(user.uid)
+                      }}>비밀번호 초기화
+                    </button>
+
+                    {/* 로그아웃 버튼 */}
+                    <button
+                      className={styles.roleButton}
+                      style={{ margin: "4px", backgroundColor: "#b957f6ff" }}
+                      onClick={async () => {
+                        await signOutByUid(user.uid);
+                      }}>로그아웃
+                    </button>
+
+                    {/* 활성화 버튼 */}
+                    {user.status !== 'ACTIVE' &&
                       <button
                         className={styles.roleButton}
-                        style={{ backgroundColor: "#59b3eeff" }}
+                        style={{ margin: "4px", backgroundColor: "#42d49aff" }}
                         onClick={async () => {
-                          await reset(user.uid)
-                        }}>비밀번호 초기화
+                          await changeUserStatus(user.uid, 'ACTIVE');
+                        }}>활성화
                       </button>
-
-                      {/* 로그아웃 버튼 */}
+                    }
+                    {/* 비활성화 버튼 */}
+                    {user.status !== 'INACTIVE' &&
                       <button
                         className={styles.roleButton}
-                        style={{ margin: "4px", backgroundColor: "#b957f6ff" }}
+                        style={{ margin: "4px", backgroundColor: "#7d7d7dff" }}
                         onClick={async () => {
-                          await signOutByUid(user.uid);
-                        }}>로그아웃
+                          await changeUserStatus(user.uid, 'INACTIVE');
+                        }}>비활성화
                       </button>
-
-                      {/* 활성화 버튼 */}
-                      {user.status !== 'ACTIVE' &&
-                        <button
-                          className={styles.roleButton}
-                          style={{ margin: "4px", backgroundColor: "#42d49aff" }}
-                          onClick={async () => {
-                            await changeUserStatus(user.uid, 'ACTIVE');
-                          }}>활성화
-                        </button>
-                      }
-                      {/* 비활성화 버튼 */}
-                      {user.status !== 'INACTIVE' &&
-                        <button
-                          className={styles.roleButton}
-                          style={{ margin: "4px", backgroundColor: "#7d7d7dff" }}
-                          onClick={async () => {
-                            await changeUserStatus(user.uid, 'INACTIVE');
-                          }}>비활성화
-                        </button>
-                      }
-                      {/* 계정 정지 버튼 */}
-                      {user.status !== 'BLOCKED' &&
-                        <button
-                          className={styles.roleButton}
-                          style={{ margin: "4px", backgroundColor: "#fe6334" }}
-                          onClick={async () => {
-                            await changeUserStatus(user.uid, 'BLOCKED');
-                          }}>계정 정지
-                        </button>
-                      }
-                      {/* 계정 삭제 버튼 */}
-                      {user.status !== 'DELETED' &&
-                        <button
-                          className={styles.roleButton}
-                          style={{ margin: "4px", backgroundColor: "#ff0000ff" }}
-                          onClick={async () => {
-                            await changeUserStatus(user.uid, 'DELETED');
-                          }}>계정 삭제
-                        </button>
-                      }
+                    }
+                    {/* 계정 정지 버튼 */}
+                    {user.status !== 'BLOCKED' &&
+                      <button
+                        className={styles.roleButton}
+                        style={{ margin: "4px", backgroundColor: "#fe6334" }}
+                        onClick={async () => {
+                          await changeUserStatus(user.uid, 'BLOCKED');
+                        }}>계정 정지
+                      </button>
+                    }
+                    {/* 계정 삭제 버튼 */}
+                    {user.status !== 'DELETED' &&
+                      <button
+                        className={styles.roleButton}
+                        style={{ margin: "4px", backgroundColor: "#ff0000ff" }}
+                        onClick={async () => {
+                          await changeUserStatus(user.uid, 'DELETED');
+                        }}>계정 삭제
+                      </button>
+                    }
                   </td>
                   <td className={styles.td}>{user.createdAt}</td>
                   <td className={styles.td}>{user.updatedAt}</td>
