@@ -22,7 +22,7 @@ function Topbar({
             {/* 좌측 영역 */}
             <div style={{ ...iconContainer }}>
                 {onBack ? (
-                    <IoIosArrowBack size={24} onClick={onBack} />
+                    <IoIosArrowBack size={24} onClick={onBack} color="#3d3d3dff" />
                 ) : (
                     <DummyIcon />
                 )}
@@ -34,7 +34,7 @@ function Topbar({
             {/* 우측 영역 */}
             <div style={{ ...iconContainer, justifyContent: "flex-end" }}>
                 {onClose ? (
-                    <IoClose size={24} onClick={onClose} />
+                    <IoClose size={24} onClick={onClose} color="#3d3d3dff" />
                 ) : (
                     <DummyIcon />
                 )}
@@ -56,6 +56,7 @@ const iconContainer: React.CSSProperties = {
 };
 
 const titleStyle: React.CSSProperties = {
+    color:"#3d3d3dff",
     textAlign: "center",
     fontSize: "18px",
     fontWeight: "bold"
