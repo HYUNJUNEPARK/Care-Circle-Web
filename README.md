@@ -3,6 +3,9 @@
 - 프로젝트 생성
 npm create vite@latest my-app -- --template react-ts
 
+- npm ls vite -> (empty)
+npm i -D vite @vitejs/plugin-react
+
 # react-router-dom
 npm install react-router-dom
 

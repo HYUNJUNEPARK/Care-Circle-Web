@@ -52,4 +52,3 @@ coverage/
 # ===== misc =====
 *.swp
 *.swo
-node_modules

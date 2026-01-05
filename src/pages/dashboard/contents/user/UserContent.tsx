@@ -18,7 +18,7 @@ export default function UsersContent() {
 
   const { showLoading, hideLoading } = useLoading();
   const [searchUser, setSearchUser] = useState('');
-  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '상태 수정', '로그인', '로그아웃', '비밀번호 초기화'];
+  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '상태 수정', '마지막 로그인', '로그아웃', '비밀번호 초기화'];
 
   //사용자 관리 페이지 마운트 시, 사용자 리스트 조회
   useEffect(() => {

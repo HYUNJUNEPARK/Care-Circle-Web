@@ -6,6 +6,8 @@ import Input from '../../components/inputs/Input';
 import { PATH } from '../../constants/paths';
 import useSignInByEmail from './useSignInByEmail';
 import strings from '../../res/strings'
+import useAlert from '../../components/alert/useAlert';
+import handleError from '../../utils/error/handleError';
 
 export default function SignIn() {
     const navigate = useNavigate();
@@ -13,6 +15,7 @@ export default function SignIn() {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const { signInByEmail, isLoading, error } = useSignInByEmail();
+    const { showAlert } = useAlert();
 
     /**
      * 로그인 처리
@@ -28,8 +31,11 @@ export default function SignIn() {
      */
     useEffect(() => {
         if (!error) return;
-        console.log("로그인 에러", error)
-        alert("로그인 실패")
+        showAlert({
+            title: "로그인 실패",
+            message: handleError(error),
+            cancelText: null
+        });
     }, [error]);
 
     return (
@@ -80,7 +86,6 @@ export default function SignIn() {
                         {/* 로그인 버튼 */}
                         <Button
                             loading={isLoading}
-                            loadingText='로그인 중'
                             buttonText={strings.signIn} />
                     </form>
 
