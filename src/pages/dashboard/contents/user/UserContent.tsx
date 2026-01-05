@@ -6,6 +6,7 @@ import useChangeUserStatus from './hook/useChangeUserStatus';
 import useResetPassword from './hook/useResetPassword';
 import useSignOut from './hook/useSignOut';
 import useLoading from '../../../../components/loading/loading/useLoading';
+import useUpdateRole from './hook/useUpdateRole';
 import type { UserStatusType } from '../../../../types/UserStatusType';
 import { wrapBySpace } from '../../../../utils/formatter';
 
@@ -14,9 +15,8 @@ export default function UsersContent() {
   const { changeUserStatus, error: statusError } = useChangeUserStatus();
   const { reset, error: resetError } = useResetPassword();
   const { signOutByUid, error: signOutError } = useSignOut();
-
-
   const { showLoading, hideLoading } = useLoading();
+  const { updateUserRole, error: updateError } = useUpdateRole();
   const [searchUser, setSearchUser] = useState('');
   const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '상태 수정', '마지막 로그인', '로그아웃', '비밀번호 초기화'];
 
@@ -51,6 +51,11 @@ export default function UsersContent() {
     alert(`${signOutError.message}`)
   }, [signOutError]);
 
+  useEffect(() => {
+    if (!updateError) return
+    alert(`${updateError.message}`)
+  }, [updateError]);
+
   //사용사 상태 변경(활성화, 비활성화, 계정정지, 계정 삭제)
   const changeStatus = async (uid: string, status: UserStatusType) => {
     try {
@@ -68,6 +73,25 @@ export default function UsersContent() {
       setUsers(prev =>
         prev.map(user =>
           user.uid === rUid ? { ...user, status: newStatus, updatedAt: updateAt } : user
+        )
+      );
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      hideLoading();
+    }
+  }
+
+  //권한 수정
+  const handleUpdateRole = async (uid: string, role: string) => {
+    try {
+      showLoading();
+
+      const res = await updateUserRole(uid, role);
+
+      setUsers(prev =>
+        prev.map(user =>
+          (user.uid === res!!.uid) ? { ...user, role: res!!.role, updatedAt: res!!.timeStamp } : user
         )
       );
     } catch (error) {
@@ -191,7 +215,30 @@ export default function UsersContent() {
                 <tr key={index}>
                   <td className={styles.td}>{user.email}</td>
                   <td className={styles.td}>{user.uid}</td>
-                  <td className={styles.td}>{user.role}</td>
+                  <td className={styles.td}>
+
+                    <select
+                      value={user.role}
+                      onChange={async (e) => {
+                        const nextRole = e.target.value as "USER" | "ADMIN";
+                        handleUpdateRole(user.uid, nextRole);
+                      }}
+                      style={{
+                        width: "100px",
+                        padding: "10px",
+                        fontSize: "14px",
+                        color: "#1f2937",
+                        borderRadius: "8px",
+                        outline: "none",
+                        cursor: "pointer",
+                        border: "1px solid #d1d5db",
+                        backgroundColor: "#fff",
+                      }}
+                    >
+                      <option value="USER">USER</option>
+                      <option value="ADMIN">ADMIN</option>
+                    </select>
+                  </td>
                   {/* 사용자 상태 */}
                   <td className={styles.td}>
                     <span className={`${styles.statusDisplay} ${getStatusClass(user.status)}`}>{user.status}</span>

@@ -3,8 +3,10 @@ import type { UserStatusType } from '../../types/UserStatusType';
 import type { UserInfo } from '../../types/UserInfo'
 import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo'
 import type ChangeUserStatusResponse from '../../types/remote/ChangeStatusResponse';
+import type UpdateUserRoleResponse from '../../types/remote/UpdateUserRoleResponse';
 import type SignOutResponse from '../../types/remote/SignOutResponse';
 import type ResetPasswordResponse from '../../types/remote/ResetPasswordResponse';
+import type { UserRole } from '../../types/UserRoleType'
 
 const userApiUrl = `/api/users`
 
@@ -144,6 +146,37 @@ export async function changeStatus(
     const data = (res.data) as ChangeUserStatusResponse;
     return data;
 }
+
+/**
+ * 회원 상태 변경
+ */
+export async function updateRole(
+    idToken: string | undefined | null,
+    uid: string,
+    role: UserRole,
+): Promise<UpdateUserRoleResponse> {
+    if (!idToken) {
+        throw new Error("idToken is null.");
+    }
+
+    const res = await apiClient.patch(
+        `${userApiUrl}/role`,   //url
+        {                       //body
+            uid: uid,
+            role: role
+        },
+        {                       //headers
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        }
+    );
+
+    const data = (res.data) as UpdateUserRoleResponse;
+    return data;
+}
+
+
 
 /**
  * 로그인 사용자 정보 로딩

@@ -1,17 +1,22 @@
 import { useState } from "react";
-import { changeStatus } from "../../../../../features/api/userApi";
-import type { UserStatusType } from "../../../../../types/UserStatusType";
+import { updateRole } from "../../../../../features/api/userApi";
+import { isUserRole } from "../../../../../types/UserRoleType";
 import { useAuth } from "../../../../../features/auth/AuthProvider";
 
 /**
- * 회원 상태 수정
+ * 회원 권한 수정
  */
-function useChangeUserStatus() {
+function useUpdateRole() {
     const { user } = useAuth();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
 
-    const changeUserStatus = async (uid: string, status: UserStatusType) => {
+    const updateUserRole = async (uid: string, role: string) => {
+
+        if (!isUserRole(role)) {
+            throw Error('Not UserRole');
+        }
+
         if (isLoading) {
             console.info('This request is already in progress.');
             return;
@@ -20,15 +25,17 @@ function useChangeUserStatus() {
         try {
             setLoading(true);
             const idToken = await user?.getIdToken();
-            const res = await changeStatus(idToken, uid, status);
+            const res = await updateRole(idToken, uid, role);
+            
             const rUid = res?.uid;
-            const newStatus = res?.status;
+            const rRole = res?.role;
             const updateAt = res?.timeStamp;
-            if (!res || !rUid || !newStatus || !updateAt) {
-                throw new Error("response data is invalid");
+            if (!res || !rUid || !updateAt || !rRole) {
+                setError(Error("response data is invalid"));
+                return;
             }
 
-            return res
+            return res;
         } catch (error) {
             setError(error as Error);
         } finally {
@@ -37,10 +44,10 @@ function useChangeUserStatus() {
     }
 
     return {
-        changeUserStatus,
+        updateUserRole,
         isLoading,
         error,
     }
 }
 
-export default useChangeUserStatus;
+export default useUpdateRole;
