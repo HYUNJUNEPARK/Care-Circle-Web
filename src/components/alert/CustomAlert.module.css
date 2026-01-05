@@ -26,14 +26,14 @@
     font-size: 16px;
     font-weight: 700;
     margin-bottom: 14px;
-    /* color: var(--color-black); */
+    color: #000000;
     white-space: pre-line;
 }
 
 .message {
     font-size: 13px;
     font-weight: 400;
-    /* color: var(--color-black); */
+    color: #000000;
     white-space: pre-line;
     line-height: 1.5;
 }

@@ -18,6 +18,7 @@ function useSignInByEmail() {
 
             navigate(PATH.ROOT, { replace: true });
         } catch (e) {
+            console.error('useSignInByEmail()', error);
             setError(e as Error);
         } finally {
             setLoading(false);

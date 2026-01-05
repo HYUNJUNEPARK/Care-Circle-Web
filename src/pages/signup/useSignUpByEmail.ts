@@ -16,19 +16,16 @@ function useSignUpByEmail() {
     const emailSignUp = async (email: string, password: string) => {
         try {
             setLoading(true);
-
+            
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
             const idToken = await userCredential?.user?.getIdToken();
-            if (!idToken) {
-                setError(Error('idToken is invalid'));
-                return;
-            }
 
             await syncMeToServer(idToken);
 
             navigate(PATH.ROOT, { replace: true });
         } catch (error) {
+            console.error('useSignUpByEmail()', error);
             setError(error as Error);
         } finally {
             setLoading(false);

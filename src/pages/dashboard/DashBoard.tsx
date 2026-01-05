@@ -14,8 +14,8 @@ export default function DashBoard() {
     const [selectedMenu, setSelectedMenu] = useState('dashboard');
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const sideMenuItems: SideMenuItem[] = [
-        { id: 'dashboard', label: '대시보드 템플릿', icon: <TbLayoutDashboard size={20} /> },
         { id: 'users', label: '사용자 관리', icon: <LuUserRound size={20} /> },
+        { id: 'dashboard', label: '대시보드 템플릿', icon: <TbLayoutDashboard size={20} /> },
         { id: 'products', label: '상품 관리 템플릿', icon: <FiShoppingCart size={20} /> },
         { id: 'analytics', label: '통계 템플릿', icon: <IoBarChartOutline size={20} /> },
         { id: 'reports', label: '리포트 템플릿', icon: <FiFileText size={20} /> },
@@ -41,7 +41,7 @@ export default function DashBoard() {
                 <div style={{
                     flex: "1",
                     padding: "1.5rem",
-                    overflow: "auto"    
+                    overflow: "auto"
                 }}>
                     <Content selectedMenu={selectedMenu} />
                 </div>

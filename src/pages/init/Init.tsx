@@ -4,15 +4,16 @@ import { useEffect } from 'react';
 import { PATH } from "../../constants/paths";
 import { auth } from "../../features/auth/authClient";
 import { syncMeToServer } from '../../features/api/userApi';
-import { getLoginUserInfo } from '../../features/api/userApi';
 import useSignOut from '../../hook/useSignOut';
 import useAlert from "../../../src/components/alert/useAlert";
 import handleError from "../../utils/error/handleError";
+import useUserInfo from "./useUserInfo";
 
 export default function Init() {
     const { showAlert } = useAlert();
     const navigate = useNavigate();
     const { userSignOut } = useSignOut();
+    const { fetchUserInfo } = useUserInfo();
 
     useEffect(() => {
         checkUserStatus();
@@ -29,18 +30,8 @@ export default function Init() {
                 return;
             }
 
-            // 로그인 사용자 상태 조회
-            const idToken = await user?.getIdToken();
-            if (!idToken) {
-                throw Error('Invalid token');
-            }
-            const userInfo = await getLoginUserInfo(idToken);
-            if (!userInfo) {
-                //로그인 화면으로 이동
-                navigate(PATH.SIGN_IN, { replace: true });
-                return;
-            }
-
+            //로그인 사용자 상태 조회
+            const userInfo = await fetchUserInfo();
             const role = userInfo.role;
             const status = userInfo.status;
 
@@ -54,7 +45,19 @@ export default function Init() {
             //일반 사용자 활성, 비활성 유저 분기
             if (status === 'ACTIVE') {
                 //활성 유저
+
+
+
+
+
+                //TODO Hook 으로 교체
+                const idToken = await user?.getIdToken();
                 await syncMeToServer(idToken);
+
+
+
+
+
                 navigate(PATH.MAIN, { replace: true });
                 return;
             } else {
@@ -67,7 +70,7 @@ export default function Init() {
                 title: "사용자 정보를 가져오는데 실패하였습니다.",
                 message: handleError(error),
                 cancelText: null,
-                onConfirmAction: async() => {
+                onConfirmAction: async () => {
                     await userSignOut();
                     navigate(PATH.SIGN_IN, { replace: true });
                 }

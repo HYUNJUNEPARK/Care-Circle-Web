@@ -5,6 +5,8 @@ import Button from '../../components/buttons/Button';
 import { useNavigate } from "react-router-dom";
 import useEmailValidation from './useEmailValidation'
 import useSignUpByEmail from './useSignUpByEmail';
+import useAlert from '../../components/alert/useAlert';
+import handleError from '../../utils/error/handleError';
 
 export default function SignUp() {
     const navigate = useNavigate();
@@ -13,14 +15,22 @@ export default function SignUp() {
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
     const [showPassword, setShowPassword] = useState(false);
+    const { showAlert } = useAlert();
     const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
     const { emailCheckResult } = useEmailValidation(email);
     const { emailSignUp, isLoading, error } = useSignUpByEmail();
 
     useEffect(() => {
         if (!error) return;
-        console.log("회웝가입 에러", error)
-        alert("회원가입 실패")
+         console.log("회웝가입 에러", error)
+
+        showAlert({
+            title: "회원가입 실패",
+            message: handleError(error),
+            cancelText: null,
+        });
+
+
     }, [error]);
 
     /**
@@ -106,7 +116,6 @@ export default function SignUp() {
                         />
 
                         {/* 비밀번호 확인 */}
-
                         <div className='mt-6'>
                             <Input
                                 id="passwordConfirm"
@@ -138,7 +147,6 @@ export default function SignUp() {
                     <Button
                         onClick={handleSignUp}
                         loading={isLoading}
-                        loadingText='회원가입 중'
                         buttonText='회원가입' />
                 </Footer>
             </Container >

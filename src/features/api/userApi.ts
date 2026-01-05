@@ -1,21 +1,23 @@
 import { apiClient } from './apiClient';
 import type { UserStatusType } from '../../types/UserStatusType';
-import type { UserInfo } from '../../types/UserInfo'
+import type { UserInfo } from '../../types/UserInfo';
 import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo'
 import type ChangeUserStatusResponse from '../../types/remote/ChangeStatusResponse';
 import type UpdateUserRoleResponse from '../../types/remote/UpdateUserRoleResponse';
 import type SignOutResponse from '../../types/remote/SignOutResponse';
 import type ResetPasswordResponse from '../../types/remote/ResetPasswordResponse';
-import type { UserRole } from '../../types/UserRoleType'
+import type { UserRole } from '../../types/UserRoleType';
 
 const userApiUrl = `/api/users`
+
+const tokenErrorMessage = 'IdToken is null.';
 
 /**
  * 전체 사용자 조회
  */
 export async function getAllUsers(idToken: string | undefined | null): Promise<UserInfo[]> {
     if (!idToken) {
-        throw new Error("idToken is null.");
+        throw new Error(`${tokenErrorMessage}`);
     }
 
     const res = await apiClient.get(
@@ -51,7 +53,7 @@ export async function getAllUsers(idToken: string | undefined | null): Promise<U
  */
 export async function syncMeToServer(idToken: string | undefined | null): Promise<Boolean> {
     if (!idToken) {
-        throw new Error("idToken is null.");
+        throw new Error(`${tokenErrorMessage}`);
     }
 
     const res = await apiClient.post(
@@ -72,7 +74,7 @@ export async function syncMeToServer(idToken: string | undefined | null): Promis
  */
 export async function signOut(idToken: string | undefined | null, uid: string): Promise<SignOutResponse> {
     if (!idToken) {
-        throw new Error("idToken is null.");
+        throw new Error(`${tokenErrorMessage}`);
     }
 
     const res = await apiClient.post(
@@ -88,7 +90,7 @@ export async function signOut(idToken: string | undefined | null, uid: string): 
     );
 
     const data = (res.data) as SignOutResponse;
-    return data 
+    return data
 }
 
 /**
@@ -103,7 +105,7 @@ export async function checkValidEmail(email: string) {
  */
 export async function delelteUserByUid(idToken: string | undefined | null): Promise<Boolean> {
     if (!idToken) {
-        throw new Error("idToken is null.");
+        throw new Error(`${tokenErrorMessage}`);
     }
 
     const res = await apiClient.delete(
@@ -127,7 +129,7 @@ export async function changeStatus(
     userStatus: UserStatusType,
 ): Promise<ChangeUserStatusResponse> {
     if (!idToken) {
-        throw new Error("idToken is null.");
+        throw new Error(`${tokenErrorMessage}`);
     }
 
     const res = await apiClient.patch(
@@ -156,7 +158,7 @@ export async function updateRole(
     role: UserRole,
 ): Promise<UpdateUserRoleResponse> {
     if (!idToken) {
-        throw new Error("idToken is null.");
+        throw new Error(`${tokenErrorMessage}`);;
     }
 
     const res = await apiClient.patch(
@@ -183,13 +185,13 @@ export async function updateRole(
  */
 export async function getLoginUserInfo(
     idToken: string | undefined | null,
-) {
+): Promise<UserInfo> {
     if (!idToken) {
-        throw new Error("idToken is null.");
+        throw new Error(`${tokenErrorMessage}`);
     }
 
     const res = await apiClient.get(
-        `${userApiUrl}/logged-in`,
+        `${userApiUrl}/sign-in`,
         {
             headers: {
                 Authorization: `Bearer ${idToken}`,
@@ -197,7 +199,20 @@ export async function getLoginUserInfo(
         }
     );
 
-    return res.data.data;
+    const rUserInfo = res.data.data as RemoteUserInfo
+    const userInfo: UserInfo = {
+        uid: rUserInfo.uid,
+        email: rUserInfo.email,
+        role: rUserInfo.role,
+        status: rUserInfo.status,
+        createdAt: "-",
+        updatedAt: "-",
+        lastLoginAt: "-",
+        logoutAt: "-",
+        passwordResetAt: "-",
+    }
+
+    return userInfo; //res.data.data;
 }
 
 /**
@@ -208,7 +223,7 @@ export async function resetPassword(
     uid: string,
 ): Promise<ResetPasswordResponse> {
     if (!idToken) {
-        throw new Error("idToken is null.");
+        throw new Error(`${tokenErrorMessage}`);
     }
 
     const res = await apiClient.post(

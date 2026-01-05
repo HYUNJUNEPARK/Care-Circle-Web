@@ -9,10 +9,10 @@ import { axiosErrorMessageMap } from "./axiosErrorMessageMap";
 export default function handleError(error: Error | unknown): string {
     if (axios.isAxiosError(error)) {
         console.info('axiosError', error);
-        return axiosErrorMessageMap[error.code ?? ''] ?? `알 수 없는 오류가 발생했습니다.(code: ax-${error.code})`;
+        return axiosErrorMessageMap[error.code ?? ''] ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${error.code})`;
     } else if (isFirebaseError(error)) {
         console.info('firebaseError', error);
-        return firebaseAuthErrorMessageMap[error.code] ?? `알 수 없는 오류가 발생했습니다.(code: fb-${error.code})`;
+        return firebaseAuthErrorMessageMap[error.code] ?? `알 수 없는 오류가 발생했습니다.\n(code: fb-${error.code})`;
     } else {
         const e = error as Error
         console.info('else error', e);

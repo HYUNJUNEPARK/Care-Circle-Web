@@ -153,7 +153,7 @@ export default function UsersContent() {
 
   const getStatusClass = (status: string) => {
     try {
-      const statusType = status as UserStatusType
+      const statusType = status as UserStatusType;
       switch (statusType) {
         case "ACTIVE": return styles.active;
         case "INACTIVE": return styles.inactive;
