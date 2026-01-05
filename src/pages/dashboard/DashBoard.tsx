@@ -9,12 +9,14 @@ import { IoBarChartOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { LuUserRound } from "react-icons/lu";
 import { FiFileText } from "react-icons/fi";
+import { PiKey } from "react-icons/pi";
 
 export default function DashBoard() {
     const [selectedMenu, setSelectedMenu] = useState('dashboard');
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const sideMenuItems: SideMenuItem[] = [
         { id: 'users', label: '사용자 관리', icon: <LuUserRound size={20} /> },
+        { id: 'key', label: '발급 키 관리', icon: <PiKey size={20} /> },
         { id: 'dashboard', label: '대시보드 템플릿', icon: <TbLayoutDashboard size={20} /> },
         { id: 'products', label: '상품 관리 템플릿', icon: <FiShoppingCart size={20} /> },
         { id: 'analytics', label: '통계 템플릿', icon: <IoBarChartOutline size={20} /> },

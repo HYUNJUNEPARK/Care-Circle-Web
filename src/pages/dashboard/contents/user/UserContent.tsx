@@ -9,6 +9,8 @@ import useLoading from '../../../../components/loading/loading/useLoading';
 import useUpdateRole from './hook/useUpdateRole';
 import type { UserStatusType } from '../../../../types/UserStatusType';
 import { wrapBySpace } from '../../../../utils/formatter';
+import { RiRefreshLine } from "react-icons/ri";
+import { LiaCloudDownloadAltSolid } from "react-icons/lia";
 
 export default function UsersContent() {
   const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
@@ -182,17 +184,29 @@ export default function UsersContent() {
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
+
           <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#1f2937' }}>사용자 목록</h2>
-          <Input
-            inputType='plaintext'
-            id="email"
-            label={""}
-            placeholder="사용자 검색"
-            value={searchUser}
-            onChange={(e) => {
-              setSearchUser(e.target.value)
-            }}
-          />
+
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+
+            <RiRefreshLine size={22} color='#1f2937' style={{ marginRight: '16px' }} />
+
+            <LiaCloudDownloadAltSolid size={26} color='#1f2937' style={{ marginRight: '16px' }} />
+            
+            <Input
+              inputType='plaintext'
+              id="email"
+              label={""}
+              placeholder="사용자 검색"
+              value={searchUser}
+              onChange={(e) => {
+                setSearchUser(e.target.value)
+              }}
+            />
+
+          </div>
+
+
         </div>
 
         <div style={{ padding: '1.5rem' }}>
