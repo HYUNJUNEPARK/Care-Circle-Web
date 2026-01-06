@@ -54,7 +54,6 @@ export default function Init() {
                 if (role === 'USER') {
                     //관리자 페이지 이동
                     navigate(PATH.MAIN, { replace: true });
-
                     return;
                 }
             } else {

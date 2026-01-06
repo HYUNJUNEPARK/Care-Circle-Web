@@ -101,6 +101,31 @@ export async function checkValidEmail(email: string) {
 }
 
 /**
+ * Email or Uid 로 사용자 검색 
+ */
+export async function searchUsersByEmailOrUid(
+    idToken: string | undefined | null,
+    keyword: string
+) {
+    if (!idToken) {
+        throw new Error(`${tokenErrorMessage}`);
+    }
+
+    const res = await apiClient.get(
+        `${userApiUrl}/search?keyword=${keyword}`,
+        {
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        }
+    );
+
+    const data = res.data;
+
+    return data
+}
+
+/**
  * 회원탈퇴(영구 삭제)
  */
 export async function delelteUserByUid(idToken: string | undefined | null): Promise<Boolean> {

@@ -11,6 +11,8 @@ import type { UserStatusType } from '../../../../types/UserStatusType';
 import { wrapBySpace } from '../../../../utils/formatter';
 import { RiRefreshLine } from "react-icons/ri";
 import { LiaCloudDownloadAltSolid } from "react-icons/lia";
+import { TbSearch } from "react-icons/tb";
+import useSearchUsers from './hook/useSearchUsers';
 
 export default function UsersContent() {
   const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
@@ -19,7 +21,8 @@ export default function UsersContent() {
   const { signOutByUid, error: signOutError } = useSignOut();
   const { showLoading, hideLoading } = useLoading();
   const { updateUserRole, error: updateError } = useUpdateRole();
-  const [searchUser, setSearchUser] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState('');
+  const { searchUsers, users: searchRes, error: seachError } = useSearchUsers();
   const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '상태 수정', '마지막 로그인', '로그아웃', '비밀번호 초기화'];
 
   //사용자 관리 페이지 마운트 시, 사용자 리스트 조회
@@ -57,6 +60,11 @@ export default function UsersContent() {
     if (!updateError) return
     alert(`${updateError.message}`)
   }, [updateError]);
+
+  useEffect(() => {
+    if (!seachError) return
+    alert(`${seachError.message}`)
+  }, [seachError]);
 
   //사용사 상태 변경(활성화, 비활성화, 계정정지, 계정 삭제)
   const handleChangeUserStatus = async (uid: string, status: UserStatusType) => {
@@ -155,6 +163,23 @@ export default function UsersContent() {
     }
   }
 
+  //사용자 검색
+  const handleSearchUsers = async () => {
+    try {
+      showLoading();
+
+      //TODO 검증 로직 추가
+      //if (!searchKeyword) return;
+
+      const res = await searchUsers(searchKeyword);
+
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      hideLoading();
+    }
+  }
+
   const applyStatusCss = (status: string) => {
     try {
       const statusType = status as UserStatusType;
@@ -173,9 +198,22 @@ export default function UsersContent() {
 
   return (
     <div>
-      <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1.5rem' }}>
-        사용자 관리
-      </h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1.5rem' }}>
+          사용자 관리
+        </h1>
+
+        <div>
+          <button style={{ backgroundColor: '#fff', padding: '12px', marginRight: '6px' }}>
+            <RiRefreshLine size={26} color='#1f2937' />
+          </button>
+
+          <button style={{ backgroundColor: '#fff', padding: '12px' }}>
+            <LiaCloudDownloadAltSolid size={26} color='#1f2937' />
+          </button>
+        </div>
+      </div>
+
 
       <div style={{ backgroundColor: 'white', borderRadius: '0.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
 
@@ -189,26 +227,23 @@ export default function UsersContent() {
 
           <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#1f2937' }}>사용자 목록</h2>
 
+          {/* 사용자 검색 */}
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-
-            <RiRefreshLine size={22} color='#1f2937' style={{ marginRight: '16px' }} />
-
-            <LiaCloudDownloadAltSolid size={26} color='#1f2937' style={{ marginRight: '16px' }} />
-            
             <Input
               inputType='plaintext'
               id="email"
               label={""}
-              placeholder="사용자 검색"
-              value={searchUser}
+              placeholder="Email, UID 사용자 검색"
+              value={searchKeyword}
               onChange={(e) => {
-                setSearchUser(e.target.value)
+                setSearchKeyword(e.target.value)
               }}
             />
 
+            <button style={{ backgroundColor: '#fff', padding: '12px', marginTop: '4px' }}>
+              <TbSearch size={26} color='#1f2937' onClick={handleSearchUsers} />
+            </button>
           </div>
-
-
         </div>
 
         <div style={{ padding: '1.5rem' }}>
