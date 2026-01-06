@@ -1,4 +1,3 @@
-//import { FileText } from 'lucide-react';
 import { FaRegUser } from "react-icons/fa";
 
 export default function ReportsContent() {

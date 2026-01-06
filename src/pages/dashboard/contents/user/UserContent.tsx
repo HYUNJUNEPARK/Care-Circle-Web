@@ -2,9 +2,9 @@ import Input from '../../../../components/inputs/Input';
 import { useState, useEffect } from 'react';
 import styles from "./UserContent.module.css";
 import useAllUsers from './hook/useAllUsers';
-import useChangeUserStatus from './hook/useChangeUserStatus';
+import useUpdateUserStatus from './hook/useUpdateUserStatus';
 import useResetPassword from './hook/useResetPassword';
-import useSignOut from './hook/useSignOut';
+import useSignOut from '../../../../hook/useSignOut';
 import useLoading from '../../../../components/loading/loading/useLoading';
 import useUpdateRole from './hook/useUpdateRole';
 import type { UserStatusType } from '../../../../types/UserStatusType';
@@ -14,13 +14,13 @@ import { LiaCloudDownloadAltSolid } from "react-icons/lia";
 
 export default function UsersContent() {
   const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
-  const { changeUserStatus, error: statusError } = useChangeUserStatus();
-  const { reset, error: resetError } = useResetPassword();
+  const { updateUserStatus, error: statusError } = useUpdateUserStatus();
+  const { resetPassword, error: resetError } = useResetPassword();
   const { signOutByUid, error: signOutError } = useSignOut();
   const { showLoading, hideLoading } = useLoading();
   const { updateUserRole, error: updateError } = useUpdateRole();
   const [searchUser, setSearchUser] = useState('');
-  const tableHeads = ['이메일', '사용자 UID', '역할', '상태', '작업', '가입', '상태 수정', '마지막 로그인', '로그아웃', '비밀번호 초기화'];
+  const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '상태 수정', '마지막 로그인', '로그아웃', '비밀번호 초기화'];
 
   //사용자 관리 페이지 마운트 시, 사용자 리스트 조회
   useEffect(() => {
@@ -59,11 +59,11 @@ export default function UsersContent() {
   }, [updateError]);
 
   //사용사 상태 변경(활성화, 비활성화, 계정정지, 계정 삭제)
-  const changeStatus = async (uid: string, status: UserStatusType) => {
+  const handleChangeUserStatus = async (uid: string, status: UserStatusType) => {
     try {
       showLoading();
 
-      const res = await changeUserStatus(uid, status)!;
+      const res = await updateUserStatus(uid, status)!;
       const rUid = res?.uid;
       const newStatus = res?.status;
       const updateAt = res?.timeStamp;
@@ -85,10 +85,12 @@ export default function UsersContent() {
   }
 
   //권한 수정
-  const handleUpdateRole = async (uid: string, role: string) => {
+  const handleChangeUserRole = async (uid: string, role: string) => {
     try {
       showLoading();
 
+
+      //TODO 버그 발생 중
       const res = await updateUserRole(uid, role);
 
       setUsers(prev =>
@@ -104,7 +106,7 @@ export default function UsersContent() {
   }
 
   //로그아웃
-  const signOut = async (uid: string) => {
+  const handleSignOut = async (uid: string) => {
     try {
       showLoading();
 
@@ -129,11 +131,11 @@ export default function UsersContent() {
   }
 
   //비밀번호 초기화
-  const resetPasword = async (uid: string) => {
+  const handleResetPasword = async (uid: string) => {
     try {
       showLoading();
 
-      const res = await reset(uid)
+      const res = await resetPassword(uid)
       const rUid = res?.uid;
       const resetAt = res?.timeStamp;
       if (!res || !rUid || !resetAt) {
@@ -153,7 +155,7 @@ export default function UsersContent() {
     }
   }
 
-  const getStatusClass = (status: string) => {
+  const applyStatusCss = (status: string) => {
     try {
       const statusType = status as UserStatusType;
       switch (statusType) {
@@ -164,7 +166,7 @@ export default function UsersContent() {
         default: return "";
       }
     } catch (error) {
-      console.error('getStatusClass error', error);
+      console.error('applyStatusCss error', error);
       return "";
     }
   };
@@ -235,7 +237,7 @@ export default function UsersContent() {
                       value={user.role}
                       onChange={async (e) => {
                         const nextRole = e.target.value as "USER" | "ADMIN";
-                        handleUpdateRole(user.uid, nextRole);
+                        handleChangeUserRole(user.uid, nextRole);
                       }}
                       style={{
                         width: "100px",
@@ -255,7 +257,7 @@ export default function UsersContent() {
                   </td>
                   {/* 사용자 상태 */}
                   <td className={styles.td}>
-                    <span className={`${styles.statusDisplay} ${getStatusClass(user.status)}`}>{user.status}</span>
+                    <span className={`${styles.statusDisplay} ${applyStatusCss(user.status)}`}>{user.status}</span>
                   </td>
                   <td className={styles.td}>
                     {/* 활성화 버튼 */}
@@ -264,7 +266,7 @@ export default function UsersContent() {
                         className={styles.roleButton}
                         style={{ margin: "4px", backgroundColor: "#119762ff" }}
                         onClick={() => {
-                          changeStatus(user.uid, 'ACTIVE');
+                          handleChangeUserStatus(user.uid, 'ACTIVE');
                         }}>활성화
                       </button>
                     }
@@ -274,7 +276,7 @@ export default function UsersContent() {
                         className={styles.roleButton}
                         style={{ margin: "4px", backgroundColor: "#00a9bfff" }}
                         onClick={() => {
-                          changeStatus(user.uid, 'INACTIVE');
+                          handleChangeUserStatus(user.uid, 'INACTIVE');
                         }}>비활성화
                       </button>
                     }
@@ -284,7 +286,7 @@ export default function UsersContent() {
                         className={styles.roleButton}
                         style={{ margin: "4px", backgroundColor: "#fe6334" }}
                         onClick={() => {
-                          changeStatus(user.uid, 'BLOCKED');
+                          handleChangeUserStatus(user.uid, 'BLOCKED');
                         }}>계정 정지
                       </button>
                     }
@@ -294,7 +296,7 @@ export default function UsersContent() {
                         className={styles.roleButton}
                         style={{ margin: "4px", backgroundColor: "#ff0000ff" }}
                         onClick={() => {
-                          changeStatus(user.uid, 'DELETED');
+                          handleChangeUserStatus(user.uid, 'DELETED');
                         }}>계정 삭제
                       </button>
                     }
@@ -325,7 +327,7 @@ export default function UsersContent() {
                         className={styles.roleButton}
                         style={{ backgroundColor: "#b957f6ff" }}
                         onClick={() => {
-                          signOut(user.uid);
+                          handleSignOut(user.uid);
                         }}>로그아웃
                       </button>
                       {/* 로그아웃 시간 */}
@@ -342,7 +344,7 @@ export default function UsersContent() {
                         className={styles.roleButton}
                         style={{ backgroundColor: "#59b3eeff" }}
                         onClick={async () => {
-                          resetPasword(user.uid);
+                          handleResetPasword(user.uid);
                         }}>비밀번호 초기화
                       </button>
                       {/* 비밀번호 초기화 시간 */}

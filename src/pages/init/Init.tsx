@@ -12,7 +12,7 @@ import useUserInfo from "./useUserInfo";
 export default function Init() {
     const { showAlert } = useAlert();
     const navigate = useNavigate();
-    const { userSignOut } = useSignOut();
+    const { signOutCache } = useSignOut();
     const { fetchUserInfo } = useUserInfo();
 
     useEffect(() => {
@@ -35,31 +35,28 @@ export default function Init() {
             const role = userInfo.role;
             const status = userInfo.status;
 
-            //일반 사용자, 관리자 분기
-            if (role === 'ADMIN') {
-                //관리자 페이지 이동
-                navigate(PATH.DASH_BOARD, { replace: true });
-                return;
-            }
 
             //일반 사용자 활성, 비활성 유저 분기
             if (status === 'ACTIVE') {
                 //활성 유저
 
-
-
-
-
                 //TODO Hook 으로 교체
                 const idToken = await user?.getIdToken();
                 await syncMeToServer(idToken);
 
+                //일반 사용자, 관리자 분기
+                if (role === 'ADMIN') {
+                    //관리자 페이지 이동
+                    navigate(PATH.DASH_BOARD, { replace: true });
+                    return;
+                }
 
+                if (role === 'USER') {
+                    //관리자 페이지 이동
+                    navigate(PATH.MAIN, { replace: true });
 
-
-
-                navigate(PATH.MAIN, { replace: true });
-                return;
+                    return;
+                }
             } else {
                 //비활성 유저
                 navigate(`${PATH.NOT_ACTIVE}?status=${status}`, { replace: true });
@@ -71,7 +68,8 @@ export default function Init() {
                 message: handleError(error),
                 cancelText: null,
                 onConfirmAction: async () => {
-                    await userSignOut();
+                    await signOutCache();
+
                     navigate(PATH.SIGN_IN, { replace: true });
                 }
             });

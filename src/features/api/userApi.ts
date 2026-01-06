@@ -123,7 +123,7 @@ export async function delelteUserByUid(idToken: string | undefined | null): Prom
 /**
  * 회원 상태 변경
  */
-export async function changeStatus(
+export async function updateUserStatus(
     idToken: string | undefined | null,
     uid: string,
     userStatus: UserStatusType,
@@ -152,7 +152,7 @@ export async function changeStatus(
 /**
  * 회원 상태 변경
  */
-export async function updateRole(
+export async function updateUserRole(
     idToken: string | undefined | null,
     uid: string,
     role: UserRole,

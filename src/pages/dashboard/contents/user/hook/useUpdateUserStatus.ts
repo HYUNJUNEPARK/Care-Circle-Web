@@ -1,17 +1,17 @@
 import { useState } from "react";
-import { changeStatus } from "../../../../../features/api/userApi";
+import { updateUserStatus as updateUserStatusApi } from "../../../../../features/api/userApi";
 import type { UserStatusType } from "../../../../../types/UserStatusType";
 import { useAuth } from "../../../../../features/auth/AuthProvider";
 
 /**
  * 회원 상태 수정
  */
-function useChangeUserStatus() {
+function useUpdateUserStatus() {
     const { user } = useAuth();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
 
-    const changeUserStatus = async (uid: string, status: UserStatusType) => {
+    const updateUserStatus = async (uid: string, status: UserStatusType) => {
         if (isLoading) {
             console.info('This request is already in progress.');
             return;
@@ -20,7 +20,7 @@ function useChangeUserStatus() {
         try {
             setLoading(true);
             const idToken = await user?.getIdToken();
-            const res = await changeStatus(idToken, uid, status);
+            const res = await updateUserStatusApi(idToken, uid, status);
             const rUid = res?.uid;
             const newStatus = res?.status;
             const updateAt = res?.timeStamp;
@@ -37,10 +37,10 @@ function useChangeUserStatus() {
     }
 
     return {
-        changeUserStatus,
+        updateUserStatus,
         isLoading,
         error,
     }
 }
 
-export default useChangeUserStatus;
+export default useUpdateUserStatus;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { resetPassword } from "../../../../../features/api/userApi";
+import { resetPassword as resetPasswordApi } from "../../../../../features/api/userApi";
 import { useAuth } from "../../../../../features/auth/AuthProvider";
 
 /**
@@ -10,7 +10,7 @@ function useResetPassword() {
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
 
-    const reset = async (uid: string) => {
+    const resetPassword = async (uid: string) => {
         if (isLoading) {
             console.info('This request is already in progress.');
             return;
@@ -19,7 +19,7 @@ function useResetPassword() {
         try {
             setLoading(true);
             const idToken = await user?.getIdToken();
-            const res = await resetPassword(idToken, uid);
+            const res = await resetPasswordApi(idToken, uid);
             return res;
         } catch (error) {
             setError(error as Error);
@@ -29,7 +29,7 @@ function useResetPassword() {
     }
 
     return {
-        reset,
+        resetPassword,
         isLoading,
         error,
     }

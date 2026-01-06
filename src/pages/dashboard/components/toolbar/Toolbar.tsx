@@ -7,6 +7,8 @@ import useSignOut from '../../../../hook/useSignOut';
 import { useAuth } from "../../../../features/auth/AuthProvider";
 import useAlert from "../../../../components/alert/useAlert";
 import strings from "../../../../res/strings";
+import useLoading from '../../../../components/loading/loading/useLoading';
+import handleError from '../../../../utils/error/handleError';
 
 function Toolbar({
   sidebarOpen,
@@ -20,8 +22,10 @@ function Toolbar({
   const { user } = useAuth(); //const { user, isLoggedIn } = useAuth();
   const dropdownItems = [`${user?.email}`, strings.signOut];
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { showLoading, hideLoading } = useLoading();
   const userButtonRef = useRef<HTMLButtonElement>(null);
-  const { userSignOut, error } = useSignOut();
+  const { signOut, isLoading, error } = useSignOut();
+
 
   // 드롭다운 아이템 클릭 핸들러
   const handleDropdownItem = (index: number) => {
@@ -31,8 +35,8 @@ function Toolbar({
         showAlert({
           title: strings.signOut,
           message: null,
-          onConfirmAction: () => {
-            userSignOut();
+          onConfirmAction: async () => {
+            await signOut();
           }
         });
       }
@@ -41,8 +45,23 @@ function Toolbar({
   }
 
   useEffect(() => {
+    if (isLoading) {
+      showLoading();
+    } else {
+      hideLoading();
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
     if (!error) return
-    alert(`${error.message}`)
+
+    showAlert({
+      title: '로그아웃 싶패',
+      message: handleError(error),
+      onConfirmAction: async () => {
+        await signOut();
+      }
+    });
   }, [error]);
 
   return (
