@@ -7,6 +7,7 @@ import type UpdateUserRoleResponse from '../../types/remote/UpdateUserRoleRespon
 import type SignOutResponse from '../../types/remote/SignOutResponse';
 import type ResetPasswordResponse from '../../types/remote/ResetPasswordResponse';
 import type { UserRole } from '../../types/UserRoleType';
+import { converToUsers, converToUser } from '../../utils/formatter';
 
 const userApiUrl = `/api/users`
 
@@ -15,7 +16,9 @@ const tokenErrorMessage = 'IdToken is null.';
 /**
  * 전체 사용자 조회
  */
-export async function getAllUsers(idToken: string | undefined | null): Promise<UserInfo[]> {
+export async function getAllUsers(
+    idToken: string | undefined | null
+): Promise<UserInfo[]> {
     if (!idToken) {
         throw new Error(`${tokenErrorMessage}`);
     }
@@ -29,20 +32,33 @@ export async function getAllUsers(idToken: string | undefined | null): Promise<U
         }
     );
 
-    const remoteUsers = res.data.data as RemoteUserInfo[]
+    const remoteUsers = (res.data.data) as RemoteUserInfo[];
+    const users = converToUsers(remoteUsers);
+    return users;
+}
 
-    const users: UserInfo[] = remoteUsers.map(user => ({
-        uid: user.uid,
-        email: user.email,
-        role: user.role,
-        status: user.status,
-        createdAt: user.created_at,
-        updatedAt: user.updated_at,
-        lastLoginAt: user.last_login_at ?? '-',
-        logoutAt: user.logout_at ?? '-',
-        passwordResetAt: user.password_reset_at ?? "-"
-    }))
+/**
+ * Email or Uid 로 사용자 검색 
+ */
+export async function searchUsersByEmailOrUid(
+    idToken: string | undefined | null,
+    keyword: string
+): Promise<UserInfo[]> {
+    if (!idToken) {
+        throw new Error(`${tokenErrorMessage}`);
+    }
 
+    const res = await apiClient.get(
+        `${userApiUrl}/search?keyword=${keyword}`,
+        {
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        }
+    );
+
+    const remoteUsers = (res.data.data) as RemoteUserInfo[];
+    const users = converToUsers(remoteUsers);
     return users;
 }
 
@@ -98,31 +114,6 @@ export async function signOut(idToken: string | undefined | null, uid: string): 
  */
 export async function checkValidEmail(email: string) {
     return apiClient.get(`${userApiUrl}/exists?email=${email}`);
-}
-
-/**
- * Email or Uid 로 사용자 검색 
- */
-export async function searchUsersByEmailOrUid(
-    idToken: string | undefined | null,
-    keyword: string
-) {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.get(
-        `${userApiUrl}/search?keyword=${keyword}`,
-        {
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
-    );
-
-    const data = res.data;
-
-    return data
 }
 
 /**
@@ -224,20 +215,9 @@ export async function getLoginUserInfo(
         }
     );
 
-    const rUserInfo = res.data.data as RemoteUserInfo
-    const userInfo: UserInfo = {
-        uid: rUserInfo.uid,
-        email: rUserInfo.email,
-        role: rUserInfo.role,
-        status: rUserInfo.status,
-        createdAt: "-",
-        updatedAt: "-",
-        lastLoginAt: "-",
-        logoutAt: "-",
-        passwordResetAt: "-",
-    }
-
-    return userInfo; //res.data.data;
+    const rUser = (res.data.data) as RemoteUserInfo
+    const user = converToUser(rUser)
+    return user; 
 }
 
 /**
@@ -252,7 +232,7 @@ export async function resetPassword(
     }
 
     const res = await apiClient.post(
-        `${userApiUrl}/reset`, //url
+        `${userApiUrl}/password-reset`, //url
         {                      //body
             uid: uid
         },

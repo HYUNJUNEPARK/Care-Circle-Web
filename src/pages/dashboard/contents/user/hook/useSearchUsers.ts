@@ -8,11 +8,10 @@ import { searchUsersByEmailOrUid } from '../../../../../features/api/userApi';
  */
 function useSearchUsers() {
     const { user } = useAuth();
-    const [users, setUsers] = useState<UserInfo[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
-    const searchUsers = async (keyword: string) => {
+    const searchUsers = async (keyword: string): Promise<UserInfo[]> => {
         try {
             setLoading(true);
 
@@ -20,18 +19,17 @@ function useSearchUsers() {
 
             const users = await searchUsersByEmailOrUid(idToken, keyword);
 
-            setUsers(users);
+            return users;
         } catch (error) {
             setError(error as Error)
+            return [];
         } finally {
             setLoading(false);
         }
     }
-    
+
     return {
         searchUsers,
-        setUsers,
-        users,
         isLoading,
         error
     }

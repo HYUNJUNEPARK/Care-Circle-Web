@@ -16,14 +16,17 @@ import useSearchUsers from './hook/useSearchUsers';
 
 export default function UsersContent() {
   const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
+
   const { updateUserStatus, error: statusError } = useUpdateUserStatus();
   const { resetPassword, error: resetError } = useResetPassword();
   const { signOutByUid, error: signOutError } = useSignOut();
   const { showLoading, hideLoading } = useLoading();
   const { updateUserRole, error: updateError } = useUpdateRole();
+
   const [searchKeyword, setSearchKeyword] = useState('');
-  const { searchUsers, users: searchRes, error: seachError } = useSearchUsers();
-  const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '상태 수정', '마지막 로그인', '로그아웃', '비밀번호 초기화'];
+  const { searchUsers, error: seachError } = useSearchUsers();
+
+  const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '상태 수정', '마지막 로그인', '로그아웃', '비밀번호 재발급'];
 
   //사용자 관리 페이지 마운트 시, 사용자 리스트 조회
   useEffect(() => {
@@ -167,12 +170,8 @@ export default function UsersContent() {
   const handleSearchUsers = async () => {
     try {
       showLoading();
-
-      //TODO 검증 로직 추가
-      //if (!searchKeyword) return;
-
-      const res = await searchUsers(searchKeyword);
-
+      const users = await searchUsers(searchKeyword);
+      setUsers(users);
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -233,7 +232,7 @@ export default function UsersContent() {
               inputType='plaintext'
               id="email"
               label={""}
-              placeholder="Email, UID 사용자 검색"
+              placeholder="이메일, 사용자 UID 검색"
               value={searchKeyword}
               onChange={(e) => {
                 setSearchKeyword(e.target.value)
@@ -250,7 +249,9 @@ export default function UsersContent() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             {/* 테이블 헤더 */}
             <thead>
-              <tr>
+              {users.length === 0 && <span style={{ color: '#000000', fontSize: '18px', display: 'flex', justifyContent:'center', alignItems:'center' }}>검색된 사용자가 없습니다.</span>}
+
+              {users.length !== 0 && <tr>
                 {tableHeads.map((thead, i) => (
                   <th
                     key={i}
@@ -258,7 +259,9 @@ export default function UsersContent() {
                     {thead}
                   </th>
                 ))}
-              </tr>
+              </tr>}
+
+
             </thead>
             {/* 테이블 바디 */}
             <tbody>
@@ -380,7 +383,7 @@ export default function UsersContent() {
                         style={{ backgroundColor: "#59b3eeff" }}
                         onClick={async () => {
                           handleResetPasword(user.uid);
-                        }}>비밀번호 초기화
+                        }}>재발급
                       </button>
                       {/* 비밀번호 초기화 시간 */}
                       <span className={styles.dateDisplay}>
@@ -390,6 +393,9 @@ export default function UsersContent() {
                   </td>
                 </tr>
               ))}
+
+
+
             </tbody>
           </table>
         </div>
