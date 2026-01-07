@@ -30,13 +30,13 @@ export default function UsersContent() {
 
   //사용자 관리 페이지 마운트 시, 사용자 리스트 조회
   useEffect(() => {
-    const fetchUsers = async () => {
-      showLoading();
-      await fetchAllUsers();
-      hideLoading();
-    }
-
-    fetchUsers();
+    // const fetchUsers = async () => {
+    //   showLoading();
+    //   await fetchAllUsers();
+    //   hideLoading();
+    // }
+    // fetchUsers();
+    handleRefreshUsers();
   }, []);
 
   useEffect(() => {
@@ -68,6 +68,13 @@ export default function UsersContent() {
     if (!seachError) return
     alert(`${seachError.message}`)
   }, [seachError]);
+
+  //사용자 목록 새로고침
+  const handleRefreshUsers = async () => {
+    showLoading();
+    await fetchAllUsers();
+    hideLoading();
+  }
 
   //사용사 상태 변경(활성화, 비활성화, 계정정지, 계정 삭제)
   const handleChangeUserStatus = async (uid: string, status: UserStatusType) => {
@@ -203,7 +210,7 @@ export default function UsersContent() {
         </h1>
 
         <div>
-          <button style={{ backgroundColor: '#fff', padding: '12px', marginRight: '6px' }}>
+          <button style={{ backgroundColor: '#fff', padding: '12px', marginRight: '6px' }} onClick={() => {handleRefreshUsers()}}>
             <RiRefreshLine size={26} color='#1f2937' />
           </button>
 
@@ -249,7 +256,7 @@ export default function UsersContent() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             {/* 테이블 헤더 */}
             <thead>
-              {users.length === 0 && <span style={{ color: '#000000', fontSize: '18px', display: 'flex', justifyContent:'center', alignItems:'center' }}>검색된 사용자가 없습니다.</span>}
+              {users.length === 0 && <span style={{ color: '#000000', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>검색된 사용자가 없습니다.</span>}
 
               {users.length !== 0 && <tr>
                 {tableHeads.map((thead, i) => (
@@ -393,9 +400,6 @@ export default function UsersContent() {
                   </td>
                 </tr>
               ))}
-
-
-
             </tbody>
           </table>
         </div>
