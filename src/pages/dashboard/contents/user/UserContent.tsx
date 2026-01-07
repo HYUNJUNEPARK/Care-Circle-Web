@@ -107,13 +107,18 @@ export default function UsersContent() {
     try {
       showLoading();
 
-
       //TODO 버그 발생 중
       const res = await updateUserRole(uid, role);
+      const rUid = res?.uid;
+      const newRole = res?.role;
+      const updateAt = res?.timeStamp;
+      if (!res || !rUid || !newRole || !updateAt) {
+        throw new Error("response is invalid");
+      }
 
       setUsers(prev =>
         prev.map(user =>
-          (user.uid === res!!.uid) ? { ...user, role: res!!.role, updatedAt: res!!.timeStamp } : user
+          (user.uid === res!!.uid) ? { ...user, role: newRole, updatedAt: updateAt } : user
         )
       );
     } catch (error) {

@@ -146,26 +146,6 @@ export async function updateUserStatus(
     return data;
 }
 
-// /**
-//  * 회원탈퇴(영구 삭제)
-//  */
-// export async function delelteUserByUid(idToken: string | undefined | null): Promise<Boolean> {
-//     if (!idToken) {
-//         throw new Error(`${tokenErrorMessage}`);
-//     }
-
-//     const res = await apiClient.delete(
-//         `${userApiUrl}`, //url
-//         {                //headers
-//             headers: {
-//                 Authorization: `Bearer ${idToken}`,
-//             },
-//         }
-//     );
-
-//     return Boolean(res.data.success);
-// }
-
 /**
  * 계정 삭제
  */
