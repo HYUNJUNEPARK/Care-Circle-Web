@@ -8,23 +8,45 @@ import useSignInByEmail from './useSignInByEmail';
 import strings from '../../res/strings'
 import useAlert from '../../components/alert/useAlert';
 import handleError from '../../utils/error/handleError';
+import {
+  clearRememberedId,
+  loadRememberedId,
+  saveRememberedId,
+} from "../../utils/rememberIdStorage";
+
 
 export default function SignIn() {
     const navigate = useNavigate();
+
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
+
     const { signInByEmail, isLoading, error } = useSignInByEmail();
     const { showAlert } = useAlert();
 
-    /**
-     * 로그인 처리
-     */
-    const handleSignIn = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const [showPassword, setShowPassword] = useState(false);
+    const [rememberId, setRememberId] = useState(false);
 
-        await signInByEmail(email, password);
-    };
+    // 1) 최초 진입 시 dfasdfsdf
+    useEffect(() => {
+        //저장된 아이디 불러오기
+        const saved = loadRememberedId();
+        if (saved) {
+            setEmail(saved);
+            setRememberId(true);
+        }
+    }, []);
+
+
+    useEffect(() => {
+        //체크 해제 시 즉시 삭제
+        if (!rememberId) {
+            clearRememberedId();
+        } else {
+            // 체크를 켰는데 email이 이미 있으면 즉시 저장해
+            if (email.trim()) saveRememberedId(email.trim());
+        }
+    }, [rememberId]);
 
     /**
      * 로그인 예외 처리
@@ -38,11 +60,28 @@ export default function SignIn() {
         });
     }, [error]);
 
+    /**
+     * 로그인 처리
+     */
+    const handleSignIn = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        //로그인 버튼 눌렀을 때 '아이디 기억하기' 설정에 따라 저장
+        if (rememberId) {
+            saveRememberedId(email.trim());
+        } else {
+            clearRememberedId();
+        }
+
+        await signInByEmail(email, password);
+
+        navigate(PATH.ROOT, { replace: true });
+    };
+
     return (
         <CenterLayout>
             <Container>
                 <Topbar title={strings.signIn} />
-
                 <Body>
                     {/* 로그인 폼 */}
                     <form onSubmit={handleSignIn} className="space-y-6 mt-8">
@@ -53,7 +92,13 @@ export default function SignIn() {
                             label={"이메일"}
                             placeholder="your@email.com"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e) => {
+                                const emailValue = e.target.value;
+                                setEmail(emailValue);
+
+                                // 체크된 상태에서 입력이 바뀌면 최신 아이디로 즉시 반영
+                                if (rememberId) saveRememberedId(emailValue.trim());
+                            }}
                             type='email'
                         />
 
@@ -75,6 +120,8 @@ export default function SignIn() {
                                 <input
                                     type="checkbox"
                                     className="ml-1 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                                    checked={rememberId}
+                                    onChange={(e) => setRememberId(e.target.checked)}
                                 />
                                 <span className="ml-2 text-sm text-gray-600">아이디 기억하기</span>
                             </label>

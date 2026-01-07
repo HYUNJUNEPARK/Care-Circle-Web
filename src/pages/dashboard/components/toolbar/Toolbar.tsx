@@ -56,7 +56,7 @@ function Toolbar({
     if (!error) return
 
     showAlert({
-      title: '로그아웃 싶패',
+      title: '로그아웃 실패',
       message: handleError(error),
       onConfirmAction: async () => {
         await signOut();
@@ -69,6 +69,7 @@ function Toolbar({
       {/* 좌측 상단 아이콘: 메뉴 */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <button
+          title={sidebarOpen ? "사이드 바 닫기" : "사이드 바 열기"}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className={styles.menuButton}>
           <IoIosMenu size={24} color='black'/>
@@ -76,7 +77,7 @@ function Toolbar({
       </div>
 
       {/* 우측 상단 아이콘: 로그인 사용자 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginRight:'8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', position: 'relative' }}>
           <button
             className={styles.userButton}

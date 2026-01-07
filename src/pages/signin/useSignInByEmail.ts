@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../features/auth/authClient";
-import { useNavigate } from "react-router-dom";
-import { PATH } from '../../constants/paths';
 
 function useSignInByEmail() {
-    const navigate = useNavigate();
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
 
@@ -15,8 +12,6 @@ function useSignInByEmail() {
 
             //FB 서버 로그인
             await signInWithEmailAndPassword(auth, email, password);
-
-            navigate(PATH.ROOT, { replace: true });
         } catch (e) {
             console.error('useSignInByEmail()', error);
             setError(e as Error);

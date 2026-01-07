@@ -23,8 +23,9 @@ function Container({
 }
 
 const containerStyle: React.CSSProperties = {
-    width: "min(100%, 360px)",
+    width: "min(100%, 380px)",
     padding: 16,
+    borderRadius: 18,
     boxShadow: "0 10px 40px rgba(0, 0, 0, 0.08)",
     display: "flex",
     backgroundColor: "#fff",

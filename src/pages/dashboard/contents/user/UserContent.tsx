@@ -242,20 +242,24 @@ export default function UsersContent() {
           사용자 관리
         </h1>
 
-        <div style={{marginBottom: '8px'}}>
-          <button style={{ backgroundColor: '#fff', padding: '12px', marginRight: '6px' }} onClick={() => { handleRefreshUsers() }}>
+        <div style={{ marginBottom: '8px' }}>
+          <button
+            title='사용자 목록 새로고침'
+            style={{ backgroundColor: '#fff', padding: '12px', marginRight: '6px' }}
+            onClick={() => { handleRefreshUsers() }}>
             <RiRefreshLine size={26} color='#1f2937' />
           </button>
 
-          <button style={{ backgroundColor: '#fff', padding: '12px' }}>
+          <button
+            title='인증 서버 동기화'
+            style={{ backgroundColor: '#fff', padding: '12px' }}
+          >
             <LiaCloudDownloadAltSolid size={26} color='#1f2937' />
           </button>
         </div>
       </div>
 
-
       <div style={{ backgroundColor: 'white', borderRadius: '0.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
-
         <div style={{
           padding: '1.5rem',
           borderBottom: '1px solid #e5e7eb',
@@ -267,7 +271,9 @@ export default function UsersContent() {
           <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#1f2937' }}>사용자 목록</h2>
 
           {/* 사용자 검색 */}
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <div
+            title='사용자 검색'
+            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Input
               inputType='plaintext'
               id="email"
@@ -338,7 +344,7 @@ export default function UsersContent() {
                     <span className={`${styles.statusDisplay} ${applyStatusCss(user.status)}`}>{user.status}</span>
                   </td>
                   <td className={styles.td}>
-                    {user.status === 'DELETED' && <span className={styles.dateDisplay}>{wrapBySpace(user.deletedAt)}</span>}      
+                    {user.status === 'DELETED' && <span className={styles.dateDisplay}>{wrapBySpace(user.deletedAt)}</span>}
 
                     {user.status !== 'DELETED' &&
                       <div>
