@@ -242,7 +242,7 @@ export default function UsersContent() {
           사용자 관리
         </h1>
 
-        <div>
+        <div style={{marginBottom: '8px'}}>
           <button style={{ backgroundColor: '#fff', padding: '12px', marginRight: '6px' }} onClick={() => { handleRefreshUsers() }}>
             <RiRefreshLine size={26} color='#1f2937' />
           </button>

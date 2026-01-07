@@ -71,7 +71,7 @@ function Toolbar({
         <button
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className={styles.menuButton}>
-          <IoIosMenu size={24} />
+          <IoIosMenu size={24} color='black'/>
         </button>
       </div>
 
