@@ -27,7 +27,7 @@ export default function SignIn() {
     const [showPassword, setShowPassword] = useState(false);
     const [rememberId, setRememberId] = useState(false);
 
-    // 1) 최초 진입 시 dfasdfsdf
+    // 최초 진입 시
     useEffect(() => {
         //저장된 아이디 불러오기
         const saved = loadRememberedId();
@@ -39,11 +39,11 @@ export default function SignIn() {
 
 
     useEffect(() => {
-        //체크 해제 시 즉시 삭제
+        // 체크 해제 시 즉시 삭제
         if (!rememberId) {
             clearRememberedId();
         } else {
-            // 체크를 켰는데 email이 이미 있으면 즉시 저장해
+            // 체크를 켰는데 email이 이미 있으면 즉시 저장
             if (email.trim()) saveRememberedId(email.trim());
         }
     }, [rememberId]);
