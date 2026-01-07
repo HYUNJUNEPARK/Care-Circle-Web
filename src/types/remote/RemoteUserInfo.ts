@@ -8,7 +8,7 @@ export interface RemoteUserInfo {
     created_at: string;
     updated_at: string;
     last_login_at: string;
-    delete_at: string;
+    deleted_at: string;
     logout_at: string;
     password_reset_at: string;
 }

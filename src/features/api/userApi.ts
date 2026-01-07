@@ -4,6 +4,7 @@ import type { UserInfo } from '../../types/UserInfo';
 import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo'
 import type ChangeUserStatusResponse from '../../types/remote/ChangeStatusResponse';
 import type UpdateUserRoleResponse from '../../types/remote/UpdateUserRoleResponse';
+import type DeleteUserResponse from '../../types/remote/DeleteUserStatusResponse';
 import type SignOutResponse from '../../types/remote/SignOutResponse';
 import type ResetPasswordResponse from '../../types/remote/ResetPasswordResponse';
 import type { UserRole } from '../../types/UserRoleType';
@@ -117,26 +118,6 @@ export async function checkValidEmail(email: string) {
 }
 
 /**
- * 회원탈퇴(영구 삭제)
- */
-export async function delelteUserByUid(idToken: string | undefined | null): Promise<Boolean> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.delete(
-        `${userApiUrl}`, //url
-        {                //headers
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
-    );
-
-    return Boolean(res.data.success);
-}
-
-/**
  * 회원 상태 변경
  */
 export async function updateUserStatus(
@@ -162,6 +143,50 @@ export async function updateUserStatus(
     );
 
     const data = (res.data) as ChangeUserStatusResponse;
+    return data;
+}
+
+// /**
+//  * 회원탈퇴(영구 삭제)
+//  */
+// export async function delelteUserByUid(idToken: string | undefined | null): Promise<Boolean> {
+//     if (!idToken) {
+//         throw new Error(`${tokenErrorMessage}`);
+//     }
+
+//     const res = await apiClient.delete(
+//         `${userApiUrl}`, //url
+//         {                //headers
+//             headers: {
+//                 Authorization: `Bearer ${idToken}`,
+//             },
+//         }
+//     );
+
+//     return Boolean(res.data.success);
+// }
+
+/**
+ * 계정 삭제
+ */
+export async function deleteUser(
+    idToken: string | undefined | null,
+    uid: string
+): Promise<DeleteUserResponse> {
+    if (!idToken) {
+        throw new Error(`${tokenErrorMessage}`);
+    }
+
+    const res = await apiClient.delete(
+        `${userApiUrl}/${uid}`, //url
+        {                       //headers
+            headers: {
+                Authorization: `Bearer ${idToken}`,
+            },
+        }
+    );
+
+    const data = (res.data) as DeleteUserResponse;
     return data;
 }
 

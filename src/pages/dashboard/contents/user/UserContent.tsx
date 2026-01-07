@@ -13,6 +13,7 @@ import { RiRefreshLine } from "react-icons/ri";
 import { LiaCloudDownloadAltSolid } from "react-icons/lia";
 import { TbSearch } from "react-icons/tb";
 import useSearchUsers from './hook/useSearchUsers';
+import useDeleteUser from './hook/useDeleteUser';
 
 export default function UsersContent() {
   const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
@@ -22,22 +23,21 @@ export default function UsersContent() {
   const { signOutByUid, error: signOutError } = useSignOut();
   const { showLoading, hideLoading } = useLoading();
   const { updateUserRole, error: updateError } = useUpdateRole();
+  const { deleteUser, error: deleteError } = useDeleteUser();
 
   const [searchKeyword, setSearchKeyword] = useState('');
   const { searchUsers, error: seachError } = useSearchUsers();
 
-  const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '상태 수정', '마지막 로그인', '로그아웃', '비밀번호 재발급'];
+  const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '업데이트', '마지막 로그인', '로그아웃', '비밀번호 재발급'];
 
-  //사용자 관리 페이지 마운트 시, 사용자 리스트 조회
   useEffect(() => {
-    // const fetchUsers = async () => {
-    //   showLoading();
-    //   await fetchAllUsers();
-    //   hideLoading();
-    // }
-    // fetchUsers();
     handleRefreshUsers();
   }, []);
+
+  useEffect(() => {
+    if (!deleteError) return
+    alert(`${deleteError.message}`)
+  }, [deleteError]);
 
   useEffect(() => {
     if (!userError) return
@@ -74,7 +74,7 @@ export default function UsersContent() {
     showLoading();
     await fetchAllUsers();
     hideLoading();
-  }
+  };
 
   //사용사 상태 변경(활성화, 비활성화, 계정정지, 계정 삭제)
   const handleChangeUserStatus = async (uid: string, status: UserStatusType) => {
@@ -100,7 +100,7 @@ export default function UsersContent() {
     } finally {
       hideLoading();
     }
-  }
+  };
 
   //권한 수정
   const handleChangeUserRole = async (uid: string, role: string) => {
@@ -121,7 +121,7 @@ export default function UsersContent() {
     } finally {
       hideLoading();
     }
-  }
+  };
 
   //로그아웃
   const handleSignOut = async (uid: string) => {
@@ -146,7 +146,7 @@ export default function UsersContent() {
     } finally {
       hideLoading();
     }
-  }
+  };
 
   //비밀번호 초기화
   const handleResetPasword = async (uid: string) => {
@@ -171,7 +171,7 @@ export default function UsersContent() {
     } finally {
       hideLoading();
     }
-  }
+  };
 
   //사용자 검색
   const handleSearchUsers = async () => {
@@ -179,6 +179,33 @@ export default function UsersContent() {
       showLoading();
       const users = await searchUsers(searchKeyword);
       setUsers(users);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  //사용자 계정 삭제
+  const handleDeleteUser = async (uid: string) => {
+    try {
+      showLoading();
+
+      //TODO 여기 API 수정
+      const res = await deleteUser(uid);
+      const rUid = res?.uid;
+      const newStatus = res?.status;
+      const timeStamp = res?.timeStamp;
+      if (!res || !rUid || !timeStamp || !newStatus) {
+        throw new Error("response is invalid");
+      }
+
+      //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
+      setUsers(prev =>
+        prev.map(user =>
+          (user.uid === rUid) ? { ...user, status: newStatus, deletedAt: timeStamp, updatedAt: timeStamp } : user
+        )
+      );
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -194,6 +221,7 @@ export default function UsersContent() {
         case "INACTIVE": return styles.inactive;
         case "BLOCKED": return styles.blocked;
         case "DELETED": return styles.deleted;
+        case "WITHDRAW": return styles.withdraw;
         default: return "";
       }
     } catch (error) {
@@ -210,7 +238,7 @@ export default function UsersContent() {
         </h1>
 
         <div>
-          <button style={{ backgroundColor: '#fff', padding: '12px', marginRight: '6px' }} onClick={() => {handleRefreshUsers()}}>
+          <button style={{ backgroundColor: '#fff', padding: '12px', marginRight: '6px' }} onClick={() => { handleRefreshUsers() }}>
             <RiRefreshLine size={26} color='#1f2937' />
           </button>
 
@@ -305,45 +333,61 @@ export default function UsersContent() {
                     <span className={`${styles.statusDisplay} ${applyStatusCss(user.status)}`}>{user.status}</span>
                   </td>
                   <td className={styles.td}>
-                    {/* 활성화 버튼 */}
-                    {user.status !== 'ACTIVE' &&
-                      <button
-                        className={styles.roleButton}
-                        style={{ margin: "4px", backgroundColor: "#119762ff" }}
-                        onClick={() => {
-                          handleChangeUserStatus(user.uid, 'ACTIVE');
-                        }}>활성화
-                      </button>
-                    }
-                    {/* 비활성화 버튼 */}
-                    {user.status !== 'INACTIVE' &&
-                      <button
-                        className={styles.roleButton}
-                        style={{ margin: "4px", backgroundColor: "#00a9bfff" }}
-                        onClick={() => {
-                          handleChangeUserStatus(user.uid, 'INACTIVE');
-                        }}>비활성화
-                      </button>
-                    }
-                    {/* 계정 정지 버튼 */}
-                    {user.status !== 'BLOCKED' &&
-                      <button
-                        className={styles.roleButton}
-                        style={{ margin: "4px", backgroundColor: "#fe6334" }}
-                        onClick={() => {
-                          handleChangeUserStatus(user.uid, 'BLOCKED');
-                        }}>계정 정지
-                      </button>
-                    }
-                    {/* 계정 삭제 버튼 */}
+                    {user.status === 'DELETED' && <span className={styles.dateDisplay}>{wrapBySpace(user.deletedAt)}</span>}      
+
                     {user.status !== 'DELETED' &&
-                      <button
-                        className={styles.roleButton}
-                        style={{ margin: "4px", backgroundColor: "#ff0000ff" }}
-                        onClick={() => {
-                          handleChangeUserStatus(user.uid, 'DELETED');
-                        }}>계정 삭제
-                      </button>
+                      <div>
+                        {/* 활성화 버튼 */}
+                        {user.status !== 'ACTIVE' &&
+                          <button
+                            className={styles.roleButton}
+                            style={{ margin: "4px", backgroundColor: "#119762ff" }}
+                            onClick={() => {
+                              handleChangeUserStatus(user.uid, 'ACTIVE');
+                            }}>활성화
+                          </button>
+                        }
+                        {/* 비활성화 버튼 */}
+                        {user.status !== 'INACTIVE' &&
+                          <button
+                            className={styles.roleButton}
+                            style={{ margin: "4px", backgroundColor: "#00a9bfff" }}
+                            onClick={() => {
+                              handleChangeUserStatus(user.uid, 'INACTIVE');
+                            }}>비활성화
+                          </button>
+                        }
+                        {/* 정지 버튼 */}
+                        {user.status !== 'BLOCKED' &&
+                          <button
+                            className={styles.roleButton}
+                            style={{ margin: "4px", backgroundColor: "#fe6334" }}
+                            onClick={() => {
+                              handleChangeUserStatus(user.uid, 'BLOCKED');
+                            }}>정지
+                          </button>
+                        }
+                        {/* 탈퇴 버튼 */}
+                        {user.status !== 'WITHDRAW' &&
+                          <button
+                            className={styles.roleButton}
+                            style={{ margin: "4px", backgroundColor: "#7300ffff" }}
+                            onClick={() => {
+                              handleChangeUserStatus(user.uid, 'WITHDRAW');
+                            }}>탈퇴
+                          </button>
+                        }
+                        {/* 계정 삭제 버튼 */}
+                        {user.status !== 'DELETED' &&
+                          <button
+                            className={styles.roleButton}
+                            style={{ margin: "4px", backgroundColor: "#ff0000ff" }}
+                            onClick={() => {
+                              handleDeleteUser(user.uid);
+                            }}>계정 삭제
+                          </button>
+                        }
+                      </div>
                     }
                   </td>
                   {/* 가입일 */}

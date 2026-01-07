@@ -7,5 +7,6 @@ export interface UserInfo {
     updatedAt: string;
     lastLoginAt: string;
     logoutAt: string;
+    deletedAt: string;
     passwordResetAt: string;
 }

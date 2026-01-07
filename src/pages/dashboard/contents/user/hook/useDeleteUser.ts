@@ -1,17 +1,16 @@
 import { useState } from "react";
-import { updateUserStatus as updateUserStatusApi } from "../../../../../features/api/userApi";
-import type { UserStatusType } from "../../../../../types/UserStatusType";
 import { useAuth } from "../../../../../features/auth/AuthProvider";
+import { deleteUser as deleteUserApi } from "../../../../../features/api/userApi";
 
 /**
  * 회원 상태 수정
  */
-function useUpdateUserStatus() {
+function useDeleteUser() {
     const { user } = useAuth();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
 
-    const updateUserStatus = async (uid: string, status: UserStatusType) => {
+    const deleteUser = async (uid: string) => {
         if (isLoading) {
             console.info('This request is already in progress.');
             return;
@@ -20,13 +19,13 @@ function useUpdateUserStatus() {
         try {
             setLoading(true);
             const idToken = await user?.getIdToken();
-            const res = await updateUserStatusApi(idToken, uid, status);
-            const rUid = res?.uid;
-            const newStatus = res?.status;
-            const updateAt = res?.timeStamp;
-            if (!res || !rUid || !newStatus || !updateAt) {
-                throw new Error("response data is invalid");
-            }
+            const res = await deleteUserApi(idToken, uid);
+            // const rUid = res?.uid;
+            // const newStatus = res?.status;
+            // const updateAt = res?.timeStamp;
+            // if (!res || !rUid || !newStatus || !updateAt) {
+            //     throw new Error("response data is invalid");
+            // }
 
             return res;
         } catch (error) {
@@ -37,10 +36,10 @@ function useUpdateUserStatus() {
     }
 
     return {
-        updateUserStatus,
+        deleteUser,
         isLoading,
         error,
     }
 }
 
-export default useUpdateUserStatus;
+export default useDeleteUser;
