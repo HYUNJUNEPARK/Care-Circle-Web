@@ -29,6 +29,13 @@ function useSignOut() {
             setLoading(true);
             const idToken = await user?.getIdToken();
             const res = await signOutApi(idToken, uid);
+            const rUid = res?.uid;
+            const logoutAt = res?.logoutAt;
+            const updatedAt = res?.updateAt;
+            if (!res || !rUid || !logoutAt || !updatedAt) {
+                throw new Error("Response is invalid.");
+            }
+
             return res;
         } catch (error) {
             setError(error as Error)

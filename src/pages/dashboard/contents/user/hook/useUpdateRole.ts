@@ -17,21 +17,18 @@ function useUpdateRole() {
             return;
         }
 
-        if (!isUserRole(role)) {
-            throw Error('Not UserRole');
-        }
-
+        if (!isUserRole(role)) throw new Error('Invalid User Role');
+        
         try {
             setLoading(true);
             const idToken = await user?.getIdToken();
             const res = await updateUserRoleApi(idToken, uid, role);
-            // const rUid = res?.uid;
-            // const rRole = res?.role;
-            // const updateAt = res?.updatedAt;
-            // if (!res || !rUid || !updateAt || !rRole) {
-            //     setError(Error("response data is invalid"));
-            //     return;
-            // }
+            const rUid = res?.uid;
+            const rRole = res?.role;
+            const updateAt = res?.updatedAt;
+            if (!res || !rUid || !updateAt || !rRole) {
+                throw new Error("Response data is invalid.");
+            }
 
             return res;
         } catch (error) {

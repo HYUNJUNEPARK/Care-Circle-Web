@@ -16,20 +16,20 @@ import useSearchUsers from './hook/useSearchUsers';
 import useDeleteUser from './hook/useDeleteUser';
 
 export default function UsersContent() {
-  const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
+  const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '업데이트', '마지막 로그인', '로그아웃', '비밀번호 재발급'];
 
+  const { showLoading, hideLoading } = useLoading();
+  const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
   const { updateUserStatus, error: statusError } = useUpdateUserStatus();
   const { resetPassword, error: resetError } = useResetPassword();
   const { signOutByUid, error: signOutError } = useSignOut();
-  const { showLoading, hideLoading } = useLoading();
   const { updateUserRole, error: updateError } = useUpdateRole();
   const { deleteUser, error: deleteError } = useDeleteUser();
 
   const [searchKeyword, setSearchKeyword] = useState('');
   const { searchUsers, error: seachError } = useSearchUsers();
 
-  const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '업데이트', '마지막 로그인', '로그아웃', '비밀번호 재발급'];
-
+  // 최초 진입 시
   useEffect(() => {
     handleRefreshUsers();
   }, []);
@@ -81,20 +81,20 @@ export default function UsersContent() {
     try {
       showLoading();
 
-      const res = await updateUserStatus(uid, status)!;
+      const data = await updateUserStatus(uid, status)!;
 
       //리스트 업데이트
       setUsers(prev =>
         prev.map(user =>
-          (user.uid === res?.uid) ? {
+          (user.uid === data?.uid) ? {
             ...user,
-            status: res.status,
-            updatedAt: res.updatedAt
+            status: data.status,
+            updatedAt: data.updatedAt
           } : user
         )
       );
     } catch (error) {
-      console.error('handleChangeUserStatus():', error);
+      console.error('Error:', error);
     } finally {
       hideLoading();
     }
@@ -105,20 +105,15 @@ export default function UsersContent() {
     try {
       showLoading();
 
-      const res = await updateUserRole(uid, role);
-      const rUid = res?.uid;
-      const newRole = res?.role;
-      const updatedAt = res?.updatedAt;
-      if (!res || !rUid || !newRole || !updatedAt) {
-        throw new Error("response is invalid");
-      }
+      const data = await updateUserRole(uid, role);
 
+      //리스트 업데이트
       setUsers(prev =>
         prev.map(user =>
-          (user.uid === rUid) ? {
+          (user.uid === data?.uid) ? {
             ...user,
-            role: newRole,
-            updatedAt: updatedAt
+            role: data.role,
+            updatedAt: data.updatedAt
           } : user
         )
       );
@@ -134,21 +129,15 @@ export default function UsersContent() {
     try {
       showLoading();
 
-      const res = await signOutByUid(uid);
-      const rUid = res?.uid;
-      const logoutAt = res?.logoutAt;
-      const updatedAt = res?.updateAt;
-      if (!res || !rUid || !logoutAt || !updatedAt) {
-        throw new Error("response is invalid");
-      }
+      const data = await signOutByUid(uid);
 
       //리스트 업데이트
       setUsers(prev =>
         prev.map(user =>
-          (user.uid === rUid) ? {
+          (user.uid === data?.uid) ? {
             ...user,
-            logoutAt: logoutAt,
-            updatedAt: updatedAt
+            logoutAt: data.logoutAt,
+            updatedAt: data.updateAt
           } : user
         )
       );
@@ -165,24 +154,17 @@ export default function UsersContent() {
     try {
       showLoading();
 
-      const res = await resetPassword(uid)
-      const rUid = res?.uid;
-      const passwordResetAt = res?.passwordResetAt;
-      const updatedAt = res?.updatedAt;
-      const logoutAt = res?.logoutAt;
-      if (!res || !rUid || !passwordResetAt || !updatedAt || !logoutAt) {
-        throw new Error("response is invalid");
-      }
+      const data = await resetPassword(uid)
 
       //리스트 업데이트
       setUsers(prev =>
         prev.map(user =>
-          (user.uid === rUid) ?
+          (user.uid === data?.uid) ?
             {
               ...user,
-              passwordResetAt: passwordResetAt,
-              logoutAt: logoutAt,
-              updatedAt: updatedAt
+              passwordResetAt: data.passwordResetAt,
+              logoutAt: data.logoutAt,
+              updatedAt: data.updatedAt
             } : user
         )
       );
@@ -211,19 +193,18 @@ export default function UsersContent() {
     try {
       showLoading();
 
-      //TODO 여기 API 수정
-      const res = await deleteUser(uid);
-      const rUid = res?.uid;
-      const newStatus = res?.status;
-      const timeStamp = res?.timeStamp;
-      if (!res || !rUid || !timeStamp || !newStatus) {
-        throw new Error("response is invalid");
-      }
+      const data = await deleteUser(uid);
 
-      //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
+      //리스트 업데이트
       setUsers(prev =>
         prev.map(user =>
-          (user.uid === rUid) ? { ...user, status: newStatus, deletedAt: timeStamp, updatedAt: timeStamp } : user
+          (user.uid === data?.uid) ?
+            {
+              ...user,
+              status: data.status,
+              deletedAt: data.deletedAt,
+              updatedAt: data.updatedAt
+            } : user
         )
       );
     } catch (error) {

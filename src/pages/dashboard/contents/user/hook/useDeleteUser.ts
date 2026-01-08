@@ -20,12 +20,13 @@ function useDeleteUser() {
             setLoading(true);
             const idToken = await user?.getIdToken();
             const res = await deleteUserApi(idToken, uid);
-            // const rUid = res?.uid;
-            // const newStatus = res?.status;
-            // const updateAt = res?.timeStamp;
-            // if (!res || !rUid || !newStatus || !updateAt) {
-            //     throw new Error("response data is invalid");
-            // }
+            const rUid = res?.uid;
+            const status = res?.status;
+            const updatedAt = res?.updatedAt;
+            const deletedAt = res?.deletedAt;
+            if (!res || !rUid || !status || !updatedAt || !deletedAt) {
+                throw new Error("Response data is invalid.");
+            }
 
             return res;
         } catch (error) {

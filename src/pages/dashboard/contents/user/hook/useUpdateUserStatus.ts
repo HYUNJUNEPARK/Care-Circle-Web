@@ -25,7 +25,7 @@ function useUpdateUserStatus() {
             const newStatus = res?.status;
             const updatedAt = res?.updatedAt;
             if (!res || !rUid || !newStatus || !updatedAt) {
-                throw new Error("Response data is invalid");
+                throw new Error("Response data is invalid.");
             }
 
             return res;

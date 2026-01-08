@@ -20,6 +20,14 @@ function useResetPassword() {
             setLoading(true);
             const idToken = await user?.getIdToken();
             const res = await resetPasswordApi(idToken, uid);
+            const rUid = res?.uid;
+            const passwordResetAt = res?.passwordResetAt;
+            const updatedAt = res?.updatedAt;
+            const logoutAt = res?.logoutAt;
+            if (!res || !rUid || !passwordResetAt || !updatedAt || !logoutAt) {
+                throw new Error("Response is invalid");
+            }
+
             return res;
         } catch (error) {
             setError(error as Error);
