@@ -3,8 +3,8 @@ import { useAuth } from "../features/auth/AuthProvider";
 import { signOut as signOutApi } from '../features/api/userApi';
 import { auth } from "../features/auth/authClient";
 import { signOut as authSignOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { PATH } from "../constants/paths";
+// import { useNavigate } from "react-router-dom";
+// import { PATH } from "../constants/paths";
 
 /**
  * 로그아웃
@@ -13,7 +13,7 @@ function useSignOut() {
     const { user } = useAuth();
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
-    const navigate = useNavigate();
+    //const navigate = useNavigate();
 
     /**
      * uid 에 해당하는 회원을 로그아웃 시킨다.
@@ -65,9 +65,9 @@ function useSignOut() {
             const idToken = await user?.getIdToken();
             await signOutApi(idToken, uid);
 
-            await signOutCache();
+            await authSignOut(auth)
 
-            navigate(PATH.ROOT, { replace: true });
+            //await signOutCache();
         } catch (error) {
             setError(error as Error)
         } finally {
@@ -83,7 +83,6 @@ function useSignOut() {
             // FB 로그아웃
             setLoading(true);
             await authSignOut(auth)
-
         } catch (error) {
             setError(error as Error);
         } finally {

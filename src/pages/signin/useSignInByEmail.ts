@@ -12,9 +12,9 @@ function useSignInByEmail() {
 
             //FB 서버 로그인
             await signInWithEmailAndPassword(auth, email, password);
-        } catch (e) {
-            console.error('useSignInByEmail()', error);
-            setError(e as Error);
+        } catch (error) {
+            console.error('useSignInByEmail', error);
+            setError(error as Error);
         } finally {
             setLoading(false);
         }

@@ -9,6 +9,8 @@ import useAlert from "../../../../components/alert/useAlert";
 import strings from "../../../../res/strings";
 import useLoading from '../../../../components/loading/loading/useLoading';
 import handleError from '../../../../utils/error/handleError';
+import { useNavigate } from "react-router-dom";
+import { PATH } from '../../../../constants/paths';
 
 function Toolbar({
   sidebarOpen,
@@ -18,7 +20,7 @@ function Toolbar({
   setSidebarOpen: (v: boolean) => void
 }) {
   const { showAlert } = useAlert();
-
+  const navigate = useNavigate();
   const { user } = useAuth(); //const { user, isLoggedIn } = useAuth();
   const dropdownItems = [`${user?.email}`, strings.signOut];
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -37,6 +39,8 @@ function Toolbar({
           message: null,
           onConfirmAction: async () => {
             await signOut();
+
+            navigate(PATH.ROOT, { replace: true });
           }
         });
       }
@@ -58,9 +62,7 @@ function Toolbar({
     showAlert({
       title: '로그아웃 실패',
       message: handleError(error),
-      onConfirmAction: async () => {
-        await signOut();
-      }
+      cancelText: null,
     });
   }, [error]);
 
@@ -72,12 +74,12 @@ function Toolbar({
           title={sidebarOpen ? "사이드 바 닫기" : "사이드 바 열기"}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className={styles.menuButton}>
-          <IoIosMenu size={24} color='black'/>
+          <IoIosMenu size={24} color='black' />
         </button>
       </div>
 
       {/* 우측 상단 아이콘: 로그인 사용자 */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginRight:'8px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginRight: '8px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', position: 'relative' }}>
           <button
             className={styles.userButton}
