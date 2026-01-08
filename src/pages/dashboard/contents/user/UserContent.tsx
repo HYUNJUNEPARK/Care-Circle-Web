@@ -14,6 +14,7 @@ import { LiaCloudDownloadAltSolid } from "react-icons/lia";
 import { TbSearch } from "react-icons/tb";
 import useSearchUsers from './hook/useSearchUsers';
 import useDeleteUser from './hook/useDeleteUser';
+import handleError from '../../../../utils/error/handleError';
 
 export default function UsersContent() {
   const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '업데이트', '마지막 로그인', '로그아웃', '비밀번호 재발급'];
@@ -23,11 +24,11 @@ export default function UsersContent() {
   const { updateUserStatus, error: statusError } = useUpdateUserStatus();
   const { resetPassword, error: resetError } = useResetPassword();
   const { signOutByUid, error: signOutError } = useSignOut();
-  const { updateUserRole, error: updateError } = useUpdateRole();
+  const { updateUserRole, error: updateRoleError } = useUpdateRole();
   const { deleteUser, error: deleteError } = useDeleteUser();
+  const { searchUsers, error: seachError } = useSearchUsers();
 
   const [searchKeyword, setSearchKeyword] = useState('');
-  const { searchUsers, error: seachError } = useSearchUsers();
 
   // 최초 진입 시
   useEffect(() => {
@@ -59,10 +60,23 @@ export default function UsersContent() {
     alert(`${signOutError.message}`)
   }, [signOutError]);
 
+
+
+
+  //
   useEffect(() => {
-    if (!updateError) return
-    alert(`${updateError.message}`)
-  }, [updateError]);
+    if (!updateRoleError) return
+
+    const meg = handleError(updateRoleError);
+    alert(`${meg}`)
+
+  }, [updateRoleError]);
+
+
+
+
+
+
 
   useEffect(() => {
     if (!seachError) return

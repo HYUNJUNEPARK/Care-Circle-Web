@@ -32,6 +32,7 @@ function useUpdateRole() {
 
             return res;
         } catch (error) {
+            console.error('updateUserRole', error);
             setError(error as Error);
         } finally {
             setLoading(false);

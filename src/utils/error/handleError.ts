@@ -3,22 +3,57 @@ import { FirebaseError } from "firebase/app";
 import { firebaseAuthErrorMessageMap } from "./firebaseAuthErrorMessageMap";
 import { axiosErrorMessageMap } from "./axiosErrorMessageMap";
 
+export interface ApiErrorResponse {
+    success: boolean;
+    code: string;
+    message: string;
+}
+
 /**
  * 
  */
 export default function handleError(error: Error | unknown): string {
     if (axios.isAxiosError(error)) {
+        //API 서버 에러 처리
         console.info('axiosError', error);
-        return axiosErrorMessageMap[error.code ?? ''] ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${error.code})`;
+
+        //서버 에러 포맷
+        const data = error.response?.data;
+
+        let errorMessage;
+        if (isApiErrorResponse(data)) {
+            const ec = data?.code;
+            const eMsg = data?.message ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${ec})`;
+            errorMessage = eMsg;
+        } else {
+            const eMsg = axiosErrorMessageMap[error.code ?? ''] ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${error.code})`;
+            errorMessage = eMsg;
+        }
+
+        return errorMessage;
     } else if (isFirebaseError(error)) {
+        //Auth 서버 에러 처리
         console.info('firebaseError', error);
         return firebaseAuthErrorMessageMap[error.code] ?? `알 수 없는 오류가 발생했습니다.\n(code: fb-${error.code})`;
     } else {
         const e = error as Error
         console.info('else error', e);
-
         return e.message;
     }
+}
+
+export function isApiErrorResponse(data: unknown): data is ApiErrorResponse {
+    if (typeof data !== "object" || data === null) {
+        return false;
+    }
+
+    const record = data as Record<string, unknown>;
+
+    return (
+        typeof record.success === "boolean" &&
+        typeof record.code === "string" &&
+        typeof record.message === "string"
+    );
 }
 
 function isFirebaseError(e: unknown): e is FirebaseError {
