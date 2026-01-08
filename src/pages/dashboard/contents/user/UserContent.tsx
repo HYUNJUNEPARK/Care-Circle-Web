@@ -15,11 +15,13 @@ import { TbSearch } from "react-icons/tb";
 import useSearchUsers from './hook/useSearchUsers';
 import useDeleteUser from './hook/useDeleteUser';
 import handleError from '../../../../utils/error/handleError';
+import useAlert from '../../../../components/alert/useAlert';
 
 export default function UsersContent() {
   const tableHeads = ['이메일', '사용자 UID', '권한', '상태', '작업', '가입', '업데이트', '마지막 로그인', '로그아웃', '비밀번호 재발급'];
 
   const { showLoading, hideLoading } = useLoading();
+  const { showAlert } = useAlert();
   const { fetchAllUsers, setUsers, users, error: userError } = useAllUsers();
   const { updateUserStatus, error: statusError } = useUpdateUserStatus();
   const { resetPassword, error: resetError } = useResetPassword();
@@ -36,46 +38,39 @@ export default function UsersContent() {
   }, []);
 
   useEffect(() => {
-    if (!deleteError) return
-    alert(`${deleteError.message}`)
-  }, [deleteError]);
+    let errorMessage;
+    if (updateRoleError) {
+      errorMessage = handleError(updateRoleError);
+    }
 
-  useEffect(() => {
-    if (!userError) return
-    alert(`${userError.message}`)
-  }, [userError]);
+    if (signOutError) {
+      errorMessage = handleError(signOutError);
+    }
 
-  useEffect(() => {
-    if (!statusError) return
-    alert(`${statusError.message}`)
-  }, [statusError]);
+    if (deleteError) {
+      errorMessage = handleError(deleteError);
+    }
 
-  useEffect(() => {
-    if (!resetError) return
-    alert(`${resetError.message}`)
-  }, [resetError]);
+    if (userError) {
+      errorMessage = handleError(userError);
+    }
 
-  useEffect(() => {
-    if (!signOutError) return
-    alert(`${signOutError.message}`)
-  }, [signOutError]);
+    if (statusError) {
+      errorMessage = handleError(statusError);
+    }
 
+    if (resetError) {
+      errorMessage = handleError(resetError);
+    }
 
+    if (!errorMessage) return;
 
-
-  //
-  useEffect(() => {
-    if (!updateRoleError) return
-
-    const meg = handleError(updateRoleError);
-    alert(`${meg}`)
-
-  }, [updateRoleError]);
-
-
-
-
-
+    showAlert({
+      title: '',
+      message: errorMessage,
+      cancelText: null
+    });
+  }, [updateRoleError, signOutError, deleteError, userError, statusError, resetError]);
 
 
   useEffect(() => {

@@ -22,7 +22,7 @@ export default function handleError(error: Error | unknown): string {
 
         let errorMessage;
         if (isApiErrorResponse(data)) {
-            const ec = data?.code;
+            const ec = data?.code ?? 'UK';
             const eMsg = data?.message ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${ec})`;
             errorMessage = eMsg;
         } else {
