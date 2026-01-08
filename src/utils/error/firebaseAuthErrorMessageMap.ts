@@ -16,5 +16,6 @@ export const firebaseAuthErrorMessageMap: Record<string, string> = {
     "auth/invalid-email": "이메일 형식이 올바르지 않습니다.",
     "auth/operation-not-allowed": "현재 회원가입을 사용할 수 없습니다.",
     "auth/too-many-requests": "요청이 너무 많습니다. 잠시 후 다시 시도해주세요.",
-    "auth/internal-error": "일시적인 오류가 발생했습니다. 다시 시도해주세요."
+    "auth/internal-error": "일시적인 오류가 발생했습니다. 다시 시도해주세요.",
+    "auth/user-token-expired": "토큰이 만료되었습니다."
 };

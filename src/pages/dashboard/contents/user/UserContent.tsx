@@ -82,21 +82,19 @@ export default function UsersContent() {
       showLoading();
 
       const res = await updateUserStatus(uid, status)!;
-      const rUid = res?.uid;
-      const newStatus = res?.status;
-      const updateAt = res?.timeStamp;
-      if (!res || !rUid || !newStatus || !updateAt) {
-        throw new Error("response is invalid");
-      }
 
-      //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
+      //리스트 업데이트
       setUsers(prev =>
         prev.map(user =>
-          user.uid === rUid ? { ...user, status: newStatus, updatedAt: updateAt } : user
+          (user.uid === res?.uid) ? {
+            ...user,
+            status: res.status,
+            updatedAt: res.updatedAt
+          } : user
         )
       );
     } catch (error) {
-      console.error('Error:', error);
+      console.error('handleChangeUserStatus():', error);
     } finally {
       hideLoading();
     }
@@ -107,18 +105,21 @@ export default function UsersContent() {
     try {
       showLoading();
 
-      //TODO 버그 발생 중
       const res = await updateUserRole(uid, role);
       const rUid = res?.uid;
       const newRole = res?.role;
-      const updateAt = res?.timeStamp;
-      if (!res || !rUid || !newRole || !updateAt) {
+      const updatedAt = res?.updatedAt;
+      if (!res || !rUid || !newRole || !updatedAt) {
         throw new Error("response is invalid");
       }
 
       setUsers(prev =>
         prev.map(user =>
-          (user.uid === res!!.uid) ? { ...user, role: newRole, updatedAt: updateAt } : user
+          (user.uid === rUid) ? {
+            ...user,
+            role: newRole,
+            updatedAt: updatedAt
+          } : user
         )
       );
     } catch (error) {
@@ -135,17 +136,23 @@ export default function UsersContent() {
 
       const res = await signOutByUid(uid);
       const rUid = res?.uid;
-      const logoutAt = res?.timeStamp;
-      if (!res || !rUid || !logoutAt) {
+      const logoutAt = res?.logoutAt;
+      const updatedAt = res?.updateAt;
+      if (!res || !rUid || !logoutAt || !updatedAt) {
         throw new Error("response is invalid");
       }
 
-      //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
+      //리스트 업데이트
       setUsers(prev =>
         prev.map(user =>
-          (user.uid === rUid) ? { ...user, logoutAt: logoutAt } : user
+          (user.uid === rUid) ? {
+            ...user,
+            logoutAt: logoutAt,
+            updatedAt: updatedAt
+          } : user
         )
       );
+
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -160,15 +167,23 @@ export default function UsersContent() {
 
       const res = await resetPassword(uid)
       const rUid = res?.uid;
-      const resetAt = res?.timeStamp;
-      if (!res || !rUid || !resetAt) {
+      const passwordResetAt = res?.passwordResetAt;
+      const updatedAt = res?.updatedAt;
+      const logoutAt = res?.logoutAt;
+      if (!res || !rUid || !passwordResetAt || !updatedAt || !logoutAt) {
         throw new Error("response is invalid");
       }
 
-      //기존에 있던 사용자 리스트에서 변경된 리스트 업데이트
+      //리스트 업데이트
       setUsers(prev =>
         prev.map(user =>
-          (user.uid === rUid) ? { ...user, passwordResetAt: resetAt } : user
+          (user.uid === rUid) ?
+            {
+              ...user,
+              passwordResetAt: passwordResetAt,
+              logoutAt: logoutAt,
+              updatedAt: updatedAt
+            } : user
         )
       );
     } catch (error) {

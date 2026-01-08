@@ -25,13 +25,13 @@ function useUpdateRole() {
             setLoading(true);
             const idToken = await user?.getIdToken();
             const res = await updateUserRoleApi(idToken, uid, role);
-            const rUid = res?.uid;
-            const rRole = res?.role;
-            const updateAt = res?.timeStamp;
-            if (!res || !rUid || !updateAt || !rRole) {
-                setError(Error("response data is invalid"));
-                return;
-            }
+            // const rUid = res?.uid;
+            // const rRole = res?.role;
+            // const updateAt = res?.updatedAt;
+            // if (!res || !rUid || !updateAt || !rRole) {
+            //     setError(Error("response data is invalid"));
+            //     return;
+            // }
 
             return res;
         } catch (error) {

@@ -23,9 +23,9 @@ function useUpdateUserStatus() {
             const res = await updateUserStatusApi(idToken, uid, status);
             const rUid = res?.uid;
             const newStatus = res?.status;
-            const updateAt = res?.timeStamp;
-            if (!res || !rUid || !newStatus || !updateAt) {
-                throw new Error("response data is invalid");
+            const updatedAt = res?.updatedAt;
+            if (!res || !rUid || !newStatus || !updatedAt) {
+                throw new Error("Response data is invalid");
             }
 
             return res;

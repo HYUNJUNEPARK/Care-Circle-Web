@@ -8,11 +8,7 @@ import useSignInByEmail from './useSignInByEmail';
 import strings from '../../res/strings'
 import useAlert from '../../components/alert/useAlert';
 import handleError from '../../utils/error/handleError';
-import {
-  clearRememberedId,
-  loadRememberedId,
-  saveRememberedId,
-} from "../../utils/rememberIdStorage";
+import { clearRememberedId, loadRememberedId, saveRememberedId, } from "../../utils/rememberIdStorage";
 
 
 export default function SignIn() {
@@ -38,6 +34,7 @@ export default function SignIn() {
     }, []);
 
 
+    //아이디 기억하기
     useEffect(() => {
         // 체크 해제 시 즉시 삭제
         if (!rememberId) {

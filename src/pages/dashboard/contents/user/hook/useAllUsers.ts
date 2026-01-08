@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { UserInfo } from '../../../../../types/UserInfo'
 import { useAuth } from "../../../../../features/auth/AuthProvider";
-import { getAllUsers } from '../../../../../features/api/userApi';
+import { getAllUsers as getAllUsersApi } from '../../../../../features/api/userApi';
 
 /**
  * 사용자 리스트 가져오기
@@ -18,7 +18,7 @@ function useAllUsers() {
 
             const idToken = await user?.getIdToken();
 
-            const users = await getAllUsers(idToken);
+            const users = await getAllUsersApi(idToken);
 
             setUsers(users);
         } catch (error) {
