@@ -13,33 +13,42 @@ export interface ApiErrorResponse {
  * 
  */
 export default function handleError(error: Error | unknown): string {
-    if (axios.isAxiosError(error)) {
-        //API 서버 에러 처리
-        console.info('axiosError', error);
+    try {
+        if (axios.isAxiosError(error)) {
+            //API 서버 에러 처리
+            console.info('testLog1 axiosError', error);
 
-        //서버 에러 포맷
-        const data = error.response?.data;
+            //서버 에러 포맷
+            const data = error.response?.data;
+            console.info('testLog2 axiosError data', data);
 
-        let errorMessage;
-        if (isApiErrorResponse(data)) {
-            const ec = data?.code ?? 'UK';
-            const eMsg = data?.message ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${ec})`;
-            errorMessage = eMsg;
+            let errorMessage;
+            if (isApiErrorResponse(data)) {
+                console.info('testLog3');
+                const ec = data?.code ?? 'UK';
+                const errorMsg = data?.message ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${ec})`;
+                errorMessage = errorMsg;
+            } else {
+                console.info('testLog4');
+                const errorMsg = axiosErrorMessageMap[error.code ?? ''] ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${error.code})`;
+                errorMessage = errorMsg;
+            }
+            console.info('testLog5', errorMessage);
+            return errorMessage;
+        } else if (isFirebaseError(error)) {
+            //Auth 서버 에러 처리
+            console.info('firebaseError', error);
+            return firebaseAuthErrorMessageMap[error.code] ?? `알 수 없는 오류가 발생했습니다.\n(code: fb-${error.code})`;
         } else {
-            const eMsg = axiosErrorMessageMap[error.code ?? ''] ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${error.code})`;
-            errorMessage = eMsg;
+            const e = error as Error
+            console.info('else error', e);
+            return e.message;
         }
-
-        return errorMessage;
-    } else if (isFirebaseError(error)) {
-        //Auth 서버 에러 처리
-        console.info('firebaseError', error);
-        return firebaseAuthErrorMessageMap[error.code] ?? `알 수 없는 오류가 발생했습니다.\n(code: fb-${error.code})`;
-    } else {
-        const e = error as Error
-        console.info('else error', e);
-        return e.message;
+    } catch (error) {
+        console.info('Error try-catch', error);
+        return `알 수 없는 오류가 발생했습니다.\n(code: unk-he)`
     }
+
 }
 
 export function isApiErrorResponse(data: unknown): data is ApiErrorResponse {

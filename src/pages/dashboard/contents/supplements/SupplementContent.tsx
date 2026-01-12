@@ -2,10 +2,11 @@ import { useEffect } from "react";
 import useSupplements from "./hook/useSupplements";
 import useEffectCodes from "./hook/useEffectCodes";
 import ToggleButton from "../../../../components/buttons/toggle/ToggleButton";
+import handleError from "../../../../utils/error/handleError";
 
 export default function SupplementContent() {
-  const { getSupplements, searchSupplementsByEffectCode, supplements } = useSupplements();
-  const { getEffectCodes, updateEffectCodeClickState, effectCodes } = useEffectCodes();
+  const { getSupplements, searchSupplementsByEffectCode, supplements, error: supplementError } = useSupplements();
+  const { getEffectCodes, updateEffectCodeClickState, effectCodes, error: effectCodeError } = useEffectCodes();
 
   useEffect(() => {
     getSupplements();
@@ -34,28 +35,36 @@ export default function SupplementContent() {
         border: '1px solid #e5e7eb',
         marginBottom: '0.6rem'
       }}>
-        {effectCodes.length > 0 && (
-          <div style={{ padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
+        <div style={{ padding: '1.5rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
+            효과 목록
+          </h2>
+
+          {/* 효과코드 에러 */}
+          {effectCodeError &&
+            <div style={{ color: '#000000', textAlign: 'center', marginBottom: '24px' }}>{handleError(effectCodeError)}</div>}
+
+          {/* 효과코드 리스트 */}
+          {effectCodes.length > 0 && (
+            <div style={{ padding: '1.5rem' }}>
+              {/* <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
               효과 목록
-            </h2>
-
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {effectCodes.map(code => (
-                <ToggleButton
-                  key={code.code}
-                  label={code.name}
-                  isSelected={code.isClicked}
-                  onClick={async () =>
-                    await handleEffectCodeClick(code.code)
-                  } />
-              ))}
+            </h2> */}
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {effectCodes.map(code => (
+                  <ToggleButton
+                    key={code.code}
+                    label={code.name}
+                    isSelected={code.isClicked}
+                    onClick={async () =>
+                      await handleEffectCodeClick(code.code)
+                    } />
+                ))}
+              </div>
             </div>
-
-          </div>
-        )}
+          )}
+        </div>
       </div>
-
 
       <div style={{
         backgroundColor: 'white',
@@ -68,6 +77,11 @@ export default function SupplementContent() {
             영양제 목록
           </h2>
 
+          {/* 영양제 에러 */}
+          {effectCodeError &&
+            <div style={{ color: '#000000', textAlign: 'center', marginBottom: '24px' }}>{handleError(supplementError)}</div>}
+
+          {/* 영양제 리스트 */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 300px))',
