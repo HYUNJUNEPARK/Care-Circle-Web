@@ -265,6 +265,7 @@ export default function UsersContent() {
       </div>
 
       <div style={{ backgroundColor: 'white', borderRadius: '0.5rem', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)', border: '1px solid #e5e7eb' }}>
+        {/* 사용자 목록 타이틀 / 사용자 검색 */}
         <div style={{
           padding: '1.5rem',
           borderBottom: '1px solid #e5e7eb',
@@ -272,10 +273,8 @@ export default function UsersContent() {
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-
           <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: '#1f2937' }}>사용자 목록</h2>
 
-          {/* 사용자 검색 */}
           <div
             title='사용자 검색'
             style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -296,6 +295,7 @@ export default function UsersContent() {
           </div>
         </div>
 
+        {/* 사용자 목록 테이블 */}
         <div style={{ padding: '1.5rem' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             {/* 테이블 헤더 */}
@@ -311,17 +311,17 @@ export default function UsersContent() {
                   </th>
                 ))}
               </tr>}
-
-
             </thead>
             {/* 테이블 바디 */}
             <tbody>
               {users?.map((user, index) => (
                 <tr key={index}>
+                  {/* 사용자 이메일 */}
                   <td className={styles.td}>{user.email}</td>
+                  {/* 사용자 UID */}
                   <td className={styles.td}>{user.uid}</td>
+                  {/* 사용자 권한 */}
                   <td className={styles.td}>
-
                     <select
                       value={user.role}
                       onChange={async (e) => {

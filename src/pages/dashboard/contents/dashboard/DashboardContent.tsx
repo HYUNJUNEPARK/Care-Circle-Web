@@ -1,9 +1,4 @@
-// import { 
-//   Users, ShoppingCart, BarChart3,
-//   User, ChevronRight
-// } from 'lucide-react';
 import { FaRegUser } from "react-icons/fa";
-
 
 // 각 메뉴별 Content 컴포넌트
 export default function DashboardContent() {

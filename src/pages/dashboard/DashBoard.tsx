@@ -4,21 +4,19 @@ import Sidebar from './components/sidebar/Sidebar';
 import Content from './contents/Content';
 import type { SideMenuItem } from '../../types/SideMenuItem';
 import { TbLayoutDashboard } from "react-icons/tb";
-import { FiShoppingCart } from "react-icons/fi";
 import { IoBarChartOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { LuUserRound } from "react-icons/lu";
 import { FiFileText } from "react-icons/fi";
-import { PiKey } from "react-icons/pi";
+import { FaPills } from "react-icons/fa6";
 
 export default function DashBoard() {
     const [selectedMenu, setSelectedMenu] = useState('dashboard');
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const sideMenuItems: SideMenuItem[] = [
-        { id: 'users', label: '사용자 관리', icon: <LuUserRound size={20} /> },
-        { id: 'key', label: '발급 키 관리', icon: <PiKey size={20} /> },
         { id: 'dashboard', label: '대시보드 템플릿', icon: <TbLayoutDashboard size={20} /> },
-        { id: 'products', label: '상품 관리 템플릿', icon: <FiShoppingCart size={20} /> },
+        { id: 'users', label: '사용자 관리', icon: <LuUserRound size={20} /> },
+        { id: 'products', label: '영양제 목록', icon: <FaPills size={20} /> },
         { id: 'analytics', label: '통계 템플릿', icon: <IoBarChartOutline size={20} /> },
         { id: 'reports', label: '리포트 템플릿', icon: <FiFileText size={20} /> },
         { id: 'settings', label: '설정 템플릿', icon: <IoSettingsOutline size={20} /> },

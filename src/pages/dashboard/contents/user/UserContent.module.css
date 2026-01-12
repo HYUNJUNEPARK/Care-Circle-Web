@@ -11,6 +11,8 @@
   padding: 0.75rem 1rem;
   color: #6b7280;
   border-bottom: 1px solid #f3f4f6;
+  word-break: break-word;
+
 }
 
 .roleButton {
@@ -19,6 +21,7 @@
   font-weight: 800;
   font-size: 0.875rem;
   padding: 0.25rem 0.5rem;
+  white-space: nowrap;
 }
 
 .statusDisplay {
@@ -26,6 +29,7 @@
   border-radius: 3px;
   font-weight: 600;
   font-size: 0.875rem;
+  white-space: nowrap;
 }
 
 .dateDisplay {
