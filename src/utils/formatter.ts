@@ -1,5 +1,5 @@
 
-import type { UserInfo } from '../types/UserInfo';
+import type { UserInfo } from '../types/local/UserInfo';
 import type { RemoteUserInfo } from '../types/remote/RemoteUserInfo'
 
 /**

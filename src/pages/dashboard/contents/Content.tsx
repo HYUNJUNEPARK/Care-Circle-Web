@@ -1,5 +1,5 @@
 import UsersContent from './user/UserContent';
-import ProductsContent from './products/ProductsContent';
+import SupplementContent from './supplements/SupplementContent';
 import ReportsContent from './report/ReportsContent';
 import AnalyticsContent from './analytics/AnalyticsContent';
 import SettingsContent from './settings/SettingsContent';
@@ -9,7 +9,7 @@ function Content({ selectedMenu }: { selectedMenu: string }) {
     switch (selectedMenu) {
         case 'dashboard': return <DashboardContent />;
         case 'users': return <UsersContent />;
-        case 'products': return <ProductsContent />;
+        case 'supplements': return <SupplementContent />;
         case 'analytics': return <AnalyticsContent />;
         case 'reports': return <ReportsContent />;
         case 'settings': return <SettingsContent />;

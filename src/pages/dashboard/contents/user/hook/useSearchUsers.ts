@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { UserInfo } from '../../../../../types/UserInfo'
+import type { UserInfo } from '../../../../../types/local/UserInfo'
 import { useAuth } from "../../../../../features/auth/AuthProvider";
 import { searchUsersByEmailOrUid } from '../../../../../features/api/userApi';
 

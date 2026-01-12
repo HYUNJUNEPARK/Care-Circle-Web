@@ -16,22 +16,38 @@ function useEffectCodes() {
         try {
             setLoading(true);
             const idToken = await user?.getIdToken();
+
+            const allOpts: EffectCodeForUi = {
+                code: 'ALL',
+                name: '전체',
+                isClicked: true,
+            };
             const effectCodes = await getEffectCodesApi(idToken);
             const effectCodesForUi = effectCodes.map(convToUiData);
-            setEffectCodes(effectCodesForUi);
+            const effectCodeOpts = [allOpts, ...effectCodesForUi];
+            setEffectCodes(effectCodeOpts);
         } catch (error) {
-            setError(error as Error)
+            setError(error as Error);
         } finally {
             setLoading(false);
         }
-    }
+    };
+
+    const updateEffectCodeClickState = (code: string) => {
+        const updatedCodes = effectCodes.map(ec => ({
+            ...ec,
+            isClicked: ec.code === code
+        }));
+        setEffectCodes(updatedCodes);
+    };
 
     return {
         getEffectCodes,
+        updateEffectCodeClickState,
         effectCodes,
         isLoading,
         error
-    }
+    };
 }
 
 export default useEffectCodes;

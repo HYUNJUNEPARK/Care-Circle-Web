@@ -1,6 +1,6 @@
 import { apiClient } from './apiClient';
 import type { UserStatusType } from '../../types/UserStatusType';
-import type { UserInfo } from '../../types/UserInfo';
+import type { UserInfo } from '../../types/local/UserInfo';
 import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo'
 import type ChangeUserStatusResponse from '../../types/remote/ChangeStatusResponse';
 import type UpdateUserRoleResponse from '../../types/remote/UpdateUserRoleResponse';

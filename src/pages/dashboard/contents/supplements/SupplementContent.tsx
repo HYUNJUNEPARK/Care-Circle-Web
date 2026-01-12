@@ -3,14 +3,27 @@ import useSupplements from "./hook/useSupplements";
 import useEffectCodes from "./hook/useEffectCodes";
 import ToggleButton from "../../../../components/buttons/toggle/ToggleButton";
 
-export default function ProductsContent() {
+export default function SupplementContent() {
   const { getSupplements, searchSupplementsByEffectCode, supplements } = useSupplements();
-  const { getEffectCodes, effectCodes } = useEffectCodes();
+  const { getEffectCodes, updateEffectCodeClickState, effectCodes } = useEffectCodes();
 
   useEffect(() => {
     getSupplements();
     getEffectCodes();
   }, []);
+
+  /**
+   * 영양제 효과 코드 클릭 핸들러
+   */
+  const handleEffectCodeClick = async (code: string) => {
+    if (code === 'ALL') {
+      await getSupplements();
+      updateEffectCodeClickState(code);
+      return;
+    }
+    await searchSupplementsByEffectCode(code);
+    updateEffectCodeClickState(code);
+  };
 
   return (
     <div>
@@ -34,9 +47,7 @@ export default function ProductsContent() {
                   label={code.name}
                   isSelected={code.isClicked}
                   onClick={async () =>
-                    //alert(`sadfsdfas ${code.code}`)
-
-                    await searchSupplementsByEffectCode(code.code)
+                    await handleEffectCodeClick(code.code)
                   } />
               ))}
             </div>
@@ -59,7 +70,7 @@ export default function ProductsContent() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 350px))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 300px))',
             gap: '1.5rem'
           }}>
             {supplements.map(supplement => (
@@ -68,13 +79,17 @@ export default function ProductsContent() {
                 borderRadius: '0.5rem',
                 padding: '1rem'
               }}>
-                <div style={{
-                  width: '100%',
-                  height: '12rem',
-                  backgroundColor: '#e5e7eb',
-                  borderRadius: '0.5rem',
-                  marginBottom: '1rem'
-                }}></div>
+                <img
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    backgroundColor: '#e5e7eb',
+                    borderRadius: '0.5rem',
+                    marginBottom: '1rem'
+                  }}
+                  src={supplement.imageUrl}
+                  alt="thumbnail"
+                />
                 <h3 style={{ fontWeight: 600, color: '#1f2937', marginBottom: '0.5rem' }}>{supplement.name}</h3>
                 <p style={{ color: '#6b7280', marginBottom: '0.5rem' }}>{supplement.description}</p>
                 <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>효과: {supplement.effects}</p>

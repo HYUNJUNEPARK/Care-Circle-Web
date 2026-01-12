@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from "../../../../../features/auth/AuthProvider";
 import { getSupplements as getSupplementsApi, searchSupplementsByEffectCode as searchSupplementsApi } from '../../../../../features/api/supplementApi';
-
 import type { Supplement } from '../../../../../types/remote/Supplements';
 
 /**

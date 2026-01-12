@@ -16,7 +16,7 @@ export default function DashBoard() {
     const sideMenuItems: SideMenuItem[] = [
         { id: 'dashboard', label: '대시보드 템플릿', icon: <TbLayoutDashboard size={20} /> },
         { id: 'users', label: '사용자 관리', icon: <LuUserRound size={20} /> },
-        { id: 'products', label: '영양제 목록', icon: <FaPills size={20} /> },
+        { id: 'supplements', label: '영양제 목록', icon: <FaPills size={20} /> },
         { id: 'analytics', label: '통계 템플릿', icon: <IoBarChartOutline size={20} /> },
         { id: 'reports', label: '리포트 템플릿', icon: <FiFileText size={20} /> },
         { id: 'settings', label: '설정 템플릿', icon: <IoSettingsOutline size={20} /> },
