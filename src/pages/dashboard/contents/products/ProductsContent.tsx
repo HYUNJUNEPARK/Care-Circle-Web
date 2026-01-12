@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import useSupplements from "./hook/useSupplements";
 import useEffectCodes from "./hook/useEffectCodes";
+import ToggleButton from "../../../../components/buttons/toggle/ToggleButton";
 
 export default function ProductsContent() {
-  const { getSupplements, supplements } = useSupplements();
+  const { getSupplements, searchSupplementsByEffectCode, supplements } = useSupplements();
   const { getEffectCodes, effectCodes } = useEffectCodes();
 
   useEffect(() => {
@@ -13,8 +14,6 @@ export default function ProductsContent() {
 
   return (
     <div>
-
-
       <div style={{
         backgroundColor: 'white',
         borderRadius: '0.5rem',
@@ -28,9 +27,17 @@ export default function ProductsContent() {
               효과 목록
             </h2>
 
-            <div style={{display:'flex', gap:'8px', flexWrap:'wrap'}}>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
               {effectCodes.map(code => (
-                <div key={code.code}>{code.name}</div>
+                <ToggleButton
+                  key={code.code}
+                  label={code.name}
+                  isSelected={code.isClicked}
+                  onClick={async () =>
+                    //alert(`sadfsdfas ${code.code}`)
+
+                    await searchSupplementsByEffectCode(code.code)
+                  } />
               ))}
             </div>
 
@@ -46,13 +53,13 @@ export default function ProductsContent() {
         border: '1px solid #e5e7eb'
       }}>
         <div style={{ padding: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
-              영양제 목록
-            </h2>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
+            영양제 목록
+          </h2>
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 350px))',
             gap: '1.5rem'
           }}>
             {supplements.map(supplement => (

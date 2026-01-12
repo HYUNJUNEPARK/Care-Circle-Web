@@ -28,7 +28,6 @@ export default function DashBoard() {
             width: "100vw",
             minHeight: "100vh"
         }}>
-
             <Toolbar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
             <div style={{ display: 'flex' }}>
