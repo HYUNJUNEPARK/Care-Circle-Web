@@ -82,6 +82,7 @@ export default function SupplementContent() {
                 <img
                   style={{
                     width: '100%',
+                    minHeight: '150px',
                     height: 'auto',
                     backgroundColor: '#e5e7eb',
                     borderRadius: '0.5rem',
