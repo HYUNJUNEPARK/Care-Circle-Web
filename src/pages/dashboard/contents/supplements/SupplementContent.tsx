@@ -3,6 +3,7 @@ import useSupplements from "./hook/useSupplements";
 import useEffectCodes from "./hook/useEffectCodes";
 import ToggleButton from "../../../../components/buttons/toggle/ToggleButton";
 import handleError from "../../../../utils/error/handleError";
+import Button from '../../../../components/buttons/Button';
 
 export default function SupplementContent() {
   const { getSupplements, searchSupplementsByEffectCode, supplements, error: supplementError } = useSupplements();
@@ -36,9 +37,7 @@ export default function SupplementContent() {
         marginBottom: '0.6rem'
       }}>
         <div style={{ padding: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
-            효과 목록
-          </h2>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>효과 목록</h2>
 
           {/* 효과코드 에러 */}
           {effectCodeError &&
@@ -47,9 +46,6 @@ export default function SupplementContent() {
           {/* 효과코드 리스트 */}
           {effectCodes.length > 0 && (
             <div style={{ padding: '1.5rem' }}>
-              {/* <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>
-              효과 목록
-            </h2> */}
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {effectCodes.map(code => (
                   <ToggleButton
@@ -91,12 +87,15 @@ export default function SupplementContent() {
               <div key={supplement.code} style={{
                 border: '1px solid #e5e7eb',
                 borderRadius: '0.5rem',
-                padding: '1rem'
+                padding: '1rem',
+                display: 'flex',
+                flexDirection: 'column',
               }}>
+                {/* 영양제 이미지 */}
                 <img
                   style={{
                     width: '100%',
-                    minHeight: '150px',
+                    minHeight: '220px',
                     height: 'auto',
                     backgroundColor: '#e5e7eb',
                     borderRadius: '0.5rem',
@@ -105,20 +104,15 @@ export default function SupplementContent() {
                   src={supplement.imageUrl}
                   alt="thumbnail"
                 />
+                {/* 영양제 이름 */}
                 <h3 style={{ fontWeight: 600, color: '#1f2937', marginBottom: '0.5rem' }}>{supplement.name}</h3>
+                {/* 영양제 설명 */}
                 <p style={{ color: '#6b7280', marginBottom: '0.5rem' }}>{supplement.description}</p>
+                {/* 영양제 효과 */}
                 <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>효과: {supplement.effects}</p>
-                <button style={{
-                  width: '100%',
-                  backgroundColor: '#3b82f6',
-                  color: 'white',
-                  padding: '0.5rem',
-                  borderRadius: '0.5rem',
-                  border: 'none',
-                  cursor: 'pointer'
-                }}>
-                  편집
-                </button>
+                <Button
+                  style={{ marginTop: 'auto' }}
+                  buttonText="수정" />
               </div>
             ))}
           </div>

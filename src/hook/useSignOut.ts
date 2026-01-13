@@ -1,19 +1,14 @@
 import { useState } from 'react';
-import { useAuth } from "../features/auth/AuthProvider";
 import { signOut as signOutApi } from '../features/api/userApi';
-import { auth } from "../features/auth/authClient";
+import { firebaseAuth } from "../features/auth/firebaseAuth";
 import { signOut as authSignOut } from "firebase/auth";
-// import { useNavigate } from "react-router-dom";
-// import { PATH } from "../constants/paths";
 
 /**
  * 로그아웃
  */
 function useSignOut() {
-    const { user } = useAuth();
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
-    //const navigate = useNavigate();
 
     /**
      * uid 에 해당하는 회원을 로그아웃 시킨다.
@@ -27,8 +22,7 @@ function useSignOut() {
 
         try {
             setLoading(true);
-            const idToken = await user?.getIdToken();
-            const res = await signOutApi(idToken, uid);
+            const res = await signOutApi(uid);
             const rUid = res?.uid;
             const logoutAt = res?.logoutAt;
             const updatedAt = res?.updateAt;
@@ -56,18 +50,14 @@ function useSignOut() {
         try {
             setLoading(true);
             //온라인 로그아웃
-            const uid = auth.currentUser?.uid
+            const uid = firebaseAuth.currentUser?.uid
             if (!uid) {
                 setError(new Error('Uid is null'));
                 return;
             }
 
-            const idToken = await user?.getIdToken();
-            await signOutApi(idToken, uid);
-
-            await authSignOut(auth)
-
-            //await signOutCache();
+            await signOutApi(uid);
+            await authSignOut(firebaseAuth)
         } catch (error) {
             setError(error as Error)
         } finally {
@@ -82,7 +72,7 @@ function useSignOut() {
         try {
             // FB 로그아웃
             setLoading(true);
-            await authSignOut(auth)
+            await authSignOut(firebaseAuth)
         } catch (error) {
             setError(error as Error);
         } finally {

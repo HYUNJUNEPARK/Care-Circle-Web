@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import type { UserInfo } from '../../../../../types/local/UserInfo'
-import { useAuth } from "../../../../../features/auth/AuthProvider";
 import { getAllUsers as getAllUsersApi } from '../../../../../features/api/userApi';
 
 /**
  * 사용자 리스트 가져오기
  */
 function useAllUsers() {
-    const { user } = useAuth();
     const [users, setUsers] = useState<UserInfo[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -16,9 +14,7 @@ function useAllUsers() {
         try {
             setLoading(true);
 
-            const idToken = await user?.getIdToken();
-
-            const users = await getAllUsersApi(idToken);
+            const users = await getAllUsersApi();
 
             setUsers(users);
         } catch (error) {

@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { updateUserRole as updateUserRoleApi } from "../../../../../features/api/userApi";
 import { isUserRole } from "../../../../../types/UserRoleType";
-import { useAuth } from "../../../../../features/auth/AuthProvider";
 
 /**
  * 회원 권한 수정
  */
 function useUpdateRole() {
-    const { user } = useAuth();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
 
@@ -21,8 +19,7 @@ function useUpdateRole() {
         
         try {
             setLoading(true);
-            const idToken = await user?.getIdToken();
-            const res = await updateUserRoleApi(idToken, uid, role);
+            const res = await updateUserRoleApi(uid, role);
             const rUid = res?.uid;
             const rRole = res?.role;
             const updateAt = res?.updatedAt;

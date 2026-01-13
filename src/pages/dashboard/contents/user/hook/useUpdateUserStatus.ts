@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { updateUserStatus as updateUserStatusApi } from "../../../../../features/api/userApi";
 import type { UserStatusType } from "../../../../../types/UserStatusType";
-import { useAuth } from "../../../../../features/auth/AuthProvider";
 
 /**
  * 회원 상태 수정
  */
 function useUpdateUserStatus() {
-    const { user } = useAuth();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
 
@@ -19,8 +17,7 @@ function useUpdateUserStatus() {
 
         try {
             setLoading(true);
-            const idToken = await user?.getIdToken();
-            const res = await updateUserStatusApi(idToken, uid, status);
+            const res = await updateUserStatusApi(uid, status);
             const rUid = res?.uid;
             const newStatus = res?.status;
             const updatedAt = res?.updatedAt;

@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "../../../../../features/auth/AuthProvider";
 import { deleteUser as deleteUserApi } from "../../../../../features/api/userApi";
 
 /**
  * 회원 상태 수정
  */
 function useDeleteUser() {
-    const { user } = useAuth();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
 
@@ -18,8 +16,7 @@ function useDeleteUser() {
 
         try {
             setLoading(true);
-            const idToken = await user?.getIdToken();
-            const res = await deleteUserApi(idToken, uid);
+            const res = await deleteUserApi(uid);
             const rUid = res?.uid;
             const status = res?.status;
             const updatedAt = res?.updatedAt;

@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { initAuthPersistence } from './features/auth/authClient.ts'
+import { initAuthPersistence } from './features/auth/firebaseAuth.ts'
 import { AuthProvider } from './features/auth/AuthProvider.tsx'
 import { AlertProvider } from './components/alert/AlertProvider.tsx';
 import { LoadingProvider } from './components/loading/loading/LoadingProvider.tsx'

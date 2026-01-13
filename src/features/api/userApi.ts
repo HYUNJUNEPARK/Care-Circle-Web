@@ -1,4 +1,5 @@
-import { apiClient } from './apiClient';
+import { authAxios } from '../axios/authAxios';
+import { publicAxios } from '../axios/publicAxios';
 import type { UserStatusType } from '../../types/UserStatusType';
 import type { UserInfo } from '../../types/local/UserInfo';
 import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo'
@@ -12,25 +13,12 @@ import { converToUsers, converToUser } from '../../utils/formatter';
 
 const userApiUrl = `/api/users`
 
-const tokenErrorMessage = 'IdToken is null.';
-
 /**
  * 전체 사용자 조회
  */
-export async function getAllUsers(
-    idToken: string | undefined | null
-): Promise<UserInfo[]> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.get(
-        `${userApiUrl}`, //url
-        {                //headers
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
+export async function getAllUsers(): Promise<UserInfo[]> {
+    const res = await authAxios.get(
+        `${userApiUrl}`,
     );
 
     const remoteUsers = (res.data.data) as RemoteUserInfo[];
@@ -41,23 +29,10 @@ export async function getAllUsers(
 /**
  * Email or Uid 로 사용자 검색 
  */
-export async function searchUsersByEmailOrUid(
-    idToken: string | undefined | null,
-    keyword: string
-): Promise<UserInfo[]> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.get(
+export async function searchUsersByEmailOrUid(keyword: string): Promise<UserInfo[]> {
+    const res = await authAxios.get(
         `${userApiUrl}/search?keyword=${keyword}`,
-        {
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
     );
-
     const remoteUsers = (res.data.data) as RemoteUserInfo[];
     const users = converToUsers(remoteUsers);
     return users;
@@ -65,47 +40,29 @@ export async function searchUsersByEmailOrUid(
 
 /**
  * 서버와 사용자 동기화
+ * firebase auth 인증 토큰을 이용하여 서버와 동기화 처리
  * 
  * @returns true 동기화 성공, false 동기화 실패
  */
-export async function syncMeToServer(idToken: string | undefined | null): Promise<Boolean> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.post(
+export async function syncMeToServer(): Promise<Boolean> {
+    const res = await authAxios.post(
         `${userApiUrl}/sync`, //url
         {},                   //body
-        {                     //headers
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
+        {},                   //headers  
     );
-
     return Boolean(res.data.success);
 }
 
 /**
  * 로그아웃
  */
-export async function signOut(idToken: string | undefined | null, uid: string): Promise<SignOutResponse> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.post(
+export async function signOut(uid: string): Promise<SignOutResponse> {
+    const res = await authAxios.post(
         `${userApiUrl}/sign-out`, //url
         {                         //body
             uid: uid
         },
-        {                         //headers
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
     );
-
     const data = (res.data) as SignOutResponse;
     return data
 }
@@ -114,34 +71,24 @@ export async function signOut(idToken: string | undefined | null, uid: string): 
  * 이메일 유효성 체크
  */
 export async function checkValidEmail(email: string) {
-    return apiClient.get(`${userApiUrl}/exists?email=${email}`);
+    return publicAxios.get(`${userApiUrl}/exists?email=${email}`);
 }
 
 /**
  * 회원 상태 변경
  */
 export async function updateUserStatus(
-    idToken: string | undefined | null,
     uid: string,
     userStatus: UserStatusType,
 ): Promise<ChangeUserStatusResponse> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.patch(
+    const res = await authAxios.patch(
         `${userApiUrl}/status`, //url
         {                       //body
             uid: uid,
             status: userStatus
         },
-        {                       //headers
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
+        {}
     );
-
     const data = (res.data) as ChangeUserStatusResponse;
     return data;
 }
@@ -149,23 +96,10 @@ export async function updateUserStatus(
 /**
  * 계정 삭제
  */
-export async function deleteUser(
-    idToken: string | undefined | null,
-    uid: string
-): Promise<DeleteUserResponse> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.delete(
-        `${userApiUrl}/${uid}`, //url
-        {                       //headers
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
+export async function deleteUser(uid: string): Promise<DeleteUserResponse> {
+    const res = await authAxios.delete(
+        `${userApiUrl}/${uid}`,
     );
-
     const data = (res.data) as DeleteUserResponse;
     return data;
 }
@@ -174,27 +108,16 @@ export async function deleteUser(
  * 회원 상태 변경
  */
 export async function updateUserRole(
-    idToken: string | undefined | null,
     uid: string,
     role: UserRole,
 ): Promise<UpdateUserRoleResponse> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);;
-    }
-
-    const res = await apiClient.patch(
+    const res = await authAxios.patch(
         `${userApiUrl}/role`,   //url
         {                       //body
             uid: uid,
             role: role
         },
-        {                       //headers
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
     );
-
     const data = (res.data) as UpdateUserRoleResponse;
     return data;
 }
@@ -204,22 +127,10 @@ export async function updateUserRole(
 /**
  * 로그인 사용자 정보 로딩
  */
-export async function getLoginUserInfo(
-    idToken: string | undefined | null,
-): Promise<UserInfo> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.get(
+export async function getLoginUserInfo(): Promise<UserInfo> {
+    const res = await authAxios.get(
         `${userApiUrl}/sign-in`,
-        {
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
     );
-
     const rUser = (res.data.data) as RemoteUserInfo
     const user = converToUser(rUser)
     return user; 
@@ -228,26 +139,13 @@ export async function getLoginUserInfo(
 /**
  * 비밀번호 초기화
  */
-export async function resetPassword(
-    idToken: string | undefined | null,
-    uid: string,
-): Promise<ResetPasswordResponse> {
-    if (!idToken) {
-        throw new Error(`${tokenErrorMessage}`);
-    }
-
-    const res = await apiClient.post(
+export async function resetPassword(uid: string): Promise<ResetPasswordResponse> {
+    const res = await authAxios.post(
         `${userApiUrl}/password-reset`, //url
         {                      //body
             uid: uid
         },
-        {                      //headers
-            headers: {
-                Authorization: `Bearer ${idToken}`,
-            },
-        }
     );
-
     const data = (res.data) as ResetPasswordResponse;
     return data;
 }

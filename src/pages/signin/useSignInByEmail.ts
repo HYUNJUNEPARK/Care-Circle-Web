@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../features/auth/authClient";
+import { firebaseAuth } from "../../features/auth/firebaseAuth";
 
 function useSignInByEmail() {
     const [isLoading, setLoading] = useState(false);
@@ -11,7 +11,7 @@ function useSignInByEmail() {
             setLoading(true);
 
             //FB 서버 로그인
-            await signInWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(firebaseAuth, email, password);
         } catch (error) {
             console.error('useSignInByEmail', error);
             setError(error as Error);

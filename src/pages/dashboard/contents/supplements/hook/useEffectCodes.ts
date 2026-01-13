@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useAuth } from "../../../../../features/auth/AuthProvider";
 import { getEffectCodes as getEffectCodesApi } from '../../../../../features/api/supplementApi';
 import { convToUiData, type EffectCodeForUi } from '../../../../../types/local/EffectCodes';
 
@@ -7,7 +6,6 @@ import { convToUiData, type EffectCodeForUi } from '../../../../../types/local/E
  * 영양제 코드 리스트 가져오기
  */
 function useEffectCodes() {
-    const { user } = useAuth();
     const [effectCodes, setEffectCodes] = useState<EffectCodeForUi[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -15,14 +13,12 @@ function useEffectCodes() {
     const getEffectCodes = async () => {
         try {
             setLoading(true);
-            const idToken = await user?.getIdToken();
-
             const allOpts: EffectCodeForUi = {
                 code: 'ALL',
                 name: '전체',
                 isClicked: true,
             };
-            const effectCodes = await getEffectCodesApi(idToken);
+            const effectCodes = await getEffectCodesApi();
             const effectCodesForUi = effectCodes.map(convToUiData);
             const effectCodeOpts = [allOpts, ...effectCodesForUi];
             setEffectCodes(effectCodeOpts);

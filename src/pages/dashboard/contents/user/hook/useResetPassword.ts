@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { resetPassword as resetPasswordApi } from "../../../../../features/api/userApi";
-import { useAuth } from "../../../../../features/auth/AuthProvider";
 
 /**
  * 비밀번호 초기화
  */
 function useResetPassword() {
-    const { user } = useAuth();
     const [error, setError] = useState<Error | null>(null);
     const [isLoading, setLoading] = useState<Boolean>(false);
 
@@ -18,8 +16,7 @@ function useResetPassword() {
 
         try {
             setLoading(true);
-            const idToken = await user?.getIdToken();
-            const res = await resetPasswordApi(idToken, uid);
+            const res = await resetPasswordApi(uid);
             const rUid = res?.uid;
             const passwordResetAt = res?.passwordResetAt;
             const updatedAt = res?.updatedAt;

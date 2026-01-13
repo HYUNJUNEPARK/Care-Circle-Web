@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useAuth } from "../../../../../features/auth/AuthProvider";
 import { getSupplements as getSupplementsApi, searchSupplementsByEffectCode as searchSupplementsApi } from '../../../../../features/api/supplementApi';
 import type { Supplement } from '../../../../../types/remote/Supplements';
 
@@ -7,7 +6,6 @@ import type { Supplement } from '../../../../../types/remote/Supplements';
  * 영양제 리스트 가져오기
  */
 function useSupplements() {
-    const { user } = useAuth();
     const [supplements, setSupplements] = useState<Supplement[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -18,8 +16,7 @@ function useSupplements() {
     const getSupplements = async () => {
         try {
             setLoading(true);
-            const idToken = await user?.getIdToken();
-            const supplements = await getSupplementsApi(idToken);
+            const supplements = await getSupplementsApi();
             setSupplements(supplements);
         } catch (error) {
             setError(error as Error)
@@ -34,8 +31,7 @@ function useSupplements() {
     const searchSupplementsByEffectCode = async (code: string) => {
         try {
             setLoading(true);
-            const idToken = await user?.getIdToken();
-            const supplements = await searchSupplementsApi(idToken, code);
+            const supplements = await searchSupplementsApi(code);
             setSupplements(supplements);
         } catch (error) {
             setError(error as Error)
