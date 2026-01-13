@@ -15,6 +15,7 @@ export interface Supplement {
     name: string;
     description: string;
     imageUrl?: string;
+    status: string;
     effectCode: string;
     effects: string;
 }

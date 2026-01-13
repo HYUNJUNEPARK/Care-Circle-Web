@@ -13,10 +13,13 @@ function useSupplements() {
     /**
      * 영양제 리스트 가져오기
      */
-    const getSupplements = async () => {
+    const getSupplements = async (
+        page: number,
+        limit: number = 20
+    ) => {
         try {
             setLoading(true);
-            const supplements = await getSupplementsApi();
+            const supplements = await getSupplementsApi(page, limit);
             setSupplements(supplements);
         } catch (error) {
             setError(error as Error)
@@ -28,10 +31,14 @@ function useSupplements() {
     /**
      * Effect 코드에 해당하는 영양제 검색
      */
-    const searchSupplementsByEffectCode = async (code: string) => {
+    const searchSupplementsByEffectCode = async (
+        code: string,
+        page: number,
+        limit: number = 20
+    ) => {
         try {
             setLoading(true);
-            const supplements = await searchSupplementsApi(code);
+            const supplements = await searchSupplementsApi(code, page, limit);
             setSupplements(supplements);
         } catch (error) {
             setError(error as Error)
