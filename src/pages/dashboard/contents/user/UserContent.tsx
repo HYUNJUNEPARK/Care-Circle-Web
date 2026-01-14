@@ -300,7 +300,7 @@ export default function UsersContent() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             {/* 테이블 헤더 */}
             <thead>
-              {users.length === 0 && <span style={{ color: '#000000', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>검색된 사용자가 없습니다.</span>}
+              {/* {users.length === 0 && <span style={{ color: '#000000', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>검색된 사용자가 없습니다.</span>}
 
               {users.length !== 0 && <tr>
                 {tableHeads.map((thead, i) => (
@@ -310,7 +310,21 @@ export default function UsersContent() {
                     {thead}
                   </th>
                 ))}
-              </tr>}
+              </tr>} */}
+              {users.length === 0 ? (
+                <tr>
+                  <th colSpan={tableHeads.length} className={styles.th} style={{ fontSize: 18, color: "#000" }}>
+                    검색된 사용자가 없습니다.
+                  </th>
+                </tr>
+              ) : (
+                <tr>
+                  {tableHeads.map((thead, i) => (
+                    <th key={i} className={styles.th}>{thead}</th>
+                  ))}
+                </tr>
+              )}
+
             </thead>
             {/* 테이블 바디 */}
             <tbody>
