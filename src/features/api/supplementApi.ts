@@ -1,5 +1,5 @@
 import { authAxios } from '../axios/authAxios';
-import type { SearchSupplementsResponse, Supplement, SupplementsResponse } from '../../types/remote/Supplements';
+import type { SearchSupplementsResponse, SupplementsResponse } from '../../types/remote/Supplements';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
 
 const supplementApiUrl = `/api/supplements`
@@ -10,12 +10,12 @@ const supplementApiUrl = `/api/supplements`
 export async function getSupplements(
     page: number,
     limit: number
-): Promise<Supplement[]> {
+): Promise<SupplementsResponse> {
     const res = await authAxios.get(
         `${supplementApiUrl}?page=${page}&limit=${limit}`,
     );
     const resData = res.data as SupplementsResponse;
-    return resData.data;
+    return resData;
 }
 
 /**
@@ -25,12 +25,12 @@ export async function searchSupplementsByEffectCode(
     effectCode: string,
     page: number,
     limit: number
-): Promise<Supplement[]> {
+): Promise<SearchSupplementsResponse> {
     const res = await authAxios.get(
         `${supplementApiUrl}?effectCode=${effectCode}&page=${page}&limit=${limit}`,
     );
     const resData = res.data as SearchSupplementsResponse;
-    return resData.data;
+    return resData;
 }
 
 /**

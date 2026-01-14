@@ -16,24 +16,19 @@ export default function handleError(error: Error | unknown): string {
     try {
         if (axios.isAxiosError(error)) {
             //API 서버 에러 처리
-            console.info('testLog1 axiosError', error);
 
             //서버 에러 포맷
             const data = error.response?.data;
-            console.info('testLog2 axiosError data', data);
 
             let errorMessage;
             if (isApiErrorResponse(data)) {
-                console.info('testLog3');
                 const ec = data?.code ?? 'UK';
                 const errorMsg = data?.message ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${ec})`;
                 errorMessage = errorMsg;
             } else {
-                console.info('testLog4');
                 const errorMsg = axiosErrorMessageMap[error.code ?? ''] ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${error.code})`;
                 errorMessage = errorMsg;
             }
-            console.info('testLog5', errorMessage);
             return errorMessage;
         } else if (isFirebaseError(error)) {
             //Auth 서버 에러 처리

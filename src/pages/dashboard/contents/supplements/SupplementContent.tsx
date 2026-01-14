@@ -4,9 +4,11 @@ import useEffectCodes from "./hook/useEffectCodes";
 import ToggleButton from "../../../../components/buttons/toggle/ToggleButton";
 import handleError from "../../../../utils/error/handleError";
 import Button from '../../../../components/buttons/Button';
+import Pagination from "../../../../components/pagination/Pagination";
+
 
 export default function SupplementContent() {
-  const { getSupplements, searchSupplementsByEffectCode, supplements, error: supplementError } = useSupplements();
+  const { getSupplements, searchSupplementsByEffectCode, supplements, pagination, error: supplementError } = useSupplements();
   const { getEffectCodes, updateEffectCodeClickState, effectCodes, error: effectCodeError } = useEffectCodes();
 
   useEffect(() => {
@@ -26,6 +28,13 @@ export default function SupplementContent() {
     await searchSupplementsByEffectCode(code, 1);
     updateEffectCodeClickState(code);
   };
+
+  /**
+   * 페이징 변경
+   */
+  const onChangePage = async (page: number) => {
+    await getSupplements(page);
+  }
 
   return (
     <div>
@@ -120,6 +129,17 @@ export default function SupplementContent() {
           </div>
         </div>
       </div>
+
+      <div>
+        <Pagination
+          page={pagination?.page ?? 1}
+          totalPages={pagination?.totalPages ?? 1}
+          onChange={(page) => {
+            onChangePage(page)
+          }}>
+        </Pagination>
+      </div>
+
     </div>
   );
 }

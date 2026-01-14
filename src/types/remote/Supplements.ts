@@ -1,12 +1,16 @@
+import type Pagination from "./Pagination";
+
 export interface SupplementsResponse {
     success: boolean;
     data: Supplement[];
+    pagination: Pagination
 }
 
 export interface SearchSupplementsResponse {
     success: boolean;
     code: string;
     data: Supplement[];
+    pagination: Pagination
 }
 
 export interface Supplement {

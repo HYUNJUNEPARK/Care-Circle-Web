@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { getSupplements as getSupplementsApi, searchSupplementsByEffectCode as searchSupplementsApi } from '../../../../../features/api/supplementApi';
 import type { Supplement } from '../../../../../types/remote/Supplements';
+import type Pagination from '../../../../../types/remote/Pagination';
 
 /**
  * 영양제 리스트 가져오기
@@ -9,6 +10,7 @@ function useSupplements() {
     const [supplements, setSupplements] = useState<Supplement[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
+    const [pagination, setPagination] = useState<Pagination | null>(null);
 
     /**
      * 영양제 리스트 가져오기
@@ -19,8 +21,11 @@ function useSupplements() {
     ) => {
         try {
             setLoading(true);
-            const supplements = await getSupplementsApi(page, limit);
-            setSupplements(supplements);
+            const resData = await getSupplementsApi(page, limit);
+            const supplement = resData.data;
+            const pagination = resData.pagination;
+            setPagination(pagination);
+            setSupplements(supplement);
         } catch (error) {
             setError(error as Error)
         } finally {
@@ -38,8 +43,11 @@ function useSupplements() {
     ) => {
         try {
             setLoading(true);
-            const supplements = await searchSupplementsApi(code, page, limit);
-            setSupplements(supplements);
+            const resData = await searchSupplementsApi(code, page, limit);
+            const supplement = resData.data;
+            const pagination = resData.pagination;
+            setPagination(pagination);
+            setSupplements(supplement);
         } catch (error) {
             setError(error as Error)
         } finally {
@@ -51,6 +59,7 @@ function useSupplements() {
         getSupplements,
         searchSupplementsByEffectCode,
         supplements,
+        pagination,
         isLoading,
         error
     }
