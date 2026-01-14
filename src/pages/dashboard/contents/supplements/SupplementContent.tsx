@@ -1,20 +1,38 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useSupplements from "./hook/useSupplements";
 import useEffectCodes from "./hook/useEffectCodes";
 import ToggleButton from "../../../../components/buttons/toggle/ToggleButton";
 import handleError from "../../../../utils/error/handleError";
 import Button from '../../../../components/buttons/Button';
 import Pagination from "../../../../components/pagination/Pagination";
-
+import Input from '../../../../components/inputs/Input';
+import { TbSearch } from "react-icons/tb";
+import useAlert from '../../../../components/alert/useAlert';
+import useLoading from '../../../../components/loading/loading/useLoading';
 
 export default function SupplementContent() {
-  const { getSupplements, searchSupplementsByEffectCode, supplements, pagination, error: supplementError } = useSupplements();
+  const { showAlert } = useAlert();
+  const { showLoading, hideLoading } = useLoading();
+
+  const { getSupplements, searchSupplementsByEffectCode, searchSupplementsByKeyword, supplements, pagination, error: supplementError } = useSupplements();
   const { getEffectCodes, updateEffectCodeClickState, effectCodes, error: effectCodeError } = useEffectCodes();
+  const [searchKeyword, setSearchKeyword] = useState('');
 
   useEffect(() => {
     getSupplements(1);
     getEffectCodes();
   }, []);
+
+  useEffect(() => {
+    if (!supplementError) return;
+
+    showAlert({
+      title: '',
+      message: handleError(supplementError),
+      cancelText: null
+    });
+  }, [supplementError]);
+
 
   /**
    * 영양제 효과 코드 클릭 핸들러
@@ -33,11 +51,29 @@ export default function SupplementContent() {
    * 페이징 변경
    */
   const onChangePage = async (page: number) => {
+    //TODO 여기서 code, keyword 로 페이징 요청 api 를 다르게 사용해야함
+
     await getSupplements(page);
   }
 
+  /**
+   * 
+   */
+  const handleSearchSupplements = async () => {
+    try {
+      showLoading();
+      await searchSupplementsByKeyword(searchKeyword, 1);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      hideLoading();
+    }
+  };
+
   return (
     <div>
+      <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1.5rem' }}>영양제 목록</h1>
+
       <div style={{
         backgroundColor: 'white',
         borderRadius: '0.5rem',
@@ -46,7 +82,35 @@ export default function SupplementContent() {
         marginBottom: '0.6rem'
       }}>
         <div style={{ padding: '1.5rem' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>효과 목록</h2>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '38px'
+          }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '1rem' }}>효과 목록</h2>
+
+            <div
+              title='영양제 검색'
+              style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <Input
+                inputType='plaintext'
+                id="search"
+                label={""}
+                placeholder="콘텐츠명, 코드 검색"
+                value={searchKeyword}
+                onChange={(e) => {
+                  setSearchKeyword(e.target.value);
+                }}
+              />
+              <button
+                style={{ backgroundColor: '#fff', padding: '12px', marginTop: '4px' }}
+                onClick={handleSearchSupplements}
+              >
+                <TbSearch size={26} color='#1f2937' />
+              </button>
+            </div>
+          </div>
 
           {/* 효과코드 에러 */}
           {effectCodeError &&

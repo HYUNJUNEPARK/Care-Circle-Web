@@ -6,9 +6,15 @@ export interface SupplementsResponse {
     pagination: Pagination
 }
 
-export interface SearchSupplementsResponse {
+export interface SearchSupplementsByCodeResponse {
     success: boolean;
     code: string;
+    data: Supplement[];
+    pagination: Pagination
+}
+
+export interface SearchSupplementsByKeywordResponse {
+    success: boolean;
     data: Supplement[];
     pagination: Pagination
 }

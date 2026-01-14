@@ -29,7 +29,6 @@ export default function UsersContent() {
   const { updateUserRole, error: updateRoleError } = useUpdateRole();
   const { deleteUser, error: deleteError } = useDeleteUser();
   const { searchUsers, error: seachError } = useSearchUsers();
-
   const [searchKeyword, setSearchKeyword] = useState('');
 
   // 최초 진입 시
@@ -285,12 +284,15 @@ export default function UsersContent() {
               placeholder="이메일, 사용자 UID 검색"
               value={searchKeyword}
               onChange={(e) => {
-                setSearchKeyword(e.target.value)
+                setSearchKeyword(e.target.value);
               }}
             />
 
-            <button style={{ backgroundColor: '#fff', padding: '12px', marginTop: '4px' }}>
-              <TbSearch size={26} color='#1f2937' onClick={handleSearchUsers} />
+            <button
+              style={{ backgroundColor: '#fff', padding: '12px', marginTop: '4px' }}
+              onClick={handleSearchUsers}
+            >
+              <TbSearch size={26} color='#1f2937' />
             </button>
           </div>
         </div>
@@ -300,17 +302,6 @@ export default function UsersContent() {
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             {/* 테이블 헤더 */}
             <thead>
-              {/* {users.length === 0 && <span style={{ color: '#000000', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>검색된 사용자가 없습니다.</span>}
-
-              {users.length !== 0 && <tr>
-                {tableHeads.map((thead, i) => (
-                  <th
-                    key={i}
-                    className={styles.th}>
-                    {thead}
-                  </th>
-                ))}
-              </tr>} */}
               {users.length === 0 ? (
                 <tr>
                   <th colSpan={tableHeads.length} className={styles.th} style={{ fontSize: 18, color: "#000" }}>

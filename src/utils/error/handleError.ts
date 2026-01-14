@@ -7,6 +7,7 @@ export interface ApiErrorResponse {
     success: boolean;
     code: string;
     message: string;
+    userMessage: string;
 }
 
 /**
@@ -23,7 +24,7 @@ export default function handleError(error: Error | unknown): string {
             let errorMessage;
             if (isApiErrorResponse(data)) {
                 const ec = data?.code ?? 'UK';
-                const errorMsg = data?.message ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${ec})`;
+                const errorMsg = data?.userMessage ?? data?.message ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${ec})`;
                 errorMessage = errorMsg;
             } else {
                 const errorMsg = axiosErrorMessageMap[error.code ?? ''] ?? `알 수 없는 오류가 발생했습니다.\n(code: ax-${error.code})`;

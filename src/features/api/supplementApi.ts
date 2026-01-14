@@ -1,5 +1,5 @@
 import { authAxios } from '../axios/authAxios';
-import type { SearchSupplementsResponse, SupplementsResponse } from '../../types/remote/Supplements';
+import type { SearchSupplementsByCodeResponse, SupplementsResponse, SearchSupplementsByKeywordResponse } from '../../types/remote/Supplements';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
 
 const supplementApiUrl = `/api/supplements`
@@ -25,11 +25,26 @@ export async function searchSupplementsByEffectCode(
     effectCode: string,
     page: number,
     limit: number
-): Promise<SearchSupplementsResponse> {
+): Promise<SearchSupplementsByCodeResponse> {
     const res = await authAxios.get(
         `${supplementApiUrl}?effectCode=${effectCode}&page=${page}&limit=${limit}`,
     );
-    const resData = res.data as SearchSupplementsResponse;
+    const resData = res.data as SearchSupplementsByCodeResponse;
+    return resData;
+}
+
+/**
+ * 키워드(영양제 이름, 영양제 코드로) 영양제 검색
+ */
+export async function searchSupplementsByKeyword(
+    keyword: string,
+    page: number,
+    limit: number
+): Promise<SearchSupplementsByKeywordResponse> {
+    const res = await authAxios.get(
+        `${supplementApiUrl}/search?keyword=${keyword}&page=${page}&limit=${limit}`,
+    );
+    const resData = res.data as SearchSupplementsByKeywordResponse;
     return resData;
 }
 
