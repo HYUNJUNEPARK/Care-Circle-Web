@@ -1,11 +1,11 @@
-import { useAuth } from "../../features/auth/AuthProvider";
-import { useEffect, useState } from "react";
-import useSignOut from '../../hook/useSignOut';
+//import useAuth from "../../network/auth/useAuth";
+import { useState } from "react";
+//import useSignOut from '../../hook/useSignOut';
 import { Container, Body, CenterLayout } from '../../components/layouts';
-import useAlert from "../../components/alert/useAlert";
-import useLoading from "../../components/loading/loading/useLoading";
-import { useNavigate } from "react-router-dom";
-import { PATH } from '../../constants/paths';
+// import useAlert from "../../components/alert/useAlert";
+// import useLoading from "../../components/loading/loading/useLoading";
+// import { useNavigate } from "react-router-dom";
+// import { PATH } from '../../constants/paths';
 
 export default function Main() {
 

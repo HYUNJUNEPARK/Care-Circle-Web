@@ -1,5 +1,5 @@
-import { authAxios } from '../axios/authAxios';
-import type { SearchSupplementsByCodeResponse, SupplementsResponse, SearchSupplementsByKeywordResponse } from '../../types/remote/Supplements';
+import privateAxios from '../axios/privateAxios';
+import type { SearchSupplementsByCodeResponse, SupplementsResponse, SearchSupplementsByKeywordResponse, SearchSupplementsByCodeParams } from '../../types/remote/Supplements';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
 
 const supplementApiUrl = `/api/supplements`
@@ -11,7 +11,7 @@ export async function getSupplements(
     page: number,
     limit: number
 ): Promise<SupplementsResponse> {
-    const res = await authAxios.get(
+    const res = await privateAxios.get(
         `${supplementApiUrl}?page=${page}&limit=${limit}`,
     );
     const resData = res.data as SupplementsResponse;
@@ -22,13 +22,21 @@ export async function getSupplements(
  * Effect 코드에 해당하는 영양제 검색
  */
 export async function searchSupplementsByEffectCode(
-    effectCode: string,
-    page: number,
-    limit: number
+    params: SearchSupplementsByCodeParams
 ): Promise<SearchSupplementsByCodeResponse> {
-    const res = await authAxios.get(
-        `${supplementApiUrl}?effectCode=${effectCode}&page=${page}&limit=${limit}`,
+
+    const { effectCode, page = 1, limit = 10 } = params;
+
+    const query = new URLSearchParams();
+    if (effectCode) query.append("effectCode", effectCode);
+
+    query.append("page", String(page));
+    query.append("limit", String(limit));
+
+    const res = await privateAxios.get(
+        `${supplementApiUrl}?${query.toString()}`,
     );
+
     const resData = res.data as SearchSupplementsByCodeResponse;
     return resData;
 }
@@ -41,7 +49,7 @@ export async function searchSupplementsByKeyword(
     page: number,
     limit: number
 ): Promise<SearchSupplementsByKeywordResponse> {
-    const res = await authAxios.get(
+    const res = await privateAxios.get(
         `${supplementApiUrl}/search?keyword=${keyword}&page=${page}&limit=${limit}`,
     );
     const resData = res.data as SearchSupplementsByKeywordResponse;
@@ -52,7 +60,7 @@ export async function searchSupplementsByKeyword(
  * 전체 영양제 코드 리스트 가져오기
  */
 export async function getEffectCodes(): Promise<EffectCode[]> {
-    const res = await authAxios.get(
+    const res = await privateAxios.get(
         `${supplementApiUrl}/codes/effect`,
     );
 

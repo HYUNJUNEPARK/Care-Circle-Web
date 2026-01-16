@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { 
+import {
     getSupplements as getSupplementsApi,
     searchSupplementsByEffectCode as searchByCodeApi,
     searchSupplementsByKeyword as searchByKeywordApi,
- } from '../../../../../features/api/supplementApi';
+} from '../../../../../network/api/supplementApi';
 import type { Supplement } from '../../../../../types/remote/Supplements';
 import type Pagination from '../../../../../types/remote/Pagination';
 
@@ -41,13 +41,17 @@ function useSupplements() {
      * Effect 코드에 해당하는 영양제 검색
      */
     const searchSupplementsByEffectCode = async (
-        code: string,
-        page: number,
-        limit: number = 20
+        effectCode: string,
+        page?: number,
+        limit?: number
     ) => {
         try {
             setLoading(true);
-            const resData = await searchByCodeApi(code, page, limit);
+            const resData = await searchByCodeApi({
+                effectCode,
+                page,
+                limit
+            });
             const supplement = resData.data;
             const pagination = resData.pagination;
             setPagination(pagination);

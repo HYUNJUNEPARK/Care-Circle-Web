@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { UserInfo } from '../../../../../types/local/UserInfo'
-import { searchUsersByEmailOrUid } from '../../../../../features/api/userApi';
+import { searchUsersByEmailOrUid } from '../../../../../network/api/userApi';
 
 /**
  * 사용자 리스트 가져오기

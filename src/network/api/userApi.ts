@@ -1,5 +1,5 @@
-import { authAxios } from '../axios/authAxios';
-import { publicAxios } from '../axios/publicAxios';
+import privateAxios from '../axios/privateAxios';
+import publicAxios from '../axios/publicAxios';
 import type { UserStatusType } from '../../types/UserStatusType';
 import type { UserInfo } from '../../types/local/UserInfo';
 import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo'
@@ -17,7 +17,7 @@ const userApiUrl = `/api/users`
  * 전체 사용자 조회
  */
 export async function getAllUsers(): Promise<UserInfo[]> {
-    const res = await authAxios.get(
+    const res = await privateAxios.get(
         `${userApiUrl}`,
     );
 
@@ -30,7 +30,7 @@ export async function getAllUsers(): Promise<UserInfo[]> {
  * Email or Uid 로 사용자 검색 
  */
 export async function searchUsersByEmailOrUid(keyword: string): Promise<UserInfo[]> {
-    const res = await authAxios.get(
+    const res = await privateAxios.get(
         `${userApiUrl}/search?keyword=${keyword}`,
     );
     const remoteUsers = (res.data.data) as RemoteUserInfo[];
@@ -45,10 +45,10 @@ export async function searchUsersByEmailOrUid(keyword: string): Promise<UserInfo
  * @returns true 동기화 성공, false 동기화 실패
  */
 export async function syncMeToServer(): Promise<Boolean> {
-    const res = await authAxios.post(
-        `${userApiUrl}/sync`, //url
-        {},                   //body
-        {},                   //headers  
+    const res = await privateAxios.post(
+        `${userApiUrl}/sync`,
+        {}, 
+        {},           
     );
     return Boolean(res.data.success);
 }
@@ -57,9 +57,9 @@ export async function syncMeToServer(): Promise<Boolean> {
  * 로그아웃
  */
 export async function signOut(uid: string): Promise<SignOutResponse> {
-    const res = await authAxios.post(
-        `${userApiUrl}/sign-out`, //url
-        {                         //body
+    const res = await privateAxios.post(
+        `${userApiUrl}/sign-out`,
+        {                     
             uid: uid
         },
     );
@@ -81,9 +81,9 @@ export async function updateUserStatus(
     uid: string,
     userStatus: UserStatusType,
 ): Promise<ChangeUserStatusResponse> {
-    const res = await authAxios.patch(
-        `${userApiUrl}/status`, //url
-        {                       //body
+    const res = await privateAxios.patch(
+        `${userApiUrl}/status`,
+        {                     
             uid: uid,
             status: userStatus
         },
@@ -97,7 +97,7 @@ export async function updateUserStatus(
  * 계정 삭제
  */
 export async function deleteUser(uid: string): Promise<DeleteUserResponse> {
-    const res = await authAxios.delete(
+    const res = await privateAxios.delete(
         `${userApiUrl}/${uid}`,
     );
     const data = (res.data) as DeleteUserResponse;
@@ -111,9 +111,9 @@ export async function updateUserRole(
     uid: string,
     role: UserRole,
 ): Promise<UpdateUserRoleResponse> {
-    const res = await authAxios.patch(
-        `${userApiUrl}/role`,   //url
-        {                       //body
+    const res = await privateAxios.patch(
+        `${userApiUrl}/role`,
+        {
             uid: uid,
             role: role
         },
@@ -128,7 +128,7 @@ export async function updateUserRole(
  * 로그인 사용자 정보 로딩
  */
 export async function getLoginUserInfo(): Promise<UserInfo> {
-    const res = await authAxios.get(
+    const res = await privateAxios.get(
         `${userApiUrl}/sign-in`,
     );
     const rUser = (res.data.data) as RemoteUserInfo
@@ -140,9 +140,9 @@ export async function getLoginUserInfo(): Promise<UserInfo> {
  * 비밀번호 초기화
  */
 export async function resetPassword(uid: string): Promise<ResetPasswordResponse> {
-    const res = await authAxios.post(
-        `${userApiUrl}/password-reset`, //url
-        {                      //body
+    const res = await privateAxios.post(
+        `${userApiUrl}/password-reset`, 
+        {                    
             uid: uid
         },
     );

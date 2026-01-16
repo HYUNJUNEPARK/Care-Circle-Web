@@ -2,8 +2,8 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from 'react';
 import { PATH } from "../../constants/paths";
-import { firebaseAuth } from "../../features/auth/firebaseAuth";
-import { syncMeToServer } from '../../features/api/userApi';
+import { firebaseAuth } from "../../network/auth/firebaseAuth";
+import { syncMeToServer } from '../../network/api/userApi';
 import useSignOut from '../../hook/useSignOut';
 import useAlert from "../../../src/components/alert/useAlert";
 import handleError from "../../utils/error/handleError";

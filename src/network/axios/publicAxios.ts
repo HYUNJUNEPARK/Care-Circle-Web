@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { API_SERVER_URL, NETWORK_TIME_OUT } from "../config/networkConfig"
 
-export const publicAxios = axios.create({
-  baseURL: `http://localhost:4000`,
-  timeout: 15_000,
+const publicAxios = axios.create({
+  baseURL: API_SERVER_URL,
+  timeout: NETWORK_TIME_OUT,
 });
 
 publicAxios.interceptors.request.use(
@@ -15,7 +16,9 @@ publicAxios.interceptors.request.use(
 publicAxios.interceptors.response.use(
   res => res,
     async error => {
-        console.log('publicAxios interceptors error:', error);
+        console.log('Axios interceptors error:', error);
         return Promise.reject(error)
     }
 );
+
+export default publicAxios;

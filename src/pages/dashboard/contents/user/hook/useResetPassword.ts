@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { resetPassword as resetPasswordApi } from "../../../../../features/api/userApi";
+import { resetPassword as resetPasswordApi } from "../../../../../network/api/userApi";
 
 /**
  * 비밀번호 초기화

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { deleteUser as deleteUserApi } from "../../../../../features/api/userApi";
+import { deleteUser as deleteUserApi } from "../../../../../network/api/userApi";
 
 /**
  * 회원 상태 수정

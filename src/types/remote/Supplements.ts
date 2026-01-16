@@ -1,5 +1,24 @@
 import type Pagination from "./Pagination";
 
+export interface Supplement {
+    id: number;
+    code: string;
+    name: string;
+    description: string;
+    imageUrl?: string;
+    status: string;
+    effectCode: string;
+    effects: string;
+}
+
+//Request
+export interface SearchSupplementsByCodeParams {
+    effectCode: string,
+    page?: number,
+    limit?: number
+}
+
+//Response
 export interface SupplementsResponse {
     success: boolean;
     data: Supplement[];
@@ -17,15 +36,4 @@ export interface SearchSupplementsByKeywordResponse {
     success: boolean;
     data: Supplement[];
     pagination: Pagination
-}
-
-export interface Supplement {
-    id: number;
-    code: string;
-    name: string;
-    description: string;
-    imageUrl?: string;
-    status: string;
-    effectCode: string;
-    effects: string;
 }

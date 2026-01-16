@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { UserInfo } from '../../types/local/UserInfo'
-import { getLoginUserInfo } from '../../features/api/userApi';
+import { getLoginUserInfo } from '../../network/api/userApi';
 
 /**
  * 로그인 사용자 정보 로드

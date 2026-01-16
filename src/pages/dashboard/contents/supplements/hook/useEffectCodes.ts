@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getEffectCodes as getEffectCodesApi } from '../../../../../features/api/supplementApi';
+import { getEffectCodes as getEffectCodesApi } from '../../../../../network/api/supplementApi';
 import { convToUiData, type EffectCodeForUi } from '../../../../../types/local/EffectCodes';
 
 /**

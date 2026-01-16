@@ -1,9 +1,10 @@
 import axios from "axios";
 import { getAuth } from "firebase/auth";
+import { API_SERVER_URL, NETWORK_TIME_OUT } from "../config/networkConfig"
 
-export const authAxios = axios.create({
-  baseURL: `http://localhost:4000`,
-  timeout: 15_000,
+const privateAxios = axios.create({
+  baseURL: API_SERVER_URL,
+  timeout: NETWORK_TIME_OUT,
 });
 
 // Firebase 현재 로그인한 사용자의 ID Token 가져오기
@@ -18,7 +19,7 @@ async function getIdToken(): Promise<string | null> {
 }
 
 // 요청 인터셉터: Firebase ID Token을 Bearer로 자동 첨부
-authAxios.interceptors.request.use(
+privateAxios.interceptors.request.use(
   async (config) => {
     const idToken = await getIdToken();
     if (idToken) {
@@ -31,10 +32,12 @@ authAxios.interceptors.request.use(
 );
 
 // 응답 인터셉터
-authAxios.interceptors.response.use(
+privateAxios.interceptors.response.use(
   res => res,
     async error => {
-        console.log('authAxios interceptors error:', error);
+        console.log('Axios interceptors error:', error);
         return Promise.reject(error)
     }
 );
+
+export default privateAxios;
