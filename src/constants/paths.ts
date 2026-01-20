@@ -5,5 +5,6 @@ export const PATH = {
     MAIN: '/main',
     SIGN_UP: '/sign-up',
     DASH_BOARD: '/dash-board',
-    SUPPLEMENTS: '/user/supplements',
+    MY_SUPPLEMENTS: '/user/supplements',
+    MANAGE_SUPPLEMENTS: '/user/supplements/manage',
 };

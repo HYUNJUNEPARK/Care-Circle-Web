@@ -6,8 +6,9 @@ import useLoading from "../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../components/layouts';
 import useSupplements from "../../../hook/useSupplements";
+import { PATH } from "../../../constants/paths";
 
-export default function Supplements() {
+export default function MySupplements() {
     const { user } = useAuth();
     const { signOut, isLoading, error } = useSignOut();
     const { showAlert } = useAlert();
@@ -70,7 +71,6 @@ export default function Supplements() {
             />
 
             <Body style={{
-                padding: '12px',
                 background: '#F7F9FC',
                 position: 'relative',
                 overflowX: 'hidden',
@@ -84,39 +84,14 @@ export default function Supplements() {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'space-between',
+                            marginBottom: '18px',
                         }}>
 
-                            <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B', marginBottom: '12px' }}>내 영양제 리스트</h2>
-                            <button 
-                                onClick={() => console.log('편집 모드')}
-                                style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '50%',
-                                    backgroundColor: 'white',
-                                    border: '1px solid #E8ECF0',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    cursor: 'pointer',
-                                    fontSize: '18px',
-                                    transition: 'all 0.2s',
-                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.06)',
-                                    marginBottom: '12px',
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.backgroundColor = '#0046FF';
-                                    e.currentTarget.style.borderColor = '#0046FF';
-                                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 70, 255, 0.2)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.backgroundColor = 'white';
-                                    e.currentTarget.style.borderColor = '#E8ECF0';
-                                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.06)';
-                                }}
-                            >
-                                ✏️
-                            </button>
+                            <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B' }}>내 영양제 리스트</h2>
+                            <span
+                                style={{ fontSize: '16px', color: '#8B95A1', cursor: 'pointer' }}
+                                onClick={() => navigate(PATH.MANAGE_SUPPLEMENTS)}
+                            >편집 ›</span>
                         </div>
 
                         {/* 영양제 리스트 */}

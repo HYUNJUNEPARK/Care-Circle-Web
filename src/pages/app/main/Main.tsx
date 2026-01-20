@@ -9,6 +9,7 @@ import { Body, Container } from '../../../components/layouts';
 import useHealthInsight from "./useHealthInsight";
 import SlideMenu from './components/SlideMenu';
 import QuickAccessButton from './components/QuickAccessButton';
+import HighlightCard from './components/HighlightCard';
 import type SlideMenuItem from "../../../types/local/SlidMenuItem";
 import { IoMenuOutline } from "react-icons/io5";
 
@@ -90,7 +91,6 @@ export default function Main() {
     return (
         <Container>
             <Body style={{
-                padding: '12px',
                 background: '#F7F9FC',
                 position: 'relative',
                 overflowX: 'hidden',
@@ -137,44 +137,10 @@ export default function Main() {
                         {/* 오늘의 건강 인사이트 */}
                         <div>
                             <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#333D4B', padding: '0 4px', marginBottom: '8px' }}>오늘의 건강 인사이트</h2>
-                            <div
-                                style={{
-                                    background: 'var(--color-primary-color)',
-                                    borderRadius: '16px',
-                                    padding: '24px',
-                                    color: 'white',
-                                    boxShadow: hoverStates.insight ? '0 20px 25px -5px rgba(0, 70, 255, 0.3)' : '0 10px 15px -3px rgba(0, 70, 255, 0.2)',
-                                    transition: 'box-shadow 0.3s',
-                                    marginBottom: '24px',
-                                }}
-                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, insight: true }))}
-                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, insight: false }))}
-                            >
-                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px' }}>
-
-                                    <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.75', flex: '1', color: '#ffffff' }}>
-                                        {healthInsight?.content}
-                                    </div>
-                                </div>
-
-                                <button
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: '4px',
-                                        color: '#ffffff',
-                                        fontSize: '14px',
-                                        fontWeight: '500',
-                                        marginLeft: 'auto',
-                                        background: 'none',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'color 0.2s',
-                                    }}
-                                >
-                                    더보기 ›
-                                </button>
-                            </div>
+                            <HighlightCard
+                                content={healthInsight?.content}
+                                buttonText="더보기 ›"
+                                onButtonClick={() => alert('ASDF')}/>
                         </div>
 
                         {/* 오늘의 알림 요약 */}
@@ -238,14 +204,13 @@ export default function Main() {
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '12px' }}>
                                 <QuickAccessButton
                                     text="영양제 관리"
-                                    onClick={() => { navigate(PATH.SUPPLEMENTS); }} />
+                                    onClick={() => { navigate(PATH.MY_SUPPLEMENTS); }} />
 
                                 <QuickAccessButton
                                     text="health" />
 
                                 <QuickAccessButton
                                     text="challenge" />
-
                             </div>
 
                             <button
