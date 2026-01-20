@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { checkValidEmail } from '../../network/api/userApi';
+import { checkValidEmail } from '../../network/api/userApis';
 
 type EmailCheckReseult = {
     result: boolean;

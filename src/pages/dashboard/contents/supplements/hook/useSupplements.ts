@@ -3,7 +3,7 @@ import {
     getSupplements as getSupplementsApi,
     searchSupplementsByEffectCode as searchByCodeApi,
     searchSupplementsByKeyword as searchByKeywordApi,
-} from '../../../../../network/api/supplementApi';
+} from '../../../../../network/api/supplementApis';
 import type { Supplement } from '../../../../../types/remote/Supplements';
 import type Pagination from '../../../../../types/remote/Pagination';
 

@@ -1,21 +1,30 @@
-import useAuth from "../../network/auth/useAuth";
+//import useAuth from "../../network/auth/useAuth";
 import { useEffect, useState } from "react";
 import useSignOut from '../../hook/useSignOut';
 import useAlert from "../../components/alert/useAlert";
 import useLoading from "../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { PATH } from '../../constants/paths';
-import { Body, Container } from '../../components/layouts/mobile';
+import { Body, Container } from '../../components/layouts';
+import useHealthInsight from "./useHealthInsight";
 
 
 export default function Main() {
 
 
-    const { user } = useAuth();
+    //const { user } = useAuth();
     const { signOut, isLoading, error } = useSignOut();
+    const { fetchHealthInsight, healthInsight } = useHealthInsight();
     const { showAlert } = useAlert();
     const { showLoading, hideLoading } = useLoading();
     const navigate = useNavigate();
+
+
+    //
+    useEffect(() => {
+        fetchHealthInsight();
+    }, []);
+
 
     useEffect(() => {
         if (isLoading) {
@@ -258,17 +267,15 @@ export default function Main() {
     });
 
     return (
-        <Container style={{
-
-
-        }}>
+        <Container>
             <Body style={{
                 padding: '12px',
                 background: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
             }}>
                 <div>
-                    {/* <div style={styles.statusBar}></div> */}
 
+
+                    {/* 오늘의 건강 인사이트 */}
                     <div style={styles.contentWrapper}>
                         <div
                             style={styles.greeting}
@@ -288,12 +295,12 @@ export default function Main() {
                                 onMouseLeave={() => setHoverStates(prev => ({ ...prev, insight: false }))}
                             >
                                 <div style={styles.insightContent}>
-                                    <span style={styles.insightIcon}>💡</span>
+
                                     <div style={styles.insightText}>
-                                        마그네슘은 저녁에 먹으면<br />
-                                        흡수에 좋아요
+                                        {healthInsight?.content}
                                     </div>
                                 </div>
+
                                 <button
                                     style={{
                                         ...styles.moreButton,

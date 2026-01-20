@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { signOut as signOutApi } from '../network/api/userApi';
+import { signOut as signOutApi } from '../network/api/userApis';
 import { firebaseAuth } from "../network/auth/firebaseAuth";
 import { signOut as authSignOut } from "firebase/auth";
 

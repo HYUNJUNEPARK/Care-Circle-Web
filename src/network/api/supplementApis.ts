@@ -1,6 +1,9 @@
 import privateAxios from '../axios/privateAxios';
-import type { SearchSupplementsByCodeResponse, SupplementsResponse, SearchSupplementsByKeywordResponse, SearchSupplementsByCodeParams } from '../../types/remote/Supplements';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
+import type {
+    SearchSupplementsByCodeResponse, SupplementsResponse,
+    SearchSupplementsByKeywordResponse, SearchSupplementsByCodeParams
+} from '../../types/remote/Supplements';
 
 const supplementApiUrl = `/api/supplements`
 
