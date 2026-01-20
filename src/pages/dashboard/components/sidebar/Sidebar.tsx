@@ -1,5 +1,5 @@
 import styles from './Sidebar.module.css';
-import type { SideMenuItem } from '../../../../types/SideMenuItem';
+import type { SideMenuItem } from '../../../../types/local/SideMenuItem';
 
 function Sidebar({
     selectedMenu,

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Toolbar from './components/toolbar/Toolbar';
 import Sidebar from './components/sidebar/Sidebar';
 import Content from './contents/Content';
-import type { SideMenuItem } from '../../types/SideMenuItem';
+import type { SideMenuItem } from '../../types/local/SideMenuItem';
 import { TbLayoutDashboard } from "react-icons/tb";
 import { IoBarChartOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";

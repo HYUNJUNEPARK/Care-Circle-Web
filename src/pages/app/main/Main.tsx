@@ -1,4 +1,4 @@
-//import useAuth from "../../network/auth/useAuth";
+import useAuth from "../../../network/auth/useAuth";
 import { useEffect, useState } from "react";
 import useSignOut from '../../../hook/useSignOut';
 import useAlert from "../../../components/alert/useAlert";
@@ -7,18 +7,17 @@ import { useNavigate } from "react-router-dom";
 import { PATH } from '../../../constants/paths';
 import { Body, Container } from '../../../components/layouts';
 import useHealthInsight from "./useHealthInsight";
+import SlideMenu from './components/SlideMenu';
+import type SlideMenuItem from "../../../types/local/SlidMenuItem";
 
 
 export default function Main() {
-
-
-    //const { user } = useAuth();
+    const { user } = useAuth();
     const { signOut, isLoading, error } = useSignOut();
     const { fetchHealthInsight, healthInsight } = useHealthInsight();
     const { showAlert } = useAlert();
     const { showLoading, hideLoading } = useLoading();
     const navigate = useNavigate();
-
 
     //
     useEffect(() => {
@@ -234,89 +233,6 @@ export default function Main() {
             fontWeight: '600',
             color: '#1f2937',
         },
-        menuOverlay: {
-            position: 'absolute' as const,
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            zIndex: 999,
-            opacity: 0,
-            transition: 'opacity 0.3s ease-in-out',
-            pointerEvents: 'none' as const,
-        },
-        menuOverlayVisible: {
-            opacity: 1,
-            pointerEvents: 'auto' as const,
-        },
-        menuContainer: {
-            position: 'absolute' as const,
-            top: 0,
-            left: 0,
-            bottom: 0,
-            width: '80%',
-            maxWidth: '400px',
-            backgroundColor: 'white',
-            zIndex: 1000,
-            boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)',
-            display: 'flex',
-            flexDirection: 'column' as const,
-            transform: 'translateX(-100%)',
-            transition: 'transform 0.3s ease-in-out',
-        },
-        menuContainerOpen: {
-            transform: 'translateX(0)',
-        },
-        menuHeader: {
-            padding: '24px',
-            borderBottom: '1px solid #e5e7eb',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-        },
-        menuTitle: {
-            fontSize: '20px',
-            fontWeight: '600',
-            color: '#1f2937',
-        },
-        closeButton: {
-            background: 'none',
-            border: 'none',
-            fontSize: '24px',
-            cursor: 'pointer',
-            padding: '8px',
-            color: '#6b7280',
-            transition: 'color 0.2s',
-        },
-        menuList: {
-            flex: 1,
-            overflowY: 'auto' as const,
-            padding: '16px 0',
-        },
-        menuItem: {
-            display: 'flex',
-            alignItems: 'center',
-            gap: '16px',
-            padding: '16px 24px',
-            cursor: 'pointer',
-            transition: 'background-color 0.2s',
-            border: 'none',
-            background: 'none',
-            width: '100%',
-            textAlign: 'left' as const,
-        },
-        menuItemHover: {
-            backgroundColor: '#f3f4f6',
-        },
-        menuItemIcon: {
-            fontSize: '24px',
-        },
-        menuItemText: {
-            fontSize: '16px',
-            fontWeight: '500',
-            color: '#1f2937',
-        },
     };
 
     const [hoverStates, setHoverStates] = useState<Record<string, boolean>>({
@@ -327,16 +243,14 @@ export default function Main() {
         checkButton: false,
     });
 
-    const menuItems = [
-        { icon: '🏠', text: '홈', action: () => console.log('홈') },
-        { icon: '💊', text: '영양제 관리', action: () => console.log('영양제') },
-        { icon: '📊', text: '리포트', action: () => console.log('리포트') },
-        { icon: '⚙️', text: '설정', action: () => console.log('설정') },
-        { icon: '👤', text: '프로필', action: () => console.log('프로필') },
-        { icon: '🚪', text: '로그아웃', action: handleSignOut },
+    const menuItems: SlideMenuItem[] = [
+        { id: 1, text: '홈', action: () => console.log('홈') },
+        { id: 2, text: '영양제 관리', action: () => console.log('영양제') },
+        { id: 3, text: '리포트', action: () => console.log('리포트') },
+        { id: 4, text: '설정', action: () => console.log('설정') },
+        { id: 5, text: '프로필', action: () => console.log('프로필') },
+        { id: 6, text: '로그아웃', action: handleSignOut },
     ];
-
-    const [menuItemHover, setMenuItemHover] = useState<number | null>(null);
 
     return (
         <Container>
@@ -344,61 +258,15 @@ export default function Main() {
                 padding: '12px',
                 background: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
                 position: 'relative',
-                overflow: 'hidden',
+                overflowX: 'hidden',
             }}>
-                {/* 메뉴 오버레이 */}
-                <div
-                    style={{
-                        ...styles.menuOverlay,
-                        ...(isMenuOpen ? styles.menuOverlayVisible : {}),
-                    }}
-                    onClick={() => setIsMenuOpen(false)}
-                />
-
                 {/* 슬라이드 메뉴 */}
-                <div
-                    style={{
-                        ...styles.menuContainer,
-                        ...(isMenuOpen ? styles.menuContainerOpen : {}),
-                    }}
-                >
-                    <div style={styles.menuHeader}>
-                        <h2 style={styles.menuTitle}>메뉴</h2>
-                        <button
-                            style={styles.closeButton}
-                            onClick={() => setIsMenuOpen(false)}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.color = '#1f2937';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.color = '#6b7280';
-                            }}
-                        >
-                            ✕
-                        </button>
-                    </div>
-
-                    <div style={styles.menuList}>
-                        {menuItems.map((item, index) => (
-                            <button
-                                key={index}
-                                style={{
-                                    ...styles.menuItem,
-                                    ...(menuItemHover === index ? styles.menuItemHover : {}),
-                                }}
-                                onMouseEnter={() => setMenuItemHover(index)}
-                                onMouseLeave={() => setMenuItemHover(null)}
-                                onClick={() => {
-                                    item.action();
-                                    setIsMenuOpen(false);
-                                }}
-                            >
-                                <span style={styles.menuItemIcon}>{item.icon}</span>
-                                <span style={styles.menuItemText}>{item.text}</span>
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                <SlideMenu
+                    isOpen={isMenuOpen}
+                    onClose={() => setIsMenuOpen(false)}
+                    menuItems={menuItems}
+                    userEmail={user?.email}
+                />
 
                 <div>
                     <div style={{
@@ -585,9 +453,6 @@ export default function Main() {
                                     </div>
                                 </button>
                             </div>
-
-
-
 
                             <button
                                 style={{
