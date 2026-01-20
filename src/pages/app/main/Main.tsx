@@ -105,7 +105,6 @@ export default function Main() {
 
                 <div>
                     <div style={{
-                        maxWidth: '672px',
                         margin: '0 auto',
                     }}>
 

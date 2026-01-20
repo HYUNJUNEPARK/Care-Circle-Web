@@ -30,8 +30,8 @@ function Header({
             display: "grid",
             gridTemplateColumns: "40px 1fr 40px", //3열 그리드: 좌 40px, 중앙 auto, 우 40px
             alignItems: "center",
-            height: "42px",
-            padding: "16px 16px 0px", //상 좌우 하
+            height: "56px",
+            padding: "16px 16px 12px 16px", //상 16px, 우 16px, 하 12px, 좌 16px
             // boxSizing: "border-box",
             // borderBottom: "1px solid #e0e0e0",
             ...style,
