@@ -1,60 +1,44 @@
-//import useAuth from "../../network/auth/useAuth";
-import { useState } from "react";
-//import useSignOut from '../../hook/useSignOut';
-import { Container, Body, CenterLayout } from '../../components/layouts';
-// import useAlert from "../../components/alert/useAlert";
-// import useLoading from "../../components/loading/loading/useLoading";
-// import { useNavigate } from "react-router-dom";
-// import { PATH } from '../../constants/paths';
+import useAuth from "../../network/auth/useAuth";
+import { useEffect, useState } from "react";
+import useSignOut from '../../hook/useSignOut';
+import useAlert from "../../components/alert/useAlert";
+import useLoading from "../../components/loading/loading/useLoading";
+import { useNavigate } from "react-router-dom";
+import { PATH } from '../../constants/paths';
+import { Body, Container } from '../../components/layouts/mobile';
+
 
 export default function Main() {
 
 
-    // const { user } = useAuth();
-    // const { signOut, isLoading, error } = useSignOut();
-    // const { showAlert } = useAlert();
-    // const { showLoading, hideLoading } = useLoading();
-    // const navigate = useNavigate();
+    const { user } = useAuth();
+    const { signOut, isLoading, error } = useSignOut();
+    const { showAlert } = useAlert();
+    const { showLoading, hideLoading } = useLoading();
+    const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if (isLoading) {
-    //         showLoading();
-    //     } else {
-    //         hideLoading();
-    //     }
-    // }, [isLoading]);
-
-
-    // useEffect(() => {
-    //     if (!error) return;
-    //     showAlert({
-    //         title: '로그아웃 실패',
-    //         message: error.message,
-    //         cancelText: null,
-    //     });
-    // }, [error]);
-
-    // const handleSignOut = async () => {
-    //     await signOut();
-    //     navigate(PATH.ROOT, { replace: true });
-    // }
-
-    // return (
-    //     <CenterLayout>
-    //         <Container>
-    //             <Body>
-    //                 <p>{user?.email}</p>
-    //                 <p>{user?.uid}</p>
-    //                 <button onClick={() => {
-    //                     handleSignOut();
-    //                 }}>로그아웃</button>
-    //             </Body>
-    //         </Container>
-    //     </CenterLayout >
-    // );
+    useEffect(() => {
+        if (isLoading) {
+            showLoading();
+        } else {
+            hideLoading();
+        }
+    }, [isLoading]);
 
 
+    useEffect(() => {
+        if (!error) return;
+        showAlert({
+            title: '로그아웃 실패',
+            message: error.message,
+            cancelText: null,
+        });
+    }, [error]);
 
+    const handleSignOut = async () => {
+        await signOut();
+        navigate(PATH.ROOT, { replace: true });
+    };
     const [checkedMeds, setCheckedMeds] = useState<Record<string, boolean>>({});
 
     const toggleMedCheck = (id: string) => {
@@ -274,170 +258,184 @@ export default function Main() {
     });
 
     return (
-        <CenterLayout>
-            <Container style={{ background: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)', }}>
-                <Body>
-                    <div>
-                        {/* <div style={styles.statusBar}></div> */}
+        <Container style={{
 
-                        <div style={styles.contentWrapper}>
-                            <div style={styles.greeting}>
-                                <span style={styles.greetingIcon}>{greetingIcon}</span>
-                                <span>{greeting}</span>
-                            </div>
 
-                            <div>
-                                <h2 style={styles.sectionTitle}>오늘의 건강 인사이트</h2>
-                                <div
+        }}>
+            <Body style={{
+                padding: '12px',
+                background: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
+            }}>
+                <div>
+                    {/* <div style={styles.statusBar}></div> */}
+
+                    <div style={styles.contentWrapper}>
+                        <div
+                            style={styles.greeting}
+                        >
+                            <span style={styles.greetingIcon}>{greetingIcon}</span>
+                            <span>{greeting}</span>
+                        </div>
+
+                        <div>
+                            <h2 style={styles.sectionTitle}>오늘의 건강 인사이트</h2>
+                            <div
+                                style={{
+                                    ...styles.insightCard,
+                                    ...(hoverStates.insight ? styles.insightCardHover : {})
+                                }}
+                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, insight: true }))}
+                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, insight: false }))}
+                            >
+                                <div style={styles.insightContent}>
+                                    <span style={styles.insightIcon}>💡</span>
+                                    <div style={styles.insightText}>
+                                        마그네슘은 저녁에 먹으면<br />
+                                        흡수에 좋아요
+                                    </div>
+                                </div>
+                                <button
                                     style={{
-                                        ...styles.insightCard,
-                                        ...(hoverStates.insight ? styles.insightCardHover : {})
+                                        ...styles.moreButton,
+                                        color: hoverStates.insight ? 'white' : 'rgba(255, 255, 255, 0.9)'
                                     }}
-                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, insight: true }))}
-                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, insight: false }))}
                                 >
-                                    <div style={styles.insightContent}>
-                                        <span style={styles.insightIcon}>💡</span>
-                                        <div style={styles.insightText}>
-                                            마그네슘은 저녁에 먹으면<br />
-                                            흡수에 좋아요
-                                        </div>
-                                    </div>
+                                    더보기 ›
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 style={styles.sectionTitle}>오늘의 알림 요약</h2>
+                            <div style={styles.summaryCard}>
+                                <div style={styles.summaryItem}>
+                                    <span style={styles.summaryItemIcon}>☀️</span>
+                                    <span style={styles.summaryItemText}>아침</span>
+                                    <span style={{ ...styles.badge, ...styles.badgeYellow }}>1건</span>
+                                </div>
+                                <div style={styles.summaryItem}>
+                                    <span style={styles.summaryItemIcon}>🌙</span>
+                                    <span style={styles.summaryItemText}>저녁</span>
+                                    <span style={{ ...styles.badge, ...styles.badgeIndigo }}>2건</span>
+                                </div>
+
+                                <div style={styles.divider}>
                                     <button
+                                        onClick={() => {
+                                            toggleMedCheck('today')
+                                        }
+
+                                        }
                                         style={{
-                                            ...styles.moreButton,
-                                            color: hoverStates.insight ? 'white' : 'rgba(255, 255, 255, 0.9)'
+                                            ...styles.checkButton,
+                                            ...(checkedMeds['today'] ? styles.checkButtonChecked : styles.checkButtonDefault),
+                                            ...(hoverStates.checkButton && !checkedMeds['today'] ? { backgroundColor: '#4338ca' } : {})
                                         }}
+                                        onMouseEnter={() => setHoverStates(prev => ({ ...prev, checkButton: true }))}
+                                        onMouseLeave={() => setHoverStates(prev => ({ ...prev, checkButton: false }))}
                                     >
-                                        더보기 ›
+                                        {checkedMeds['today'] ? (
+                                            <span style={styles.checkButtonContent}>
+                                                ✅ 완료했어요!
+                                            </span>
+                                        ) : (
+                                            '오늘 복용 체크'
+                                        )}
                                     </button>
                                 </div>
                             </div>
+                        </div>
 
-                            <div>
-                                <h2 style={styles.sectionTitle}>오늘의 알림 요약</h2>
-                                <div style={styles.summaryCard}>
-                                    <div style={styles.summaryItem}>
-                                        <span style={styles.summaryItemIcon}>☀️</span>
-                                        <span style={styles.summaryItemText}>아침</span>
-                                        <span style={{ ...styles.badge, ...styles.badgeYellow }}>1건</span>
-                                    </div>
-                                    <div style={styles.summaryItem}>
-                                        <span style={styles.summaryItemIcon}>🌙</span>
-                                        <span style={styles.summaryItemText}>저녁</span>
-                                        <span style={{ ...styles.badge, ...styles.badgeIndigo }}>2건</span>
-                                    </div>
-
-                                    <div style={styles.divider}>
-                                        <button
-                                            onClick={() => {
-                                                toggleMedCheck('today')
-                                            }
-
-                                            }
-                                            style={{
-                                                ...styles.checkButton,
-                                                ...(checkedMeds['today'] ? styles.checkButtonChecked : styles.checkButtonDefault),
-                                                ...(hoverStates.checkButton && !checkedMeds['today'] ? { backgroundColor: '#4338ca' } : {})
-                                            }}
-                                            onMouseEnter={() => setHoverStates(prev => ({ ...prev, checkButton: true }))}
-                                            onMouseLeave={() => setHoverStates(prev => ({ ...prev, checkButton: false }))}
-                                        >
-                                            {checkedMeds['today'] ? (
-                                                <span style={styles.checkButtonContent}>
-                                                    ✅ 완료했어요!
-                                                </span>
-                                            ) : (
-                                                '오늘 복용 체크'
-                                            )}
-                                        </button>
-                                    </div>
-                                </div>
+                        <div>
+                            <div style={styles.quickAccessHeader}>
+                                <div style={styles.quickAccessLine}></div>
+                                <span style={styles.quickAccessText}>빠른 이동</span>
+                                <div style={styles.quickAccessLine}></div>
                             </div>
 
-                            <div>
-                                <div style={styles.quickAccessHeader}>
-                                    <div style={styles.quickAccessLine}></div>
-                                    <span style={styles.quickAccessText}>빠른 이동</span>
-                                    <div style={styles.quickAccessLine}></div>
-                                </div>
-
-                                <div style={styles.quickGrid}>
-                                    <button
-                                        style={{
-                                            ...styles.quickButton,
-                                            ...(hoverStates.health ? {
-                                                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                                                transform: 'translateY(-4px)'
-                                            } : {})
-                                        }}
-                                        onMouseEnter={() => setHoverStates(prev => ({ ...prev, health: true }))}
-                                        onMouseLeave={() => setHoverStates(prev => ({ ...prev, health: false }))}
-                                    >
-                                        <div style={styles.quickButtonContent}>
-                                            <div style={{
-                                                ...styles.iconCircle,
-                                                ...styles.iconCircleBlue,
-                                                backgroundColor: hoverStates.health ? '#bfdbfe' : '#dbeafe'
-                                            }}>
-                                                ℹ️
-                                            </div>
-                                            <span style={styles.quickButtonText}>건강 정보</span>
-                                        </div>
-                                    </button>
-
-                                    <button
-                                        style={{
-                                            ...styles.quickButton,
-                                            ...(hoverStates.challenge ? {
-                                                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                                                transform: 'translateY(-4px)'
-                                            } : {})
-                                        }}
-                                        onMouseEnter={() => setHoverStates(prev => ({ ...prev, challenge: true }))}
-                                        onMouseLeave={() => setHoverStates(prev => ({ ...prev, challenge: false }))}
-                                    >
-                                        <div style={styles.quickButtonContent}>
-                                            <div style={{
-                                                ...styles.iconCircle,
-                                                ...styles.iconCircleGreen,
-                                                backgroundColor: hoverStates.challenge ? '#bbf7d0' : '#dcfce7'
-                                            }}>
-                                                📈
-                                            </div>
-                                            <span style={styles.quickButtonText}>챌린지</span>
-                                        </div>
-                                    </button>
-                                </div>
-
+                            <div style={styles.quickGrid}>
                                 <button
                                     style={{
                                         ...styles.quickButton,
-                                        width: '100%',
-                                        ...(hoverStates.report ? {
+                                        ...(hoverStates.health ? {
                                             boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                                             transform: 'translateY(-4px)'
                                         } : {})
                                     }}
-                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, report: true }))}
-                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, report: false }))}
+                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, health: true }))}
+                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, health: false }))}
+                                >
+                                    <div
+                                        style={styles.quickButtonContent}
+                                        onClick={() => {
+                                            handleSignOut();
+                                        }}
+                                    >
+                                        <div style={{
+                                            ...styles.iconCircle,
+                                            ...styles.iconCircleBlue,
+                                            backgroundColor: hoverStates.health ? '#bfdbfe' : '#dbeafe'
+                                        }}>
+                                            ℹ️
+                                        </div>
+                                        <span
+                                            style={styles.quickButtonText}
+
+                                        >건강 정보</span>
+                                    </div>
+                                </button>
+
+                                <button
+                                    style={{
+                                        ...styles.quickButton,
+                                        ...(hoverStates.challenge ? {
+                                            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                                            transform: 'translateY(-4px)'
+                                        } : {})
+                                    }}
+                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, challenge: true }))}
+                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, challenge: false }))}
                                 >
                                     <div style={styles.quickButtonContent}>
                                         <div style={{
                                             ...styles.iconCircle,
-                                            ...styles.iconCirclePurple,
-                                            backgroundColor: hoverStates.report ? '#e9d5ff' : '#f3e8ff'
+                                            ...styles.iconCircleGreen,
+                                            backgroundColor: hoverStates.challenge ? '#bbf7d0' : '#dcfce7'
                                         }}>
-                                            📊
+                                            📈
                                         </div>
-                                        <span style={styles.quickButtonText}>리포트</span>
+                                        <span style={styles.quickButtonText}>챌린지</span>
                                     </div>
                                 </button>
                             </div>
+
+                            <button
+                                style={{
+                                    ...styles.quickButton,
+                                    width: '100%',
+                                    ...(hoverStates.report ? {
+                                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                                        transform: 'translateY(-4px)'
+                                    } : {})
+                                }}
+                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, report: true }))}
+                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, report: false }))}
+                            >
+                                <div style={styles.quickButtonContent}>
+                                    <div style={{
+                                        ...styles.iconCircle,
+                                        ...styles.iconCirclePurple,
+                                        backgroundColor: hoverStates.report ? '#e9d5ff' : '#f3e8ff'
+                                    }}>
+                                        📊
+                                    </div>
+                                    <span style={styles.quickButtonText}>리포트</span>
+                                </div>
+                            </button>
                         </div>
                     </div>
-                </Body>
-            </Container>
-        </CenterLayout >
+                </div>
+            </Body>
+        </Container>
     );
 };

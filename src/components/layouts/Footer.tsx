@@ -1,30 +1,30 @@
+/**
+ * Footer 컴포넌트
+ * 하단 고정 레이아웃
+ */
+interface FooterProps {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}
 
 function Footer({
   children,
   style,
-  ...rest
-}: {
-  children: React.ReactNode;
-  style?: React.CSSProperties;
-}) {
+}: FooterProps) {
   return (
     <div
       style={{
-        ...footerStyle,
+        padding: "0 16px 24px", //상 좌우 하
+        height: "62px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         ...style
       }}
-      {...rest}
     >
       {children}
     </div>
   );
 }
-
-const footerStyle: React.CSSProperties = {
-  height: "62px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center"
-};
 
 export default Footer;
