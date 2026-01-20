@@ -1,5 +1,5 @@
 import useAuth from "../../../network/auth/useAuth";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import useSignOut from '../../../hook/useSignOut';
 import useAlert from "../../../components/alert/useAlert";
 import useLoading from "../../../components/loading/loading/useLoading";
@@ -13,7 +13,9 @@ export default function Supplements() {
     const { showAlert } = useAlert();
     const { showLoading, hideLoading } = useLoading();
     const navigate = useNavigate();
-    const { supplements, getSupplements } = useSupplements();
+    const { supplements, getSupplements, loadMoreSupplements, pagination } = useSupplements();
+    const observerRef = useRef<IntersectionObserver | null>(null);
+    const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
     //
     useEffect(() => {
@@ -27,6 +29,35 @@ export default function Supplements() {
             hideLoading();
         }
     }, [isLoading]);
+
+    // 무한 스크롤 콜백
+    const handleLoadMore = useCallback(() => {
+        if (pagination?.hasNext && !isLoading) {
+            loadMoreSupplements();
+        }
+    }, [pagination, isLoading, loadMoreSupplements]);
+
+    // Intersection Observer 설정
+    useEffect(() => {
+        if (!loadMoreTriggerRef.current) return;
+
+        observerRef.current = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    handleLoadMore();
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        observerRef.current.observe(loadMoreTriggerRef.current);
+
+        return () => {
+            if (observerRef.current) {
+                observerRef.current.disconnect();
+            }
+        };
+    }, [handleLoadMore]);
 
     return (
         <Container>
@@ -46,6 +77,7 @@ export default function Supplements() {
             }}>
                 <div>
                     <div style={{
+                        maxWidth: '672px',
                         margin: '0 auto',
                     }}>
 
@@ -210,6 +242,29 @@ export default function Supplements() {
                                 }}>
                                     영양제를 추가해보세요
                                 </p>
+                            </div>
+                        )}
+
+                        {/* 무한 스크롤 트리거 */}
+                        {pagination?.hasNext && (
+                            <div
+                                ref={loadMoreTriggerRef}
+                                style={{
+                                    height: '20px',
+                                    margin: '20px 0',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <div style={{
+                                    width: '24px',
+                                    height: '24px',
+                                    border: '3px solid #E6F0FF',
+                                    borderTop: '3px solid #0046FF',
+                                    borderRadius: '50%',
+                                    animation: 'spin 1s linear infinite',
+                                }} />
                             </div>
                         )}
 

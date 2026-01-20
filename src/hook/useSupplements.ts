@@ -15,9 +15,10 @@ function useSupplements() {
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [pagination, setPagination] = useState<Pagination | null>(null);
+    const [currentPage, setCurrentPage] = useState(1);
 
     /**
-     * 영양제 리스트 가져오기
+     * 영양제 리스트 가져오기 (초기 로드 - 데이터 교체)
      */
     const getSupplements = async (
         page: number,
@@ -30,6 +31,32 @@ function useSupplements() {
             const pagination = resData.pagination;
             setPagination(pagination);
             setSupplements(supplement);
+            setCurrentPage(page);
+        } catch (error) {
+            setError(error as Error)
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    /**
+     * 다음 페이지 영양제 더 불러오기 (무한 스크롤 - 데이터 추가)
+     */
+    const loadMoreSupplements = async (
+        limit: number = 20
+    ) => {
+        if (!pagination?.hasNext || isLoading) return;
+
+        try {
+            setLoading(true);
+            const nextPage = currentPage + 1;
+            const resData = await getSupplementsApi(nextPage, limit);
+            const newSupplements = resData.data;
+            const newPagination = resData.pagination;
+            
+            setPagination(newPagination);
+            setSupplements(prev => [...prev, ...newSupplements]);
+            setCurrentPage(nextPage);
         } catch (error) {
             setError(error as Error)
         } finally {
@@ -87,10 +114,12 @@ function useSupplements() {
 
     return {
         getSupplements,
+        loadMoreSupplements,
         searchSupplementsByEffectCode,
         searchSupplementsByKeyword,
         supplements,
         pagination,
+        currentPage,
         isLoading,
         error
     }
