@@ -12,6 +12,17 @@ import QuickAccessButton from './components/QuickAccessButton';
 import type SlideMenuItem from "../../../types/local/SlidMenuItem";
 import { IoMenuOutline } from "react-icons/io5";
 
+/**
+ 배경: #F7F9FC (신한 스타일 밝은 회색)
+헤더 인사말: #0046FF (신한 브랜드 블루)
+건강 인사이트 카드: 신한 블루 그라디언트 (135deg, #0046FF → #0073FF)
+섹션 제목: #333D4B (진한 네이비)
+복용 체크 버튼: #0046FF / hover #0056FF (신한 블루)
+빠른 이동 버튼: #E6F0FF / hover #CCE1FF (밝은 블루 계열)
+리포트 버튼 아이콘: #E6F0FF / hover #CCE1FF
+텍스트: #333D4B (진한 네이비) 및 #8B95A1 (회색)
+ */
+
 export default function Main() {
     const { user } = useAuth();
     const { signOut, isLoading, error } = useSignOut();
@@ -80,7 +91,7 @@ export default function Main() {
         <Container>
             <Body style={{
                 padding: '12px',
-                background: '#f1f6fa', //그라디에이션 'linear-gradient(to bottom right, #f5f8fb, #eaeefd)'
+                background: '#F7F9FC',
                 position: 'relative',
                 overflowX: 'hidden',
             }}>
@@ -114,7 +125,7 @@ export default function Main() {
                                 gap: '8px',
                                 fontSize: '24px',
                                 fontWeight: '600',
-                                color: '#1f2937',
+                                color: '#000000',
                             }}>
                                 <span style={{ fontSize: '28px' }}>{greetingIcon}</span>
                                 <span>{greeting}</span>
@@ -126,14 +137,14 @@ export default function Main() {
 
                         {/* 오늘의 건강 인사이트 */}
                         <div>
-                            <h2 style={{ fontSize: '14px', fontWeight: '500', color: '#4b5563', padding: '0 4px', marginBottom: '8px' }}>오늘의 건강 인사이트</h2>
+                            <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#333D4B', padding: '0 4px', marginBottom: '8px' }}>오늘의 건강 인사이트</h2>
                             <div
                                 style={{
-                                    background: 'linear-gradient(to bottom right, #a855f7, #4f46e5)',
+                                    background: 'linear-gradient(135deg, #275ffa 0%, #0073FF 100%)',
                                     borderRadius: '16px',
                                     padding: '24px',
                                     color: 'white',
-                                    boxShadow: hoverStates.insight ? '0 20px 25px -5px rgba(0, 0, 0, 0.1)' : '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                                    boxShadow: hoverStates.insight ? '0 20px 25px -5px rgba(0, 70, 255, 0.3)' : '0 10px 15px -3px rgba(0, 70, 255, 0.2)',
                                     transition: 'box-shadow 0.3s',
                                     marginBottom: '24px',
                                 }}
@@ -142,7 +153,7 @@ export default function Main() {
                             >
                                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px' }}>
 
-                                    <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.75', flex: '1' }}>
+                                    <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.75', flex: '1', color: '#FFFFFF' }}>
                                         {healthInsight?.content}
                                     </div>
                                 </div>
@@ -152,7 +163,7 @@ export default function Main() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '4px',
-                                        color: hoverStates.insight ? 'white' : 'rgba(255, 255, 255, 0.9)',
+                                        color: 'rgba(255, 255, 255, 0.9)',
                                         fontSize: '14px',
                                         fontWeight: '500',
                                         marginLeft: 'auto',
@@ -169,7 +180,7 @@ export default function Main() {
 
                         {/* 오늘의 알림 요약 */}
                         <div>
-                            <h2 style={{ fontSize: '14px', fontWeight: '500', color: '#4b5563', padding: '0 4px', marginBottom: '8px' }}>오늘의 알림 요약</h2>
+                            <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#333D4B', padding: '0 4px', marginBottom: '8px' }}>오늘의 알림 요약</h2>
                             <div style={{ backgroundColor: 'white', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', marginBottom: '24px' }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: '#374151', marginBottom: '12px' }}>
                                     <span style={{ fontSize: '20px' }}>☀️</span>
@@ -198,7 +209,7 @@ export default function Main() {
                                             cursor: 'pointer',
                                             transition: 'all 0.3s',
                                             fontSize: '16px',
-                                            backgroundColor: checkedMeds['today'] ? '#22c55e' : (hoverStates.checkButton ? '#4338ca' : '#4f46e5'),
+                                            backgroundColor: checkedMeds['today'] ? '#22c55e' : (hoverStates.checkButton ? '#0056FF' : '#0046FF'),
                                             color: 'white',
                                         }}
                                         onMouseEnter={() => setHoverStates(prev => ({ ...prev, checkButton: true }))}
@@ -218,27 +229,23 @@ export default function Main() {
 
                         {/* 빠른 이동 */}
                         <div>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '14px', color: '#6b7280', marginBottom: '12px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', fontSize: '14px', color: '#8B95A1', marginBottom: '12px' }}>
                                 <div style={{ height: '1px', backgroundColor: '#d1d5db', flex: '1' }}></div>
                                 <span style={{ fontWeight: '500' }}>빠른 이동</span>
                                 <div style={{ height: '1px', backgroundColor: '#d1d5db', flex: '1' }}></div>
                             </div>
 
+                            {/* 빠른 이동: Grid 3 */}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '12px' }}>
                                 <QuickAccessButton
-                                    text="insight"
-                                    backgroundColor="#dcfce7"
-                                    hoverBackgroundColor="#bbf7d0" />
+                                    text="영양제 관리"
+                                    onClick={() => { navigate(PATH.SUPPLEMENTS); }} />
 
                                 <QuickAccessButton
-                                    text="health"
-                                    backgroundColor="#dcfce7"
-                                    hoverBackgroundColor="#bbf7d0" />
+                                    text="health" />
 
                                 <QuickAccessButton
-                                    text="challenge"
-                                    backgroundColor="#dcfce7"
-                                    hoverBackgroundColor="#bbf7d0" />
+                                    text="challenge" />
 
                             </div>
 
@@ -267,11 +274,11 @@ export default function Main() {
                                         justifyContent: 'center',
                                         transition: 'background-color 0.3s',
                                         fontSize: '24px',
-                                        backgroundColor: hoverStates.report ? '#e9d5ff' : '#f3e8ff'
+                                        backgroundColor: hoverStates.report ? '#CCE1FF' : '#E6F0FF'
                                     }}>
                                         📊
                                     </div>
-                                    <span style={{ fontWeight: '600', color: '#1f2937' }}>리포트</span>
+                                    <span style={{ fontWeight: '600', color: '#333D4B' }}>리포트</span>
                                 </div>
                             </button>
 
@@ -301,11 +308,11 @@ export default function Main() {
                                         justifyContent: 'center',
                                         transition: 'background-color 0.3s',
                                         fontSize: '24px',
-                                        backgroundColor: hoverStates.report ? '#e9d5ff' : '#f3e8ff'
+                                        backgroundColor: hoverStates.report ? '#CCE1FF' : '#E6F0FF'
                                     }}>
                                         📊
                                     </div>
-                                    <span style={{ fontWeight: '600', color: '#1f2937' }}>리포트</span>
+                                    <span style={{ fontWeight: '600', color: '#333D4B' }}>리포트</span>
                                 </div>
                             </button>
 

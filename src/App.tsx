@@ -7,6 +7,7 @@ import NotFound from './pages/notfound/NotFound';
 import SignUp from './pages/signup/SignUp';
 import NotActive from './pages/notactive/NotActive';
 import DashBoard from './pages/dashboard/DashBoard';
+import Supplements from './pages/app/supplements/Supplements';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
         <Route path={PATH.SIGN_UP} element={<SignUp />} />
         <Route path={PATH.NOT_ACTIVE} element={<NotActive />} />
         <Route path={PATH.DASH_BOARD} element={<DashBoard />} />
+        <Route path={PATH.SUPPLEMENTS} element={<Supplements />} />
       </Routes>
     </BrowserRouter>
   )

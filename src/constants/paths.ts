@@ -4,5 +4,6 @@ export const PATH = {
     SIGN_IN: '/sign-in',
     MAIN: '/main',
     SIGN_UP: '/sign-up',
-    DASH_BOARD: '/dash-board'
+    DASH_BOARD: '/dash-board',
+    SUPPLEMENTS: '/user/supplements',
 };

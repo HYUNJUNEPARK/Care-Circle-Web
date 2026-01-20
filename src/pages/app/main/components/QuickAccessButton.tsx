@@ -11,8 +11,8 @@ interface QuickAccessButtonProps {
 export default function QuickAccessButton({
     text,
     icon,
-    backgroundColor = '#dcfce7',
-    hoverBackgroundColor = '#bbf7d0',
+    backgroundColor = "#E6F0FF",
+    hoverBackgroundColor = "#CCE1FF",
     onClick,
 }: QuickAccessButtonProps) {
     const [isHovered, setIsHovered] = useState(false);

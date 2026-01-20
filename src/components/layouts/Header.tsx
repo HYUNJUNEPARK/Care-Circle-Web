@@ -42,7 +42,7 @@ function Header({
                 alignItems: "center"
             }}>
                 {onBackButtonClick ? (
-                    <IoIosArrowBack size={24} onClick={onBackButtonClick} color="#3d3d3dff" />
+                    <IoIosArrowBack size={28} onClick={onBackButtonClick} color="#3d3d3dff" />
                 ) : (
                     <DummyIcon />
                 )}
@@ -63,7 +63,7 @@ function Header({
                 justifyContent: "flex-end"
             }}>
                 {onCloseButtonClick ? (
-                    <IoClose size={24} onClick={onCloseButtonClick} color="#3d3d3dff" />
+                    <IoClose size={28} onClick={onCloseButtonClick} color="#3d3d3dff" />
                 ) : (
                     <DummyIcon />
                 )}
