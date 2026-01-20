@@ -3,12 +3,12 @@ import {
     getSupplements as getSupplementsApi,
     searchSupplementsByEffectCode as searchByCodeApi,
     searchSupplementsByKeyword as searchByKeywordApi,
-} from '../../../../../network/api/supplementApis';
-import type { Supplement } from '../../../../../types/remote/Supplements';
-import type Pagination from '../../../../../types/remote/Pagination';
+} from '../network/api/supplementApis';
+import type { Supplement } from '../types/remote/Supplements';
+import type Pagination from '../types/remote/Pagination';
 
 /**
- * 영양제 리스트 가져오기
+ * 영양제 관련 데이터 로드 및 상태 관리 훅
  */
 function useSupplements() {
     const [supplements, setSupplements] = useState<Supplement[]>([]);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { getTodayHealthInsight } from '../../network/api/healthInsightApis';
-import type { HealthInsight } from '../../types/remote/HealthInsight';
+import { getTodayHealthInsight } from '../../../network/api/healthInsightApis';
+import type { HealthInsight } from '../../../types/remote/HealthInsight';
 
 /**
  * 로그인 사용자 정보 로드

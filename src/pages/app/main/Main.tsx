@@ -1,11 +1,11 @@
 //import useAuth from "../../network/auth/useAuth";
 import { useEffect, useState } from "react";
-import useSignOut from '../../hook/useSignOut';
-import useAlert from "../../components/alert/useAlert";
-import useLoading from "../../components/loading/loading/useLoading";
+import useSignOut from '../../../hook/useSignOut';
+import useAlert from "../../../components/alert/useAlert";
+import useLoading from "../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
-import { PATH } from '../../constants/paths';
-import { Body, Container } from '../../components/layouts';
+import { PATH } from '../../../constants/paths';
+import { Body, Container } from '../../../components/layouts';
 import useHealthInsight from "./useHealthInsight";
 
 
@@ -49,6 +49,7 @@ export default function Main() {
         navigate(PATH.ROOT, { replace: true });
     };
     const [checkedMeds, setCheckedMeds] = useState<Record<string, boolean>>({});
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMedCheck = (id: string) => {
         setCheckedMeds(prev => ({ ...prev, [id]: !prev[id] }));
@@ -59,29 +60,6 @@ export default function Main() {
     const greetingIcon = currentHour < 12 ? '👋' : currentHour < 18 ? '☀️' : '🌙';
 
     const styles = {
-        // container: {
-        //     minHeight: '100vh',
-        //     background: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
-        // },
-        // statusBar: {
-        //     height: '48px',
-        //     backgroundColor: 'rgba(255, 255, 255, 0.8)',
-        //     backdropFilter: 'blur(12px)',
-        // },
-        contentWrapper: {
-            maxWidth: '672px',
-            margin: '0 auto',
-            // padding: '24px 16px',
-        },
-        greeting: {
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            fontSize: '24px',
-            fontWeight: '600',
-            color: '#1f2937',
-            marginBottom: '24px',
-        },
         greetingIcon: {
             fontSize: '32px',
         },
@@ -256,6 +234,89 @@ export default function Main() {
             fontWeight: '600',
             color: '#1f2937',
         },
+        menuOverlay: {
+            position: 'absolute' as const,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            zIndex: 999,
+            opacity: 0,
+            transition: 'opacity 0.3s ease-in-out',
+            pointerEvents: 'none' as const,
+        },
+        menuOverlayVisible: {
+            opacity: 1,
+            pointerEvents: 'auto' as const,
+        },
+        menuContainer: {
+            position: 'absolute' as const,
+            top: 0,
+            left: 0,
+            bottom: 0,
+            width: '80%',
+            maxWidth: '400px',
+            backgroundColor: 'white',
+            zIndex: 1000,
+            boxShadow: '2px 0 10px rgba(0, 0, 0, 0.1)',
+            display: 'flex',
+            flexDirection: 'column' as const,
+            transform: 'translateX(-100%)',
+            transition: 'transform 0.3s ease-in-out',
+        },
+        menuContainerOpen: {
+            transform: 'translateX(0)',
+        },
+        menuHeader: {
+            padding: '24px',
+            borderBottom: '1px solid #e5e7eb',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+        },
+        menuTitle: {
+            fontSize: '20px',
+            fontWeight: '600',
+            color: '#1f2937',
+        },
+        closeButton: {
+            background: 'none',
+            border: 'none',
+            fontSize: '24px',
+            cursor: 'pointer',
+            padding: '8px',
+            color: '#6b7280',
+            transition: 'color 0.2s',
+        },
+        menuList: {
+            flex: 1,
+            overflowY: 'auto' as const,
+            padding: '16px 0',
+        },
+        menuItem: {
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px',
+            padding: '16px 24px',
+            cursor: 'pointer',
+            transition: 'background-color 0.2s',
+            border: 'none',
+            background: 'none',
+            width: '100%',
+            textAlign: 'left' as const,
+        },
+        menuItemHover: {
+            backgroundColor: '#f3f4f6',
+        },
+        menuItemIcon: {
+            fontSize: '24px',
+        },
+        menuItemText: {
+            fontSize: '16px',
+            fontWeight: '500',
+            color: '#1f2937',
+        },
     };
 
     const [hoverStates, setHoverStates] = useState<Record<string, boolean>>({
@@ -266,24 +327,133 @@ export default function Main() {
         checkButton: false,
     });
 
+    const menuItems = [
+        { icon: '🏠', text: '홈', action: () => console.log('홈') },
+        { icon: '💊', text: '영양제 관리', action: () => console.log('영양제') },
+        { icon: '📊', text: '리포트', action: () => console.log('리포트') },
+        { icon: '⚙️', text: '설정', action: () => console.log('설정') },
+        { icon: '👤', text: '프로필', action: () => console.log('프로필') },
+        { icon: '🚪', text: '로그아웃', action: handleSignOut },
+    ];
+
+    const [menuItemHover, setMenuItemHover] = useState<number | null>(null);
+
     return (
         <Container>
             <Body style={{
                 padding: '12px',
                 background: 'linear-gradient(to bottom right, #eff6ff, #e0e7ff)',
+                position: 'relative',
+                overflow: 'hidden',
             }}>
-                <div>
+                {/* 메뉴 오버레이 */}
+                <div
+                    style={{
+                        ...styles.menuOverlay,
+                        ...(isMenuOpen ? styles.menuOverlayVisible : {}),
+                    }}
+                    onClick={() => setIsMenuOpen(false)}
+                />
 
-
-                    {/* 오늘의 건강 인사이트 */}
-                    <div style={styles.contentWrapper}>
-                        <div
-                            style={styles.greeting}
+                {/* 슬라이드 메뉴 */}
+                <div
+                    style={{
+                        ...styles.menuContainer,
+                        ...(isMenuOpen ? styles.menuContainerOpen : {}),
+                    }}
+                >
+                    <div style={styles.menuHeader}>
+                        <h2 style={styles.menuTitle}>메뉴</h2>
+                        <button
+                            style={styles.closeButton}
+                            onClick={() => setIsMenuOpen(false)}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.color = '#1f2937';
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.color = '#6b7280';
+                            }}
                         >
-                            <span style={styles.greetingIcon}>{greetingIcon}</span>
-                            <span>{greeting}</span>
+                            ✕
+                        </button>
+                    </div>
+
+                    <div style={styles.menuList}>
+                        {menuItems.map((item, index) => (
+                            <button
+                                key={index}
+                                style={{
+                                    ...styles.menuItem,
+                                    ...(menuItemHover === index ? styles.menuItemHover : {}),
+                                }}
+                                onMouseEnter={() => setMenuItemHover(index)}
+                                onMouseLeave={() => setMenuItemHover(null)}
+                                onClick={() => {
+                                    item.action();
+                                    setIsMenuOpen(false);
+                                }}
+                            >
+                                <span style={styles.menuItemIcon}>{item.icon}</span>
+                                <span style={styles.menuItemText}>{item.text}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div>
+                    <div style={{
+                        maxWidth: '672px',
+                        margin: '0 auto',
+                    }}>
+
+                        {/* Header */}
+                        <div
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                marginBottom: '24px',
+                            }}
+                        >
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                fontSize: '24px',
+                                fontWeight: '600',
+                                color: '#1f2937',
+                            }}>
+                                <span style={styles.greetingIcon}>{greetingIcon}</span>
+                                <span>{greeting}</span>
+                            </div>
+                            <button
+                                style={{
+                                    background: 'white',
+                                    border: 'none',
+                                    borderRadius: '12px',
+                                    padding: '8px 12px',
+                                    fontSize: '24px',
+                                    cursor: 'pointer',
+                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                    transition: 'all 0.3s',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
+                                    e.currentTarget.style.transform = 'translateY(-2px)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
+                                    e.currentTarget.style.transform = 'translateY(0)';
+                                }}
+                                onClick={() => {
+                                    setIsMenuOpen(true);
+                                }}
+                            >
+                                ☰
+                            </button>
                         </div>
 
+                        {/* 오늘의 건강 인사이트 */}
                         <div>
                             <h2 style={styles.sectionTitle}>오늘의 건강 인사이트</h2>
                             <div
@@ -311,6 +481,8 @@ export default function Main() {
                                 </button>
                             </div>
                         </div>
+
+
 
                         <div>
                             <h2 style={styles.sectionTitle}>오늘의 알림 요약</h2>
@@ -364,6 +536,27 @@ export default function Main() {
                                 <button
                                     style={{
                                         ...styles.quickButton,
+                                        ...(hoverStates.challenge ? {
+                                            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                                            transform: 'translateY(-4px)'
+                                        } : {})
+                                    }}
+                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, challenge: true }))}
+                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, challenge: false }))}
+                                >
+                                    <div style={styles.quickButtonContent}>
+                                        <div style={{
+                                            ...styles.iconCircle,
+                                            ...styles.iconCircleGreen,
+                                            backgroundColor: hoverStates.challenge ? '#bbf7d0' : '#dcfce7'
+                                        }} />
+                                        <span style={styles.quickButtonText}>영양제</span>
+                                    </div>
+                                </button>
+
+                                <button
+                                    style={{
+                                        ...styles.quickButton,
                                         ...(hoverStates.health ? {
                                             boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                                             transform: 'translateY(-4px)'
@@ -391,30 +584,10 @@ export default function Main() {
                                         >건강 정보</span>
                                     </div>
                                 </button>
-
-                                <button
-                                    style={{
-                                        ...styles.quickButton,
-                                        ...(hoverStates.challenge ? {
-                                            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-                                            transform: 'translateY(-4px)'
-                                        } : {})
-                                    }}
-                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, challenge: true }))}
-                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, challenge: false }))}
-                                >
-                                    <div style={styles.quickButtonContent}>
-                                        <div style={{
-                                            ...styles.iconCircle,
-                                            ...styles.iconCircleGreen,
-                                            backgroundColor: hoverStates.challenge ? '#bbf7d0' : '#dcfce7'
-                                        }}>
-                                            📈
-                                        </div>
-                                        <span style={styles.quickButtonText}>챌린지</span>
-                                    </div>
-                                </button>
                             </div>
+
+
+
 
                             <button
                                 style={{
@@ -439,6 +612,32 @@ export default function Main() {
                                     <span style={styles.quickButtonText}>리포트</span>
                                 </div>
                             </button>
+
+                            <button
+                                style={{
+                                    marginTop: '12px',
+                                    ...styles.quickButton,
+                                    width: '100%',
+                                    ...(hoverStates.report ? {
+                                        boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                                        transform: 'translateY(-4px)'
+                                    } : {})
+                                }}
+                                onMouseEnter={() => setHoverStates(prev => ({ ...prev, report: true }))}
+                                onMouseLeave={() => setHoverStates(prev => ({ ...prev, report: false }))}
+                            >
+                                <div style={styles.quickButtonContent}>
+                                    <div style={{
+                                        ...styles.iconCircle,
+                                        ...styles.iconCirclePurple,
+                                        backgroundColor: hoverStates.report ? '#e9d5ff' : '#f3e8ff'
+                                    }}>
+                                        📊
+                                    </div>
+                                    <span style={styles.quickButtonText}>리포트</span>
+                                </div>
+                            </button>
+
                         </div>
                     </div>
                 </div>

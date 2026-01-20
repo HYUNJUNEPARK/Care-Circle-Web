@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { PATH } from './constants/paths';
 import SignIn from './pages/signin/SignIn';
-import Main from './pages/main/Main';
+import Main from './pages/app/main/Main';
 import Init from './pages/init/Init';
 import NotFound from './pages/notfound/NotFound';
 import SignUp from './pages/signup/SignUp';
