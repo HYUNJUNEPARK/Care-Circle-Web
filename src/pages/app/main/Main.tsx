@@ -8,8 +8,9 @@ import { PATH } from '../../../constants/paths';
 import { Body, Container } from '../../../components/layouts';
 import useHealthInsight from "./useHealthInsight";
 import SlideMenu from './components/SlideMenu';
+import QuickAccessButton from './components/QuickAccessButton';
 import type SlideMenuItem from "../../../types/local/SlidMenuItem";
-
+import { IoMenuOutline } from "react-icons/io5";
 
 export default function Main() {
     const { user } = useAuth();
@@ -79,7 +80,7 @@ export default function Main() {
         <Container>
             <Body style={{
                 padding: '12px',
-                background: 'linear-gradient(to bottom right, #f5f8fb, #eaeefd)',
+                background: '#f1f6fa', //그라디에이션 'linear-gradient(to bottom right, #f5f8fb, #eaeefd)'
                 position: 'relative',
                 overflowX: 'hidden',
             }}>
@@ -106,6 +107,7 @@ export default function Main() {
                                 marginBottom: '24px',
                             }}
                         >
+                            {/* 인사 */}
                             <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
@@ -114,34 +116,12 @@ export default function Main() {
                                 fontWeight: '600',
                                 color: '#1f2937',
                             }}>
-                                <span style={{ fontSize: '32px' }}>{greetingIcon}</span>
+                                <span style={{ fontSize: '28px' }}>{greetingIcon}</span>
                                 <span>{greeting}</span>
                             </div>
-                            <button
-                                style={{
-                                    background: 'white',
-                                    border: 'none',
-                                    borderRadius: '12px',
-                                    padding: '8px 12px',
-                                    fontSize: '24px',
-                                    cursor: 'pointer',
-                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-                                    transition: 'all 0.3s',
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.15)';
-                                    e.currentTarget.style.transform = 'translateY(-2px)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)';
-                                    e.currentTarget.style.transform = 'translateY(0)';
-                                }}
-                                onClick={() => {
-                                    setIsMenuOpen(true);
-                                }}
-                            >
-                                ☰
-                            </button>
+
+                            {/* 메뉴 버튼 */}
+                            <IoMenuOutline size={32} onClick={() => setIsMenuOpen(true)} />
                         </div>
 
                         {/* 오늘의 건강 인사이트 */}
@@ -186,8 +166,6 @@ export default function Main() {
                                 </button>
                             </div>
                         </div>
-
-
 
                         {/* 오늘의 알림 요약 */}
                         <div>
@@ -247,95 +225,21 @@ export default function Main() {
                             </div>
 
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '12px' }}>
-                                <button
-                                    style={{
-                                        backgroundColor: 'white',
-                                        borderRadius: '16px',
-                                        padding: '24px',
-                                        boxShadow: hoverStates.insight ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.3s',
-                                        transform: hoverStates.insight ? 'translateY(-4px)' : 'translateY(0)',
-                                    }}
-                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, insight: true }))}
-                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, insight: false }))}
-                                >
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                                        <div style={{
-                                            width: '48px',
-                                            height: '48px',
-                                            borderRadius: '50%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            transition: 'background-color 0.3s',
-                                            fontSize: '24px',
-                                            backgroundColor: hoverStates.insight ? '#bbf7d0' : '#dcfce7'
-                                        }} />
-                                        <span style={{ fontWeight: '600', color: '#1f2937' }}>insight</span>
-                                    </div>
-                                </button>
+                                <QuickAccessButton
+                                    text="insight"
+                                    backgroundColor="#dcfce7"
+                                    hoverBackgroundColor="#bbf7d0" />
 
-                                <button
-                                    style={{
-                                        backgroundColor: 'white',
-                                        borderRadius: '16px',
-                                        padding: '24px',
-                                        boxShadow: hoverStates.health ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.3s',
-                                        transform: hoverStates.health ? 'translateY(-4px)' : 'translateY(0)',
-                                    }}
-                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, health: true }))}
-                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, health: false }))}
-                                >
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                                        <div style={{
-                                            width: '48px',
-                                            height: '48px',
-                                            borderRadius: '50%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            transition: 'background-color 0.3s',
-                                            fontSize: '24px',
-                                            backgroundColor: hoverStates.health ? '#bbf7d0' : '#dcfce7'
-                                        }} />
-                                        <span style={{ fontWeight: '600', color: '#1f2937' }}>health</span>
-                                    </div>
-                                </button>
+                                <QuickAccessButton
+                                    text="health"
+                                    backgroundColor="#dcfce7"
+                                    hoverBackgroundColor="#bbf7d0" />
 
-                                <button
-                                    style={{
-                                        backgroundColor: 'white',
-                                        borderRadius: '16px',
-                                        padding: '24px',
-                                        boxShadow: hoverStates.challenge ? '0 10px 15px -3px rgba(0, 0, 0, 0.1)' : '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-                                        border: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.3s',
-                                        transform: hoverStates.challenge ? 'translateY(-4px)' : 'translateY(0)',
-                                    }}
-                                    onMouseEnter={() => setHoverStates(prev => ({ ...prev, challenge: true }))}
-                                    onMouseLeave={() => setHoverStates(prev => ({ ...prev, challenge: false }))}
-                                >
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-                                        <div style={{
-                                            width: '48px',
-                                            height: '48px',
-                                            borderRadius: '50%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            transition: 'background-color 0.3s',
-                                            fontSize: '24px',
-                                            backgroundColor: hoverStates.challenge ? '#bbf7d0' : '#dcfce7'
-                                        }} />
-                                        <span style={{ fontWeight: '600', color: '#1f2937' }}>challenge</span>
-                                    </div>
-                                </button>
+                                <QuickAccessButton
+                                    text="challenge"
+                                    backgroundColor="#dcfce7"
+                                    hoverBackgroundColor="#bbf7d0" />
+
                             </div>
 
                             <button
