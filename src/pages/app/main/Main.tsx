@@ -139,7 +139,7 @@ export default function Main() {
                             <h2 style={{ fontSize: '14px', fontWeight: '600', color: '#333D4B', padding: '0 4px', marginBottom: '8px' }}>오늘의 건강 인사이트</h2>
                             <div
                                 style={{
-                                    background: 'linear-gradient(135deg, #275ffa 0%, #0073FF 100%)',
+                                    background: 'var(--color-primary-color)',
                                     borderRadius: '16px',
                                     padding: '24px',
                                     color: 'white',
@@ -152,7 +152,7 @@ export default function Main() {
                             >
                                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px' }}>
 
-                                    <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.75', flex: '1', color: '#FFFFFF' }}>
+                                    <div style={{ fontSize: '18px', fontWeight: '500', lineHeight: '1.75', flex: '1', color: '#ffffff' }}>
                                         {healthInsight?.content}
                                     </div>
                                 </div>
@@ -162,7 +162,7 @@ export default function Main() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: '4px',
-                                        color: 'rgba(255, 255, 255, 0.9)',
+                                        color: '#ffffff',
                                         fontSize: '14px',
                                         fontWeight: '500',
                                         marginLeft: 'auto',
@@ -208,8 +208,8 @@ export default function Main() {
                                             cursor: 'pointer',
                                             transition: 'all 0.3s',
                                             fontSize: '16px',
-                                            backgroundColor: checkedMeds['today'] ? '#22c55e' : (hoverStates.checkButton ? '#0056FF' : '#0046FF'),
-                                            color: 'white',
+                                            backgroundColor: checkedMeds['today'] ? '#22c55e' : (hoverStates.checkButton ? 'var(--color-primary-color)' : 'var(--color-primary-color)'),
+                                            color: '#ffffff',
                                         }}
                                         onMouseEnter={() => setHoverStates(prev => ({ ...prev, checkButton: true }))}
                                         onMouseLeave={() => setHoverStates(prev => ({ ...prev, checkButton: false }))}

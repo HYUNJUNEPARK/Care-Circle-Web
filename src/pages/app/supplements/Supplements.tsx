@@ -77,9 +77,47 @@ export default function Supplements() {
             }}>
                 <div>
                     <div style={{
-                        maxWidth: '672px',
                         margin: '0 auto',
                     }}>
+
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                        }}>
+
+                            <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B', marginBottom: '12px' }}>내 영양제 리스트</h2>
+                            <button 
+                                onClick={() => console.log('편집 모드')}
+                                style={{
+                                    width: '40px',
+                                    height: '40px',
+                                    borderRadius: '50%',
+                                    backgroundColor: 'white',
+                                    border: '1px solid #E8ECF0',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    fontSize: '18px',
+                                    transition: 'all 0.2s',
+                                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.06)',
+                                    marginBottom: '12px',
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#0046FF';
+                                    e.currentTarget.style.borderColor = '#0046FF';
+                                    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 70, 255, 0.2)';
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = 'white';
+                                    e.currentTarget.style.borderColor = '#E8ECF0';
+                                    e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.06)';
+                                }}
+                            >
+                                ✏️
+                            </button>
+                        </div>
 
                         {/* 영양제 리스트 */}
                         {supplements && supplements.length > 0 ? (
@@ -182,9 +220,9 @@ export default function Supplements() {
                                                                 display: 'inline-block',
                                                                 padding: '4px 8px',
                                                                 backgroundColor: '#E6F0FF',
-                                                                color: '#0046FF',
+                                                                color: '#0056FF',
                                                                 fontSize: '12px',
-                                                                fontWeight: '500',
+                                                                fontWeight: '600',
                                                                 borderRadius: '6px',
                                                             }}
                                                         >
