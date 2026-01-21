@@ -13,8 +13,9 @@ import useLoading from '../../../../components/loading/loading/useLoading';
 
 export default function SupplementContent() {
   const { showAlert } = useAlert();
-  const { showLoading, hideLoading } = useLoading();
-
+  const { updateLoading } = useLoading();
+  const { getEffectCodes, updateEffectCodeClickState, effectCodes, error: effectCodeError } = useEffectCodes();
+  const [searchKeyword, setSearchKeyword] = useState('');
   const {
     getSupplements,
     searchSupplementsByEffectCode,
@@ -25,8 +26,6 @@ export default function SupplementContent() {
     isLoading,
     error: supplementError
   } = useSupplements();
-  const { getEffectCodes, updateEffectCodeClickState, effectCodes, error: effectCodeError } = useEffectCodes();
-  const [searchKeyword, setSearchKeyword] = useState('');
 
   useEffect(() => {
     getSupplements(1);
@@ -45,7 +44,7 @@ export default function SupplementContent() {
 
 
   useEffect(() => {
-
+    updateLoading(isLoading);
   }, [isLoading]);
 
   /**
@@ -74,14 +73,7 @@ export default function SupplementContent() {
    * 영양제 검색
    */
   const handleSearchSupplements = async () => {
-    try {
-      showLoading();
-      await searchSupplementsByKeyword(searchKeyword, 1);
-    } catch (error) {
-      console.error('Error:', error);
-    } finally {
-      hideLoading();
-    }
+    await searchSupplementsByKeyword(searchKeyword, 1);
   };
 
   /**

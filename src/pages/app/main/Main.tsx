@@ -29,7 +29,7 @@ export default function Main() {
     const { signOut, isLoading, error } = useSignOut();
     const { fetchHealthInsight, healthInsight } = useHealthInsight();
     const { showAlert } = useAlert();
-    const { showLoading, hideLoading } = useLoading();
+    const { updateLoading } = useLoading();
     const navigate = useNavigate();
 
     //
@@ -39,11 +39,7 @@ export default function Main() {
 
 
     useEffect(() => {
-        if (isLoading) {
-            showLoading();
-        } else {
-            hideLoading();
-        }
+        updateLoading(isLoading);
     }, [isLoading]);
 
 

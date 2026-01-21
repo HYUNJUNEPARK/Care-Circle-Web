@@ -12,7 +12,7 @@ export default function ManageSupplements() {
     const { user } = useAuth();
     const { signOut, isLoading, error } = useSignOut();
     const { showAlert } = useAlert();
-    const { showLoading, hideLoading } = useLoading();
+    const { updateLoading } = useLoading();
     const navigate = useNavigate();
     const { supplements, getSupplements, loadMoreSupplements, pagination } = useSupplements();
     const observerRef = useRef<IntersectionObserver | null>(null);
@@ -24,11 +24,7 @@ export default function ManageSupplements() {
     }, []);
 
     useEffect(() => {
-        if (isLoading) {
-            showLoading();
-        } else {
-            hideLoading();
-        }
+        updateLoading(isLoading);
     }, [isLoading]);
 
     // 무한 스크롤 콜백
