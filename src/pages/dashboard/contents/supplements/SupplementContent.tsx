@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useSupplements from "../../../../hook/useSupplements";
 import useEffectCodes from "./hook/useEffectCodes";
 import ToggleButton from "../../../../components/buttons/toggle/ToggleButton";
+import SwitchButton from "../../../../components/buttons/switch/SwitchButton";
 import handleError from "../../../../utils/error/handleError";
 import Button from '../../../../components/buttons/Button';
 import Pagination from "../../../../components/pagination/Pagination";
@@ -14,7 +15,16 @@ export default function SupplementContent() {
   const { showAlert } = useAlert();
   const { showLoading, hideLoading } = useLoading();
 
-  const { getSupplements, searchSupplementsByEffectCode, searchSupplementsByKeyword, supplements, pagination, error: supplementError } = useSupplements();
+  const {
+    getSupplements,
+    searchSupplementsByEffectCode,
+    searchSupplementsByKeyword,
+    updateSupplementStatus,
+    supplements,
+    pagination,
+    isLoading,
+    error: supplementError
+  } = useSupplements();
   const { getEffectCodes, updateEffectCodeClickState, effectCodes, error: effectCodeError } = useEffectCodes();
   const [searchKeyword, setSearchKeyword] = useState('');
 
@@ -33,6 +43,10 @@ export default function SupplementContent() {
     });
   }, [supplementError]);
 
+
+  useEffect(() => {
+
+  }, [isLoading]);
 
   /**
    * 영양제 효과 코드 클릭 핸들러
@@ -57,7 +71,7 @@ export default function SupplementContent() {
   }
 
   /**
-   * 
+   * 영양제 검색
    */
   const handleSearchSupplements = async () => {
     try {
@@ -68,6 +82,17 @@ export default function SupplementContent() {
     } finally {
       hideLoading();
     }
+  };
+
+  /**
+   * 영양제 상태 변경 핸들러
+   */
+  const handleStatusChange = async (
+    supplementCode: string,
+    currentStatus: string
+  ) => {
+    const newStatus = (currentStatus === 'ACTIVE') ? 'INACTIVE' : 'ACTIVE';
+    await updateSupplementStatus(supplementCode, newStatus);
   };
 
   return (
@@ -183,8 +208,19 @@ export default function SupplementContent() {
                 <p style={{ color: '#6b7280', marginBottom: '0.5rem' }}>{supplement.description}</p>
                 {/* 영양제 효과 */}
                 <p style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>효과: {supplement.effects}</p>
-                {/* 아이템 상태 */}
-                {/* <h3 style={{ color: '#1f2937', marginBottom: '0.5rem' }}>{supplement.status}</h3> */}
+
+                {/* 아이템 상태 스위치 */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+                  <span style={{ fontSize: '0.875rem', color: '#6b7280' }}>상태:</span>
+                  <SwitchButton
+                    isOn={supplement.status === 'ACTIVE'}
+                    onChange={() => handleStatusChange(supplement.code, supplement.status)}
+                  />
+                  <span style={{ fontSize: '0.875rem', color: '#6b7280', fontWeight: 500 }}>
+                    {supplement.status === 'ACTIVE' ? 'ON' : 'OFF'}
+                  </span>
+                </div>
+
                 <Button
                   style={{ marginTop: 'auto' }}
                   buttonText="수정" />

@@ -1,5 +1,6 @@
 import type Pagination from "./Pagination";
 
+// Entity
 export interface Supplement {
     id: number;
     code: string;
@@ -11,29 +12,35 @@ export interface Supplement {
     effects: string;
 }
 
-//Request
-export interface SearchSupplementsByCodeParams {
-    effectCode: string,
-    page?: number,
-    limit?: number
-}
-
-//Response
-export interface SupplementsResponse {
-    success: boolean;
-    data: Supplement[];
-    pagination: Pagination
-}
-
-export interface SearchSupplementsByCodeResponse {
-    success: boolean;
+export interface SupplementStatus {
     code: string;
-    data: Supplement[];
-    pagination: Pagination
+    status: string;
 }
 
-export interface SearchSupplementsByKeywordResponse {
-    success: boolean;
-    data: Supplement[];
-    pagination: Pagination
+// Request
+export interface SearchSupplementsByCodeParams {
+    effectCode: string;
+    page?: number;
+    limit?: number;
 }
+
+// Response Base
+export interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+}
+
+export interface ApiPaginationResponse<T> {
+    success: boolean;
+    data: T;
+    pagination: Pagination;
+}
+
+// Response Types
+export type SupplementsResponse = ApiPaginationResponse<Supplement[]>;
+
+export type SearchSupplementsByCodeResponse = ApiPaginationResponse<Supplement[]> & { effectCode: string; };
+
+export type SearchSupplementsByKeywordResponse = ApiPaginationResponse<Supplement[]>;
+
+export type UpdateSupplementStatusResponse = ApiResponse<SupplementStatus>;

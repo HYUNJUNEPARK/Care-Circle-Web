@@ -3,6 +3,7 @@ import {
     getSupplements as getSupplementsApi,
     searchSupplementsByEffectCode as searchByCodeApi,
     searchSupplementsByKeyword as searchByKeywordApi,
+    updateSupplementStatus as updateSupplementStatusApi,
 } from '../network/api/supplementApis';
 import type { Supplement } from '../types/remote/Supplements';
 import type Pagination from '../types/remote/Pagination';
@@ -53,7 +54,7 @@ function useSupplements() {
             const resData = await getSupplementsApi(nextPage, limit);
             const newSupplements = resData.data;
             const newPagination = resData.pagination;
-            
+
             setPagination(newPagination);
             setSupplements(prev => [...prev, ...newSupplements]);
             setCurrentPage(nextPage);
@@ -112,11 +113,41 @@ function useSupplements() {
         }
     }
 
+    /**
+     * 영양제 상태 변경
+     * @param supplementCode 영양제 코드
+     * @param newStatus 새로운 상태 ('ACTIVE' | 'INACTIVE')
+     */
+    const updateSupplementStatus = async (
+        supplementCode: string,
+        newStatus: 'ACTIVE' | 'INACTIVE'
+    ) => {
+        try {
+            setLoading(true);
+            const updateResult = await updateSupplementStatusApi(supplementCode, newStatus);
+
+            // 로컬 상태 업데이트
+            setSupplements(prev =>
+                prev.map(supplement =>
+                    (supplement.code === supplementCode)
+                        ? { ...supplement, status: updateResult.status }
+                        : supplement
+                )
+            );
+        } catch (error) {
+            setError(error as Error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return {
         getSupplements,
         loadMoreSupplements,
         searchSupplementsByEffectCode,
         searchSupplementsByKeyword,
+        updateSupplementStatus,
         supplements,
         pagination,
         currentPage,

@@ -2,7 +2,8 @@ import privateAxios from '../axios/privateAxios';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
 import type {
     SearchSupplementsByCodeResponse, SupplementsResponse,
-    SearchSupplementsByKeywordResponse, SearchSupplementsByCodeParams
+    SearchSupplementsByKeywordResponse, SearchSupplementsByCodeParams,
+    UpdateSupplementStatusResponse, SupplementStatus
 } from '../../types/remote/Supplements';
 
 const supplementApiUrl = `/api/supplements`
@@ -74,4 +75,23 @@ export async function getEffectCodes(): Promise<EffectCode[]> {
     }));
 
     return supplements;
+}
+
+/**
+ * 영양제 상태 변경 (ACTIVE <-> INACTIVE)
+ */
+export async function updateSupplementStatus(
+    supplementCode: string,
+    status: 'ACTIVE' | 'INACTIVE'
+): Promise<SupplementStatus> {
+    const res = await privateAxios.patch(
+        `${supplementApiUrl}/${supplementCode}/status`,
+        {
+            status
+        },
+        {}
+    );
+    const resData = res.data as UpdateSupplementStatusResponse
+    const updatedStatus = resData.data;
+    return updatedStatus;
 }
