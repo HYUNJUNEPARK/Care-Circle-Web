@@ -1,17 +1,16 @@
 import { useState } from 'react';
 import {
-    getSupplements as getSupplementsApi,
-    //searchSupplementsByEffectCode as searchByCodeApi,
+    getAdminSupplements as getAdminSupplementsApi,
     searchSupplementsByKeyword as searchByKeywordApi,
     updateSupplementStatus as updateSupplementStatusApi,
-} from '../network/api/supplementApis';
-import type { Supplement } from '../types/remote/Supplements';
-import type Pagination from '../types/remote/Pagination';
+} from '../../../../../network/api/supplementApis'
+import type { Supplement } from '../../../../../types/remote/Supplements';
+import type Pagination from '../../../../../types/remote/Pagination';
 
 /**
  * 영양제 관련 데이터 로드 및 상태 관리 훅
  */
-function useSupplements() {
+function useAdminSupplements() {
     const [supplements, setSupplements] = useState<Supplement[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -23,11 +22,11 @@ function useSupplements() {
      */
     const getSupplements = async (
         page: number,
-        limit: number = 20
+        limit: number = 50
     ) => {
         try {
             setLoading(true);
-            const resData = await getSupplementsApi({ page: page, limit: limit });
+            const resData = await getAdminSupplementsApi({ page: page, limit: limit });
             const supplement = resData.data;
             const pagination = resData.pagination;
             setPagination(pagination);
@@ -44,14 +43,14 @@ function useSupplements() {
      * 다음 페이지 영양제 더 불러오기 (무한 스크롤 - 데이터 추가)
      */
     const loadMoreSupplements = async (
-        limit: number = 20
+        limit: number = 50
     ) => {
         if (!pagination?.hasNext || isLoading) return;
 
         try {
             setLoading(true);
             const nextPage = currentPage + 1;
-            const resData = await getSupplementsApi({ page: nextPage, limit });
+            const resData = await getAdminSupplementsApi({ page: nextPage, limit });
             const newSupplements = resData.data;
             const newPagination = resData.pagination;
 
@@ -75,7 +74,7 @@ function useSupplements() {
     ) => {
         try {
             setLoading(true);
-            const resData = await getSupplementsApi({
+            const resData = await getAdminSupplementsApi({
                 effectCode: effectCode,
                 page: page,
                 limit: limit
@@ -97,7 +96,7 @@ function useSupplements() {
     const searchSupplementsByKeyword = async (
         keyword: string,
         page: number,
-        limit: number = 20
+        limit: number = 50
     ) => {
         try {
             setLoading(true);
@@ -157,4 +156,4 @@ function useSupplements() {
 
 }
 
-export default useSupplements;
+export default useAdminSupplements;

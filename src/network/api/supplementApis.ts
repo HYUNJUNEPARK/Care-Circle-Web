@@ -1,35 +1,20 @@
 import privateAxios from '../axios/privateAxios';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
 import type {
-    SearchSupplementsByCodeResponse, SupplementsResponse,
-    SearchSupplementsByKeywordResponse, SearchSupplementsByCodeParams,
+    SupplementsResponse,
+    SearchSupplementsByKeywordResponse, SearchSupplementsParams,
     UpdateSupplementStatusResponse, SupplementStatus
 } from '../../types/remote/Supplements';
 
 const supplementApiUrl = `/api/supplements`
 
 /**
- * 전체 영양제 리스트 가져오기
+ * 전체 영양제 리스트 가져오기(일반 회원용)
  */
 export async function getSupplements(
-    page: number,
-    limit: number
+    params: SearchSupplementsParams
 ): Promise<SupplementsResponse> {
-    const res = await privateAxios.get(
-        `${supplementApiUrl}?page=${page}&limit=${limit}`,
-    );
-    const resData = res.data as SupplementsResponse;
-    return resData;
-}
-
-/**
- * Effect 코드에 해당하는 영양제 검색
- */
-export async function searchSupplementsByEffectCode(
-    params: SearchSupplementsByCodeParams
-): Promise<SearchSupplementsByCodeResponse> {
-
-    const { effectCode, page = 1, limit = 10 } = params;
+    const { effectCode, page = 1, limit = 20 } = params;
 
     const query = new URLSearchParams();
     if (effectCode) query.append("effectCode", effectCode);
@@ -40,8 +25,28 @@ export async function searchSupplementsByEffectCode(
     const res = await privateAxios.get(
         `${supplementApiUrl}?${query.toString()}`,
     );
+    const resData = res.data as SupplementsResponse;
+    return resData;
+}
 
-    const resData = res.data as SearchSupplementsByCodeResponse;
+/**
+ * 전체 영양제 리스트 가져오기(관리자용)
+ */
+export async function getAdminSupplements(
+    params: SearchSupplementsParams
+): Promise<SupplementsResponse> {
+    const { effectCode, page = 1, limit = 50 } = params;
+
+    const query = new URLSearchParams();
+    if (effectCode) query.append("effectCode", effectCode);
+
+    query.append("page", String(page));
+    query.append("limit", String(limit));
+
+    const res = await privateAxios.get(
+        `${supplementApiUrl}/admin?${query.toString()}`,
+    );
+    const resData = res.data as SupplementsResponse;
     return resData;
 }
 

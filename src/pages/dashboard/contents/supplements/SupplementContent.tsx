@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import useSupplements from "../../../../hook/useSupplements";
 import useEffectCodes from "./hook/useEffectCodes";
 import ToggleButton from "../../../../components/buttons/toggle/ToggleButton";
 import SwitchButton from "../../../../components/buttons/switch/SwitchButton";
@@ -10,6 +9,7 @@ import Input from '../../../../components/inputs/Input';
 import { TbSearch } from "react-icons/tb";
 import useAlert from '../../../../components/alert/useAlert';
 import useLoading from '../../../../components/loading/loading/useLoading';
+import useAdminSupplements from "./hook/useAdminSupplements";
 
 export default function SupplementContent() {
   const { showAlert } = useAlert();
@@ -25,7 +25,7 @@ export default function SupplementContent() {
     pagination,
     isLoading,
     error: supplementError
-  } = useSupplements();
+  } = useAdminSupplements();
 
   useEffect(() => {
     getSupplements(1);

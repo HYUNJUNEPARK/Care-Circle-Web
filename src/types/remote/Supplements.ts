@@ -18,8 +18,8 @@ export interface SupplementStatus {
 }
 
 // Request
-export interface SearchSupplementsByCodeParams {
-    effectCode: string;
+export interface SearchSupplementsParams {
+    effectCode?: string;
     page?: number;
     limit?: number;
 }
@@ -39,7 +39,7 @@ export interface ApiPaginationResponse<T> {
 // Response Types
 export type SupplementsResponse = ApiPaginationResponse<Supplement[]>;
 
-export type SearchSupplementsByCodeResponse = ApiPaginationResponse<Supplement[]> & { effectCode: string; };
+//export type SearchSupplementsByCodeResponse = ApiPaginationResponse<Supplement[]> & { effectCode: string; };
 
 export type SearchSupplementsByKeywordResponse = ApiPaginationResponse<Supplement[]>;
 

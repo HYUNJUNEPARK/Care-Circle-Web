@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { adminSignOut as adminSignOutApi } from '../network/api/userApis';
 import { signOut as signOutApi } from '../network/api/userApis';
 import { firebaseAuth } from "../network/auth/firebaseAuth";
-import { signOut as authSignOut } from "firebase/auth";
+import { signOut as firebaseAuthSignOut } from "firebase/auth";
 
 /**
  * 로그아웃
@@ -11,7 +12,7 @@ function useSignOut() {
     const [error, setError] = useState<Error | null>(null);
 
     /**
-     * uid 에 해당하는 회원을 로그아웃 시킨다.
+     * uid 에 해당하는 회원을 로그아웃 시킨다.(관리자용)
      * cf. 관리자만 사용 가능
      */
     const signOutByUid = async (uid: string) => {
@@ -22,15 +23,12 @@ function useSignOut() {
 
         try {
             setLoading(true);
-            const res = await signOutApi(uid);
-            const rUid = res?.uid;
-            const logoutAt = res?.logoutAt;
-            const updatedAt = res?.updateAt;
-            if (!res || !rUid || !logoutAt || !updatedAt) {
+            const res = await adminSignOutApi(uid);
+            const resData = res?.data;
+            if (!resData) {
                 throw new Error("Response is invalid.");
             }
-
-            return res;
+            return resData;
         } catch (error) {
             setError(error as Error)
         } finally {
@@ -39,7 +37,7 @@ function useSignOut() {
     }
 
     /**
-     * 로그인 중인 사용자를 로그아웃 시킨다.
+     * 로그인 중인 사용자를 로그아웃 시킨다.(일반 사용자용)
      */
     const signOut = async () => {
         if (isLoading) {
@@ -56,8 +54,9 @@ function useSignOut() {
                 return;
             }
 
-            await signOutApi(uid);
-            await authSignOut(firebaseAuth)
+            await signOutApi();
+            
+            await firebaseAuthSignOut(firebaseAuth)
         } catch (error) {
             setError(error as Error)
         } finally {
@@ -72,7 +71,7 @@ function useSignOut() {
         try {
             // FB 로그아웃
             setLoading(true);
-            await authSignOut(firebaseAuth)
+            await firebaseAuthSignOut(firebaseAuth)
         } catch (error) {
             setError(error as Error);
         } finally {

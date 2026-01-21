@@ -54,18 +54,30 @@ export async function syncMeToServer(): Promise<Boolean> {
 }
 
 /**
- * 로그아웃
+ * 로그아웃(관리자용)
  */
-export async function signOut(uid: string): Promise<SignOutResponse> {
+export async function adminSignOut(uid: string): Promise<SignOutResponse> {
     const res = await privateAxios.post(
-        `${userApiUrl}/sign-out`,
+        `${userApiUrl}/admin/sign-out`,
         {                     
             uid: uid
         },
     );
     const data = (res.data) as SignOutResponse;
-    return data
+    return data;
 }
+
+/**
+ * 로그아웃(일반 사용자용) - 자기자신 로그아웃
+ */
+export async function signOut(): Promise<SignOutResponse> {
+    const res = await privateAxios.post(
+        `${userApiUrl}/sign-out`
+    );
+    const data = (res.data) as SignOutResponse;
+    return data;
+}
+
 
 /**
  * 이메일 유효성 체크
