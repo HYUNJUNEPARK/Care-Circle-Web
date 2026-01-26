@@ -1,10 +1,6 @@
 import privateAxios from '../axios/privateAxios';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
-import type {
-    SupplementsResponse,
-    SearchSupplementsByKeywordResponse, SearchSupplementsParams,
-    UpdateSupplementStatusResponse, SupplementStatus
-} from '../../types/remote/Supplements';
+import type { SupplementsResponse, SearchSupplementsByKeywordResponse, SearchSupplementsParams } from '../../types/remote/Supplements';
 
 const supplementApiUrl = `/api/health-items`
 
@@ -41,27 +37,6 @@ export async function getUserSupplements() {
     return data;
 }
 
-// /**
-//  * 전체 영양제 리스트 가져오기(관리자용)
-//  */
-// export async function getAdminSupplements(
-//     params: SearchSupplementsParams
-// ): Promise<SupplementsResponse> {
-//     const { effectCode, page = 1, limit = 50 } = params;
-
-//     const query = new URLSearchParams();
-//     if (effectCode) query.append("effectCode", effectCode);
-
-//     query.append("page", String(page));
-//     query.append("limit", String(limit));
-
-//     const res = await privateAxios.get(
-//         `${supplementApiUrl}/admin?${query.toString()}`,
-//     );
-//     const resData = res.data as SupplementsResponse;
-//     return resData;
-// }
-
 /**
  * 키워드(영양제 이름, 영양제 코드로) 영양제 검색
  */
@@ -92,23 +67,4 @@ export async function getEffectCodes(): Promise<EffectCode[]> {
     }));
 
     return supplements;
-}
-
-/**
- * 영양제 상태 변경 (ACTIVE <-> INACTIVE)
- */
-export async function updateSupplementStatus(
-    supplementCode: string,
-    status: 'ACTIVE' | 'INACTIVE'
-): Promise<SupplementStatus> {
-    const res = await privateAxios.patch(
-        `${supplementApiUrl}/${supplementCode}/status`,
-        {
-            status
-        },
-        {}
-    );
-    const resData = res.data as UpdateSupplementStatusResponse
-    const updatedStatus = resData.data;
-    return updatedStatus;
 }

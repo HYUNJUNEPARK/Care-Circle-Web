@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import {
     getSupplements as getSupplementsApi,
-    //searchSupplementsByEffectCode as searchByCodeApi,
     searchSupplementsByKeyword as searchByKeywordApi,
-    updateSupplementStatus as updateSupplementStatusApi,
     getUserSupplements as getUserSupplementsApi
 } from '../../../network/api/supplementApis';
+import { updateSupplementStatus as updateSupplementStatusApi } from '../../../network/api/adminApis';
 import type { Supplement } from '../../../types/remote/Supplements';
 import type Pagination from '../../../types/remote/Pagination';
 
@@ -18,7 +17,6 @@ function useSupplements() {
     const [error, setError] = useState<Error | null>(null);
     const [pagination, setPagination] = useState<Pagination | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
-
 
     /**
      * 내 영양제 리스트 가져오기

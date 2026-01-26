@@ -2,7 +2,6 @@ import privateAxios from '../axios/privateAxios';
 import publicAxios from '../axios/publicAxios';
 import type { UserInfo } from '../../types/local/UserInfo';
 import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo'
-
 import type SignOutResponse from '../../types/remote/SignOutResponse';
 import { converToUser } from '../../utils/formatter';
 

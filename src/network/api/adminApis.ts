@@ -1,6 +1,7 @@
 import privateAxios from '../axios/privateAxios';
 import type {
     SupplementsResponse, SearchSupplementsParams,
+    UpdateSupplementStatusResponse, SupplementStatus
 } from '../../types/remote/Supplements';
 import type SignOutResponse from '../../types/remote/SignOutResponse';
 import type { UserStatusType } from '../../types/UserStatusType';
@@ -38,6 +39,25 @@ export async function getAdminSupplements(
     );
     const resData = res.data as SupplementsResponse;
     return resData;
+}
+
+/**
+ * 영양제 상태 변경 (ACTIVE <-> INACTIVE) (관리자용)
+ */
+export async function updateSupplementStatus(
+    supplementCode: string,
+    status: 'ACTIVE' | 'INACTIVE'
+): Promise<SupplementStatus> {
+    const res = await privateAxios.patch(
+        `${adminApiUrl}/health-items/${supplementCode}/status`,
+        {
+            status
+        },
+        {}
+    );
+    const resData = res.data as UpdateSupplementStatusResponse
+    const updatedStatus = resData.data;
+    return updatedStatus;
 }
 
 /**
