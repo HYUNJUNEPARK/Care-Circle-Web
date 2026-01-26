@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { updateUserStatus as updateUserStatusApi } from "../../../../../network/api/userApis";
+import { updateUserStatus as updateUserStatusApi } from "../../../../../network/api/adminApis";
 import type { UserStatusType } from "../../../../../types/UserStatusType";
 
 /**

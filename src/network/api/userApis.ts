@@ -1,9 +1,7 @@
 import privateAxios from '../axios/privateAxios';
 import publicAxios from '../axios/publicAxios';
-import type { UserStatusType } from '../../types/UserStatusType';
 import type { UserInfo } from '../../types/local/UserInfo';
 import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo'
-import type ChangeUserStatusResponse from '../../types/remote/ChangeStatusResponse';
 import type UpdateUserRoleResponse from '../../types/remote/UpdateUserRoleResponse';
 import type DeleteUserResponse from '../../types/remote/DeleteUserStatusResponse';
 import type SignOutResponse from '../../types/remote/SignOutResponse';
@@ -54,20 +52,6 @@ export async function syncMeToServer(): Promise<Boolean> {
 }
 
 /**
- * 로그아웃(관리자용)
- */
-export async function adminSignOut(uid: string): Promise<SignOutResponse> {
-    const res = await privateAxios.post(
-        `${userApiUrl}/admin/sign-out`,
-        {                     
-            uid: uid
-        },
-    );
-    const data = (res.data) as SignOutResponse;
-    return data;
-}
-
-/**
  * 로그아웃(일반 사용자용) - 자기자신 로그아웃
  */
 export async function signOut(): Promise<SignOutResponse> {
@@ -84,25 +68,6 @@ export async function signOut(): Promise<SignOutResponse> {
  */
 export async function checkValidEmail(email: string) {
     return publicAxios.get(`${userApiUrl}/exists?email=${email}`);
-}
-
-/**
- * 회원 상태 변경
- */
-export async function updateUserStatus(
-    uid: string,
-    userStatus: UserStatusType,
-): Promise<ChangeUserStatusResponse> {
-    const res = await privateAxios.patch(
-        `${userApiUrl}/status`,
-        {                     
-            uid: uid,
-            status: userStatus
-        },
-        {}
-    );
-    const data = (res.data) as ChangeUserStatusResponse;
-    return data;
 }
 
 /**
