@@ -5,13 +5,15 @@ import useAlert from "../../../components/alert/useAlert";
 import useLoading from "../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../components/layouts';
-import useSupplements from "../../../hook/useSupplements";
-import { PATH } from "../../../constants/paths";
+import useSupplements from "./useSupplements";
 
-export default function MySupplements() {
-    const { user } = useAuth();
+/**
+ * 영양 아이템 리스트 선택 페이지
+ */
+export default function NutritionSelection() {
+    //const { user } = useAuth();
     const { signOut, isLoading, error } = useSignOut();
-    const { showAlert } = useAlert();
+    //const { showAlert } = useAlert();
     const { updateLoading } = useLoading();
     const navigate = useNavigate();
     const { supplements, getSupplements, loadMoreSupplements, pagination } = useSupplements();
@@ -59,7 +61,7 @@ export default function MySupplements() {
     return (
         <Container>
             <Header
-                title="영양제 관리"
+                title="편집"
                 style={{
                     background: '#F7F9FC',
                 }}
@@ -86,7 +88,6 @@ export default function MySupplements() {
                             <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B' }}>내 영양제 리스트</h2>
                             <span
                                 style={{ fontSize: '16px', color: '#8B95A1', cursor: 'pointer' }}
-                                onClick={() => navigate(PATH.MANAGE_SUPPLEMENTS)}
                             >편집 ›</span>
                         </div>
 

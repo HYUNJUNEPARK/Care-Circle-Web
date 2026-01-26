@@ -7,8 +7,8 @@ import NotFound from './pages/notfound/NotFound';
 import SignUp from './pages/signup/SignUp';
 import NotActive from './pages/notactive/NotActive';
 import DashBoard from './pages/dashboard/DashBoard';
-import MySupplements from './pages/app/supplements/MySupplements';
-import ManageSupplements from './pages/app/supplements/ManageSupplements';
+import UserNutrition from './pages/app/nutrition/UserNutrition';
+import NutritionSelection from './pages/app/nutrition/NutritionSelection';
 
 function App() {
 
@@ -22,8 +22,8 @@ function App() {
         <Route path={PATH.SIGN_UP} element={<SignUp />} />
         <Route path={PATH.NOT_ACTIVE} element={<NotActive />} />
         <Route path={PATH.DASH_BOARD} element={<DashBoard />} />
-        <Route path={PATH.MY_SUPPLEMENTS} element={<MySupplements />} />
-        <Route path={PATH.MANAGE_SUPPLEMENTS} element={<ManageSupplements />} />
+        <Route path={PATH.MY_SUPPLEMENTS} element={<UserNutrition />} />
+        <Route path={PATH.MANAGE_SUPPLEMENTS} element={<NutritionSelection />} />
       </Routes>
     </BrowserRouter>
   )

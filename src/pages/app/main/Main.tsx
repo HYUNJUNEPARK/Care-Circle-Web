@@ -199,7 +199,7 @@ export default function Main() {
                             {/* 빠른 이동: Grid 3 */}
                             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '12px' }}>
                                 <QuickAccessButton
-                                    text="영양제 관리"
+                                    text="영양 관리"
                                     onClick={() => { navigate(PATH.MY_SUPPLEMENTS); }} />
 
                                 <QuickAccessButton

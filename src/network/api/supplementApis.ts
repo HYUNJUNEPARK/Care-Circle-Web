@@ -6,7 +6,7 @@ import type {
     UpdateSupplementStatusResponse, SupplementStatus
 } from '../../types/remote/Supplements';
 
-const supplementApiUrl = `/api/supplements`
+const supplementApiUrl = `/api/health-items`
 
 /**
  * 전체 영양제 리스트 가져오기(일반 회원용)
@@ -30,25 +30,37 @@ export async function getSupplements(
 }
 
 /**
- * 전체 영양제 리스트 가져오기(관리자용)
+ * 내 영양제 리스트 가져오기
  */
-export async function getAdminSupplements(
-    params: SearchSupplementsParams
-): Promise<SupplementsResponse> {
-    const { effectCode, page = 1, limit = 50 } = params;
-
-    const query = new URLSearchParams();
-    if (effectCode) query.append("effectCode", effectCode);
-
-    query.append("page", String(page));
-    query.append("limit", String(limit));
-
+export async function getUserSupplements() {
     const res = await privateAxios.get(
-        `${supplementApiUrl}/admin?${query.toString()}`,
+        `${supplementApiUrl}/user`,
     );
-    const resData = res.data as SupplementsResponse;
-    return resData;
+    const resData = res.data
+    const data = resData.data;
+    return data;
 }
+
+// /**
+//  * 전체 영양제 리스트 가져오기(관리자용)
+//  */
+// export async function getAdminSupplements(
+//     params: SearchSupplementsParams
+// ): Promise<SupplementsResponse> {
+//     const { effectCode, page = 1, limit = 50 } = params;
+
+//     const query = new URLSearchParams();
+//     if (effectCode) query.append("effectCode", effectCode);
+
+//     query.append("page", String(page));
+//     query.append("limit", String(limit));
+
+//     const res = await privateAxios.get(
+//         `${supplementApiUrl}/admin?${query.toString()}`,
+//     );
+//     const resData = res.data as SupplementsResponse;
+//     return resData;
+// }
 
 /**
  * 키워드(영양제 이름, 영양제 코드로) 영양제 검색

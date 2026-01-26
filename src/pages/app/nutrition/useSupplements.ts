@@ -4,9 +4,10 @@ import {
     //searchSupplementsByEffectCode as searchByCodeApi,
     searchSupplementsByKeyword as searchByKeywordApi,
     updateSupplementStatus as updateSupplementStatusApi,
-} from '../network/api/supplementApis';
-import type { Supplement } from '../types/remote/Supplements';
-import type Pagination from '../types/remote/Pagination';
+    getUserSupplements as getUserSupplementsApi
+} from '../../../network/api/supplementApis';
+import type { Supplement } from '../../../types/remote/Supplements';
+import type Pagination from '../../../types/remote/Pagination';
 
 /**
  * 영양제 관련 데이터 로드 및 상태 관리 훅
@@ -17,6 +18,22 @@ function useSupplements() {
     const [error, setError] = useState<Error | null>(null);
     const [pagination, setPagination] = useState<Pagination | null>(null);
     const [currentPage, setCurrentPage] = useState(1);
+
+
+    /**
+     * 내 영양제 리스트 가져오기
+     */
+    const getUserSupplements = async () => {
+        try {
+            setLoading(true);
+            const resData = await getUserSupplementsApi();
+            console.error(resData);
+        } catch (error) {
+            setError(error as Error)
+        } finally {
+            setLoading(false);
+        }
+    }
 
     /**
      * 영양제 리스트 가져오기 (초기 로드 - 데이터 교체)
@@ -144,6 +161,7 @@ function useSupplements() {
 
     return {
         getSupplements,
+        getUserSupplements,
         loadMoreSupplements,
         searchSupplementsByEffectCode,
         searchSupplementsByKeyword,

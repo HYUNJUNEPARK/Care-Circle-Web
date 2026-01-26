@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import {
-    getAdminSupplements as getAdminSupplementsApi,
     searchSupplementsByKeyword as searchByKeywordApi,
     updateSupplementStatus as updateSupplementStatusApi,
 } from '../../../../../network/api/supplementApis'
+import { getAdminSupplements as getAdminSupplementsApi } from '../../../../../network/api/adminApis';
 import type { Supplement } from '../../../../../types/remote/Supplements';
 import type Pagination from '../../../../../types/remote/Pagination';
 

@@ -1,65 +1,68 @@
 import useAuth from "../../../network/auth/useAuth";
-import { useEffect, useState, useRef, useCallback } from "react";
-import useSignOut from '../../../hook/useSignOut';
+import { useEffect, useRef } from "react";
+//import useSignOut from '../../../hook/useSignOut';
 import useAlert from "../../../components/alert/useAlert";
 import useLoading from "../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../components/layouts';
-import useSupplements from "../../../hook/useSupplements";
+import useSupplements from "./useSupplements";
+import { PATH } from "../../../constants/paths";
 
-
-export default function ManageSupplements() {
+/**
+ * 내 영양 아이템 페이지
+ */
+export default function UserNutrition() {
     const { user } = useAuth();
-    const { signOut, isLoading, error } = useSignOut();
+    //const { signOut, isLoading, error } = useSignOut();
     const { showAlert } = useAlert();
     const { updateLoading } = useLoading();
     const navigate = useNavigate();
-    const { supplements, getSupplements, loadMoreSupplements, pagination } = useSupplements();
+    const { supplements, pagination, getUserSupplements } = useSupplements();
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
     //
     useEffect(() => {
-        getSupplements(1);
+        getUserSupplements();
     }, []);
 
-    useEffect(() => {
-        updateLoading(isLoading);
-    }, [isLoading]);
+    // useEffect(() => {
+    //     updateLoading(isLoading);
+    // }, [isLoading]);
 
     // 무한 스크롤 콜백
-    const handleLoadMore = useCallback(() => {
-        if (pagination?.hasNext && !isLoading) {
-            loadMoreSupplements();
-        }
-    }, [pagination, isLoading, loadMoreSupplements]);
+    // const handleLoadMore = useCallback(() => {
+    //     if (pagination?.hasNext && !isLoading) {
+    //         loadMoreSupplements();
+    //     }
+    // }, [pagination, isLoading, loadMoreSupplements]);
 
     // Intersection Observer 설정
-    useEffect(() => {
-        if (!loadMoreTriggerRef.current) return;
+    // useEffect(() => {
+    //     if (!loadMoreTriggerRef.current) return;
 
-        observerRef.current = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting) {
-                    handleLoadMore();
-                }
-            },
-            { threshold: 0.1 }
-        );
+    //     observerRef.current = new IntersectionObserver(
+    //         (entries) => {
+    //             if (entries[0].isIntersecting) {
+    //                 //handleLoadMore();
+    //             }
+    //         },
+    //         { threshold: 0.1 }
+    //     );
 
-        observerRef.current.observe(loadMoreTriggerRef.current);
+    //     observerRef.current.observe(loadMoreTriggerRef.current);
 
-        return () => {
-            if (observerRef.current) {
-                observerRef.current.disconnect();
-            }
-        };
-    }, [handleLoadMore]);
+    //     return () => {
+    //         if (observerRef.current) {
+    //             observerRef.current.disconnect();
+    //         }
+    //     };
+    // }, [handleLoadMore]);
 
     return (
         <Container>
             <Header
-                title="편집"
+                title="영양 관리"
                 style={{
                     background: '#F7F9FC',
                 }}
@@ -83,9 +86,10 @@ export default function ManageSupplements() {
                             marginBottom: '18px',
                         }}>
 
-                            <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B' }}>내 영양제 리스트</h2>
+                            <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B' }}>내 영양 리스트</h2>
                             <span
                                 style={{ fontSize: '16px', color: '#8B95A1', cursor: 'pointer' }}
+                                onClick={() => navigate(PATH.MANAGE_SUPPLEMENTS)}
                             >편집 ›</span>
                         </div>
 
