@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { updateUserRole as updateUserRoleApi } from "../../../../../network/api/userApis";
+import { updateUserRole as updateUserRoleApi } from "../../../../../network/api/adminApis";
 import { isUserRole } from "../../../../../types/UserRoleType";
 
 /**

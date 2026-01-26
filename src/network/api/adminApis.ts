@@ -5,6 +5,17 @@ import type {
 import type SignOutResponse from '../../types/remote/SignOutResponse';
 import type { UserStatusType } from '../../types/UserStatusType';
 import type ChangeUserStatusResponse from '../../types/remote/ChangeStatusResponse';
+import type { UserInfo } from '../../types/local/UserInfo';
+import type { RemoteUserInfo } from '../../types/remote/RemoteUserInfo';
+import type ResetPasswordResponse from '../../types/remote/ResetPasswordResponse';
+import type UpdateUserRoleResponse from '../../types/remote/UpdateUserRoleResponse';
+import type DeleteUserResponse from '../../types/remote/DeleteUserStatusResponse';
+import type { UserRole } from '../../types/UserRoleType';
+import { converToUsers } from '../../utils/formatter';
+
+/**
+ * 관리자 API 기본 경로
+ */
 
 const adminApiUrl = `/api/admin`;
 
@@ -30,6 +41,31 @@ export async function getAdminSupplements(
 }
 
 /**
+ * 전체 사용자 조회(관리자용)
+ */
+export async function getAllUsers(): Promise<UserInfo[]> {
+    const res = await privateAxios.get(
+        `${adminApiUrl}/users`,
+    );
+
+    const remoteUsers = (res.data.data) as RemoteUserInfo[];
+    const users = converToUsers(remoteUsers);
+    return users;
+}
+
+/**
+ * Email or Uid 로 사용자 검색(관리자용)
+ */
+export async function searchUsers(keyword: string): Promise<UserInfo[]> {
+    const res = await privateAxios.get(
+        `${adminApiUrl}/users/search?keyword=${keyword}`,
+    );
+    const remoteUsers = (res.data.data) as RemoteUserInfo[];
+    const users = converToUsers(remoteUsers);
+    return users;
+}
+
+/**
  * 로그아웃(관리자용)
  */
 export async function adminSignOut(uid: string): Promise<SignOutResponse> {
@@ -44,7 +80,7 @@ export async function adminSignOut(uid: string): Promise<SignOutResponse> {
 }
 
 /**
- * 회원 상태 변경
+ * 회원 상태 변경(관리자용)
  */
 export async function updateUserStatus(
     uid: string,
@@ -59,5 +95,48 @@ export async function updateUserStatus(
         {}
     );
     const data = (res.data) as ChangeUserStatusResponse;
+    return data;
+}
+
+/**
+ * 비밀번호 초기화(관리자용)
+ */
+export async function resetPassword(uid: string): Promise<ResetPasswordResponse> {
+    const res = await privateAxios.post(
+        `${adminApiUrl}/users/password-reset`, 
+        {                    
+            uid: uid
+        },
+    );
+    const data = (res.data) as ResetPasswordResponse;
+    return data;
+}
+
+/**
+ * 회원 권한 변경(관리자용)
+ */
+export async function updateUserRole(
+    uid: string,
+    role: UserRole,
+): Promise<UpdateUserRoleResponse> {
+    const res = await privateAxios.patch(
+        `${adminApiUrl}/users/role`,
+        {
+            uid: uid,
+            role: role
+        },
+    );
+    const data = (res.data) as UpdateUserRoleResponse;
+    return data;
+}
+
+/**
+ * 계정 삭제(관리자용)
+ */
+export async function deleteUser(uid: string): Promise<DeleteUserResponse> {
+    const res = await privateAxios.delete(
+        `${adminApiUrl}/users/${uid}`,
+    );
+    const data = (res.data) as DeleteUserResponse;
     return data;
 }

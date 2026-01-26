@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { UserInfo } from '../../../../../types/local/UserInfo'
-import { searchUsersByEmailOrUid } from '../../../../../network/api/userApis';
+import { searchUsers as SearchUsersApi } from '../../../../../network/api/adminApis';
 
 /**
- * 사용자 리스트 가져오기
+ * 사용자 검색 훅
  */
 function useSearchUsers() {
     const [isLoading, setLoading] = useState(false);
@@ -12,7 +12,7 @@ function useSearchUsers() {
     const searchUsers = async (keyword: string): Promise<UserInfo[]> => {
         try {
             setLoading(true);
-            const users = await searchUsersByEmailOrUid(keyword);
+            const users = await SearchUsersApi(keyword);
             return users;
         } catch (error) {
             setError(error as Error)
