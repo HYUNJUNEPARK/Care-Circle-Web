@@ -5,18 +5,18 @@ import useAlert from "../../../components/alert/useAlert";
 import useLoading from "../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../components/layouts';
-import useSupplements from "./useSupplements";
+import useSupplements from "../main/useSupplements";
 
 /**
  * 영양 아이템 리스트 선택 페이지
  */
-export default function NutritionSelection() {
+export default function SupplementEditor() {
     //const { user } = useAuth();
     const { signOut, isLoading, error } = useSignOut();
     //const { showAlert } = useAlert();
     const { updateLoading } = useLoading();
     const navigate = useNavigate();
-    const { supplements, getSupplements, loadMoreSupplements, pagination } = useSupplements();
+    const { supplements, getSupplements, loadMoreSupplements, pagination, addUserHealthItem } = useSupplements();
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
@@ -85,10 +85,10 @@ export default function NutritionSelection() {
                             marginBottom: '18px',
                         }}>
 
-                            <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B' }}>내 영양제 리스트</h2>
+                            {/* <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B' }}>내 영양제 리스트</h2>
                             <span
                                 style={{ fontSize: '16px', color: '#8B95A1', cursor: 'pointer' }}
-                            >편집 ›</span>
+                            >편집 ›</span> */}
                         </div>
 
                         {/* 영양제 리스트 */}
@@ -121,7 +121,7 @@ export default function NutritionSelection() {
                                             e.currentTarget.style.transform = 'translateY(0)';
                                             e.currentTarget.style.borderColor = '#E8ECF0';
                                         }}
-                                        onClick={() => console.log('Supplement clicked:', supplement.id)}
+                                        onClick={() => addUserHealthItem(supplement.id)}
                                     >
                                         {/* 이미지 */}
                                         {supplement.imageUrl ? (

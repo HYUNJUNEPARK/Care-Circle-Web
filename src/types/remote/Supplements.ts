@@ -1,4 +1,4 @@
-import type Pagination from "./Pagination";
+import { type Pagination } from "./Pagination";
 
 // Entity
 export interface Supplement {

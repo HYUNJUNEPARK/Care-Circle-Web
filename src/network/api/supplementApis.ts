@@ -1,6 +1,7 @@
 import privateAxios from '../axios/privateAxios';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
 import type { SupplementsResponse, SearchSupplementsByKeywordResponse, SearchSupplementsParams } from '../../types/remote/Supplements';
+import type { PaginationParams } from '../../types/remote/Pagination';
 
 const supplementApiUrl = `/api/health-items`
 
@@ -28,13 +29,22 @@ export async function getSupplements(
 /**
  * 내 영양제 리스트 가져오기
  */
-export async function getUserSupplements() {
+export async function getUserSupplements(
+    params: PaginationParams
+): Promise<SupplementsResponse>  {
+    const { page = 1, limit = 20 } = params;
+    const query = new URLSearchParams();
+    query.append("page", String(page));
+    query.append("limit", String(limit));
+
     const res = await privateAxios.get(
-        `${supplementApiUrl}/user`,
+        `${supplementApiUrl}/user?${query.toString()}`,
     );
-    const resData = res.data
-    const data = resData.data;
-    return data;
+
+    const resData = res.data as SupplementsResponse;
+
+    
+    return resData;
 }
 
 /**
@@ -67,4 +77,18 @@ export async function getEffectCodes(): Promise<EffectCode[]> {
     }));
 
     return supplements;
+}
+
+/**
+ * 사용자 영양제 리스트에 아이템 추가
+ * @param supplementId 추가할 영양제 ID
+ */
+export async function addUserHealthItem(supplementId: number) {
+    const res = await privateAxios.post(
+        `${supplementApiUrl}/user`,
+        {
+            supplementId
+        }
+    );
+    return res.data;
 }

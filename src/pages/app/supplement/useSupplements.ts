@@ -2,11 +2,12 @@ import { useState } from 'react';
 import {
     getSupplements as getSupplementsApi,
     searchSupplementsByKeyword as searchByKeywordApi,
-    getUserSupplements as getUserSupplementsApi
+    getUserSupplements as getUserSupplementsApi,
+    addUserHealthItem as addUserHealthItemApi
 } from '../../../network/api/supplementApis';
 import { updateSupplementStatus as updateSupplementStatusApi } from '../../../network/api/adminApis';
 import type { Supplement } from '../../../types/remote/Supplements';
-import type Pagination from '../../../types/remote/Pagination';
+import { type Pagination } from '../../../types/remote/Pagination';
 
 /**
  * 영양제 관련 데이터 로드 및 상태 관리 훅
@@ -21,11 +22,18 @@ function useSupplements() {
     /**
      * 내 영양제 리스트 가져오기
      */
-    const getUserSupplements = async () => {
+    const getUserSupplements = async (
+        page: number,
+        limit: number = 20
+    ) => {
         try {
             setLoading(true);
-            const resData = await getUserSupplementsApi();
-            console.error(resData);
+            const resData = await getUserSupplementsApi({ page: page, limit: limit });
+
+            const supplements = resData.data;
+            const pagination = resData.pagination;
+            setPagination(pagination);
+            setSupplements(supplements);
         } catch (error) {
             setError(error as Error)
         } finally {
@@ -43,10 +51,10 @@ function useSupplements() {
         try {
             setLoading(true);
             const resData = await getSupplementsApi({ page: page, limit: limit });
-            const supplement = resData.data;
+            const supplements = resData.data;
             const pagination = resData.pagination;
             setPagination(pagination);
-            setSupplements(supplement);
+            setSupplements(supplements);
             setCurrentPage(page);
         } catch (error) {
             setError(error as Error)
@@ -157,6 +165,23 @@ function useSupplements() {
         }
     }
 
+    /**
+     * 사용자 영양제 리스트에 아이템 추가
+     * @param supplementId 추가할 영양제 ID
+     */
+    const addUserHealthItem = async (supplementId: number) => {
+        try {
+            setLoading(true);
+            const result = await addUserHealthItemApi(supplementId);
+            return result;
+        } catch (error) {
+            setError(error as Error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    }
+
     return {
         getSupplements,
         getUserSupplements,
@@ -164,6 +189,7 @@ function useSupplements() {
         searchSupplementsByEffectCode,
         searchSupplementsByKeyword,
         updateSupplementStatus,
+        addUserHealthItem,
         supplements,
         pagination,
         currentPage,

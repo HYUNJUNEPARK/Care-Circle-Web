@@ -1,63 +1,63 @@
 import useAuth from "../../../network/auth/useAuth";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 //import useSignOut from '../../../hook/useSignOut';
 import useAlert from "../../../components/alert/useAlert";
 import useLoading from "../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../components/layouts';
-import useSupplements from "./useSupplements";
+import useSupplements from "../supplement/useSupplements";
 import { PATH } from "../../../constants/paths";
 
 /**
  * 내 영양 아이템 페이지
  */
-export default function UserNutrition() {
+export default function UserSupplementList() {
     const { user } = useAuth();
     //const { signOut, isLoading, error } = useSignOut();
     const { showAlert } = useAlert();
     const { updateLoading } = useLoading();
     const navigate = useNavigate();
-    const { supplements, pagination, getUserSupplements } = useSupplements();
+    const { supplements, pagination, getUserSupplements, isLoading, loadMoreSupplements } = useSupplements();
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
     //
     useEffect(() => {
-        getUserSupplements();
+        getUserSupplements(1, 20);
     }, []);
 
-    // useEffect(() => {
-    //     updateLoading(isLoading);
-    // }, [isLoading]);
+    useEffect(() => {
+        updateLoading(isLoading);
+    }, [isLoading]);
 
-    // 무한 스크롤 콜백
-    // const handleLoadMore = useCallback(() => {
-    //     if (pagination?.hasNext && !isLoading) {
-    //         loadMoreSupplements();
-    //     }
-    // }, [pagination, isLoading, loadMoreSupplements]);
+    //무한 스크롤 콜백
+    const handleLoadMore = useCallback(() => {
+        if (pagination?.hasNext && !isLoading) {
+            loadMoreSupplements();
+        }
+    }, [pagination, isLoading, loadMoreSupplements]);
 
     // Intersection Observer 설정
-    // useEffect(() => {
-    //     if (!loadMoreTriggerRef.current) return;
+    useEffect(() => {
+        if (!loadMoreTriggerRef.current) return;
 
-    //     observerRef.current = new IntersectionObserver(
-    //         (entries) => {
-    //             if (entries[0].isIntersecting) {
-    //                 //handleLoadMore();
-    //             }
-    //         },
-    //         { threshold: 0.1 }
-    //     );
+        observerRef.current = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting) {
+                    handleLoadMore();
+                }
+            },
+            { threshold: 0.1 }
+        );
 
-    //     observerRef.current.observe(loadMoreTriggerRef.current);
+        observerRef.current.observe(loadMoreTriggerRef.current);
 
-    //     return () => {
-    //         if (observerRef.current) {
-    //             observerRef.current.disconnect();
-    //         }
-    //     };
-    // }, [handleLoadMore]);
+        return () => {
+            if (observerRef.current) {
+                observerRef.current.disconnect();
+            }
+        };
+    }, [handleLoadMore]);
 
     return (
         <Container>
