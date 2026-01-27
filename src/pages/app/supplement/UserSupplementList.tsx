@@ -1,4 +1,4 @@
-import useAuth from "../../../network/auth/useAuth";
+//import useAuth from "../../../network/auth/useAuth";
 import { useEffect, useRef, useCallback } from "react";
 //import useSignOut from '../../../hook/useSignOut';
 import useAlert from "../../../components/alert/useAlert";
@@ -12,12 +12,12 @@ import { PATH } from "../../../constants/paths";
  * 내 영양 아이템 페이지
  */
 export default function UserSupplementList() {
-    const { user } = useAuth();
+    //const { user } = useAuth();
     //const { signOut, isLoading, error } = useSignOut();
     const { showAlert } = useAlert();
     const { updateLoading } = useLoading();
     const navigate = useNavigate();
-    const { supplements, pagination, getUserSupplements, isLoading, loadMoreSupplements } = useSupplements();
+    const { supplements, pagination, getUserSupplements, loadMoreSupplements, isLoading, error } = useSupplements();
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
@@ -29,6 +29,15 @@ export default function UserSupplementList() {
     useEffect(() => {
         updateLoading(isLoading);
     }, [isLoading]);
+
+    useEffect(() => {
+        if (error) {
+            showAlert({
+                title: 'Error',
+                message: error.message || 'An unknown error has occurred.',
+            });
+        }
+    }, [error]);
 
     //무한 스크롤 콜백
     const handleLoadMore = useCallback(() => {

@@ -5,7 +5,7 @@ import useAlert from "../../../components/alert/useAlert";
 import useLoading from "../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../components/layouts';
-import useSupplements from "../main/useSupplements";
+import useSupplements from "./useSupplements";
 
 /**
  * 영양 아이템 리스트 선택 페이지

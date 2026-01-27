@@ -1,5 +1,8 @@
 # React + TypeScript + Vite
 
+- 개발 모드 (npm run dev): .env.development 사용
+- 프로덕션 빌드 (npm run build): .env.production 사용
+
 - 프로젝트 생성
 npm create vite@latest my-app -- --template react-ts
 
