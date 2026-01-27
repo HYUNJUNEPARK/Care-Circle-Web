@@ -1,6 +1,6 @@
 import privateAxios from '../axios/privateAxios';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
-import type { SupplementsResponse, SearchSupplementsByKeywordResponse, SearchSupplementsParams } from '../../types/remote/Supplements';
+import type { SupplementsResponse, SearchSupplementsByKeywordResponse, SearchSupplementsParams, SupplementsWithMyFlagResponse } from '../../types/remote/Supplements';
 import type { PaginationParams } from '../../types/remote/Pagination';
 
 const supplementApiUrl = `/api/health-items`
@@ -91,4 +91,24 @@ export async function addUserHealthItem(supplementId: number) {
         }
     );
     return res.data;
+}
+
+/**
+ * 전체 영양제 리스트 가져오기 (내 리스트 포함 여부 플래그 포함)
+ * isInMyList 필드가 포함된 응답 반환
+ */
+export async function getSupplementsWithMyFlag(
+    params: PaginationParams
+): Promise<SupplementsWithMyFlagResponse> {
+    const { page = 1, limit = 20 } = params;
+
+    const query = new URLSearchParams();
+    query.append("page", String(page));
+    query.append("limit", String(limit));
+
+    const res = await privateAxios.get(
+        `${supplementApiUrl}/with-my-flag?${query.toString()}`,
+    );
+    const resData = res.data as SupplementsWithMyFlagResponse;
+    return resData;
 }

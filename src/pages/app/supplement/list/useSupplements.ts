@@ -4,10 +4,10 @@ import {
     searchSupplementsByKeyword as searchByKeywordApi,
     getUserSupplements as getUserSupplementsApi,
     addUserHealthItem as addUserHealthItemApi
-} from '../../../network/api/supplementApis';
-import { updateSupplementStatus as updateSupplementStatusApi } from '../../../network/api/adminApis';
-import type { Supplement } from '../../../types/remote/Supplements';
-import { type Pagination } from '../../../types/remote/Pagination';
+} from '../../../../network/api/supplementApis';
+import { updateSupplementStatus as updateSupplementStatusApi } from '../../../../network/api/adminApis';
+import type { Supplement } from '../../../../types/remote/Supplements';
+import { type Pagination } from '../../../../types/remote/Pagination';
 
 /**
  * 영양제 관련 데이터 로드 및 상태 관리 훅

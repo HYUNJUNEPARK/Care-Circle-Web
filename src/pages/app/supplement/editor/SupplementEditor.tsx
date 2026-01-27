@@ -1,11 +1,11 @@
-import useAuth from "../../../network/auth/useAuth";
+import useAuth from "../../../../network/auth/useAuth";
 import { useEffect, useState, useRef, useCallback } from "react";
-import useSignOut from '../../../hook/useSignOut';
-import useAlert from "../../../components/alert/useAlert";
-import useLoading from "../../../components/loading/loading/useLoading";
+import useSignOut from '../../../../hook/useSignOut';
+import useAlert from "../../../../components/alert/useAlert";
+import useLoading from "../../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
-import { Body, Container, Header } from '../../../components/layouts';
-import useSupplements from "./useSupplements";
+import { Body, Container, Header } from '../../../../components/layouts';
+import useSupplementsWithMyFlag from "./useSupplementsWithMyFlag";
 
 /**
  * 영양 아이템 리스트 선택 페이지
@@ -16,7 +16,7 @@ export default function SupplementEditor() {
     //const { showAlert } = useAlert();
     const { updateLoading } = useLoading();
     const navigate = useNavigate();
-    const { supplements, getSupplements, loadMoreSupplements, pagination, addUserHealthItem } = useSupplements();
+    const { supplements, getSupplements, loadMoreSupplements, pagination, addUserHealthItem } = useSupplementsWithMyFlag();
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
@@ -110,6 +110,7 @@ export default function SupplementEditor() {
                                             transition: 'all 0.3s',
                                             cursor: 'pointer',
                                             border: '1px solid #E8ECF0',
+                                            position: 'relative',
                                         }}
                                         onMouseEnter={(e) => {
                                             e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 70, 255, 0.15)';
@@ -123,6 +124,28 @@ export default function SupplementEditor() {
                                         }}
                                         onClick={() => addUserHealthItem(supplement.id)}
                                     >
+                                        {/* 체크 표시 - isInMyList가 0(false)인 경우에만 표시 */}
+                                        {supplement.isInMyList && (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '8px',
+                                                left: '8px',
+                                                width: '24px',
+                                                height: '24px',
+                                                backgroundColor: '#0046FF',
+                                                borderRadius: '50%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                zIndex: 1,
+                                            }}>
+                                                <span style={{
+                                                    color: 'white',
+                                                    fontSize: '14px',
+                                                    fontWeight: 'bold',
+                                                }}>✓</span>
+                                            </div>
+                                        )}
                                         {/* 이미지 */}
                                         {supplement.imageUrl ? (
                                             <div style={{

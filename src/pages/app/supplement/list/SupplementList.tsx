@@ -1,17 +1,17 @@
 //import useAuth from "../../../network/auth/useAuth";
 import { useEffect, useRef, useCallback } from "react";
 //import useSignOut from '../../../hook/useSignOut';
-import useAlert from "../../../components/alert/useAlert";
-import useLoading from "../../../components/loading/loading/useLoading";
+import useAlert from "../../../../components/alert/useAlert";
+import useLoading from "../../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
-import { Body, Container, Header } from '../../../components/layouts';
-import useSupplements from "../supplement/useSupplements";
-import { PATH } from "../../../constants/paths";
+import { Body, Container, Header } from '../../../../components/layouts';
+import useSupplements from "./useSupplements";
+import { PATH } from "../../../../constants/paths";
 
 /**
  * 내 영양 아이템 페이지
  */
-export default function UserSupplementList() {
+export default function SupplementList() {
     //const { user } = useAuth();
     //const { signOut, isLoading, error } = useSignOut();
     const { showAlert } = useAlert();

@@ -12,6 +12,10 @@ export interface Supplement {
     effects: string;
 }
 
+export interface SupplementWithMyFlag extends Supplement {
+    isInMyList: boolean;
+}
+
 export interface SupplementStatus {
     code: string;
     status: string;
@@ -38,6 +42,8 @@ export interface ApiPaginationResponse<T> {
 
 // Response Types
 export type SupplementsResponse = ApiPaginationResponse<Supplement[]>;
+
+export type SupplementsWithMyFlagResponse = ApiPaginationResponse<SupplementWithMyFlag[]>;
 
 //export type SearchSupplementsByCodeResponse = ApiPaginationResponse<Supplement[]> & { effectCode: string; };
 
