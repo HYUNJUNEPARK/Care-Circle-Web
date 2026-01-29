@@ -3,7 +3,7 @@ import {
     getSupplements as getSupplementsApi,
     searchSupplementsByKeyword as searchByKeywordApi,
     getUserSupplements as getUserSupplementsApi,
-    addUserHealthItem as addUserHealthItemApi
+    addHealthItemInList as addHealthItemInListApi
 } from '../../../../network/api/supplementApis';
 import { updateSupplementStatus as updateSupplementStatusApi } from '../../../../network/api/adminApis';
 import type { Supplement } from '../../../../types/remote/Supplements';
@@ -169,10 +169,10 @@ function useSupplements() {
      * 사용자 영양제 리스트에 아이템 추가
      * @param supplementId 추가할 영양제 ID
      */
-    const addUserHealthItem = async (supplementId: number) => {
+    const addHealthItemInList = async (supplementId: number) => {
         try {
             setLoading(true);
-            const result = await addUserHealthItemApi(supplementId);
+            const result = await addHealthItemInListApi(supplementId);
             return result;
         } catch (error) {
             setError(error as Error);
@@ -189,7 +189,7 @@ function useSupplements() {
         searchSupplementsByEffectCode,
         searchSupplementsByKeyword,
         updateSupplementStatus,
-        addUserHealthItem,
+        addHealthItemInList,
         supplements,
         pagination,
         currentPage,

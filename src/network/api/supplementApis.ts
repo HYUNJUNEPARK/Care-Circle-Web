@@ -1,9 +1,12 @@
 import privateAxios from '../axios/privateAxios';
 import type { EffectCode, EffectCodeResponse } from '../../types/remote/EffectCodes';
-import type { SupplementsResponse, SearchSupplementsByKeywordResponse, SearchSupplementsParams, SupplementsWithMyFlagResponse } from '../../types/remote/Supplements';
+import type { 
+    SupplementsResponse, SearchSupplementsByKeywordResponse, SearchSupplementsParams, SupplementsWithMyFlagResponse, UpdateHealthItemInListResponse,
+    UpdateHealthItemInListResult
+ } from '../../types/remote/Supplements';
 import type { PaginationParams } from '../../types/remote/Pagination';
 
-const supplementApiUrl = `/api/health-items`
+const healthItemApiUrl = `/api/health-items`
 
 /**
  * 전체 영양제 리스트 가져오기(일반 회원용)
@@ -20,7 +23,7 @@ export async function getSupplements(
     query.append("limit", String(limit));
 
     const res = await privateAxios.get(
-        `${supplementApiUrl}?${query.toString()}`,
+        `${healthItemApiUrl}?${query.toString()}`,
     );
     const resData = res.data as SupplementsResponse;
     return resData;
@@ -38,12 +41,10 @@ export async function getUserSupplements(
     query.append("limit", String(limit));
 
     const res = await privateAxios.get(
-        `${supplementApiUrl}/user?${query.toString()}`,
+        `${healthItemApiUrl}/user?${query.toString()}`,
     );
 
     const resData = res.data as SupplementsResponse;
-
-    
     return resData;
 }
 
@@ -56,7 +57,7 @@ export async function searchSupplementsByKeyword(
     limit: number
 ): Promise<SearchSupplementsByKeywordResponse> {
     const res = await privateAxios.get(
-        `${supplementApiUrl}/search?keyword=${keyword}&page=${page}&limit=${limit}`,
+        `${healthItemApiUrl}/search?keyword=${keyword}&page=${page}&limit=${limit}`,
     );
     const resData = res.data as SearchSupplementsByKeywordResponse;
     return resData;
@@ -67,7 +68,7 @@ export async function searchSupplementsByKeyword(
  */
 export async function getEffectCodes(): Promise<EffectCode[]> {
     const res = await privateAxios.get(
-        `${supplementApiUrl}/codes/effect`,
+        `${healthItemApiUrl}/codes/effect`,
     );
 
     const resData = res.data as EffectCodeResponse;
@@ -81,17 +82,31 @@ export async function getEffectCodes(): Promise<EffectCode[]> {
 
 /**
  * 사용자 영양제 리스트에 아이템 추가
- * @param supplementId 추가할 영양제 ID
+ * @param id 추가할 영양제 ID
  */
-export async function addUserHealthItem(supplementId: number) {
+export async function addHealthItemInList(id: number): Promise<UpdateHealthItemInListResult> {
     const res = await privateAxios.post(
-        `${supplementApiUrl}/user`,
+        `${healthItemApiUrl}/user`,
         {
-            supplementId
+            supplementId: id
         }
     );
-    return res.data;
+    const resData = res.data as UpdateHealthItemInListResponse;
+    const result = resData.data;   
+    return result;
 }
+
+/**
+ * 사용자 영양제 리스트에서 아이템 제거
+ */
+export async function removeHealthItemFromList(id: number): Promise<UpdateHealthItemInListResult> {
+    const res = await privateAxios.delete(
+        `${healthItemApiUrl}/user/${id}`
+    );
+    const resData = res.data as UpdateHealthItemInListResponse;
+    const result = resData.data;
+    return result;
+}  
 
 /**
  * 전체 영양제 리스트 가져오기 (내 리스트 포함 여부 플래그 포함)
@@ -107,7 +122,7 @@ export async function getSupplementsWithMyFlag(
     query.append("limit", String(limit));
 
     const res = await privateAxios.get(
-        `${supplementApiUrl}/with-my-flag?${query.toString()}`,
+        `${healthItemApiUrl}/with-my-flag?${query.toString()}`,
     );
     const resData = res.data as SupplementsWithMyFlagResponse;
     return resData;

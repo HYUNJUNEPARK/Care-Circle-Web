@@ -13,7 +13,7 @@ export interface Supplement {
 }
 
 export interface SupplementWithMyFlag extends Supplement {
-    isInMyList: boolean;
+    isInList: boolean;
 }
 
 export interface SupplementStatus {
@@ -40,13 +40,18 @@ export interface ApiPaginationResponse<T> {
     pagination: Pagination;
 }
 
+export interface UpdateHealthItemInListResult {
+    code: string;
+    id: number;
+}  
+
 // Response Types
 export type SupplementsResponse = ApiPaginationResponse<Supplement[]>;
 
 export type SupplementsWithMyFlagResponse = ApiPaginationResponse<SupplementWithMyFlag[]>;
 
-//export type SearchSupplementsByCodeResponse = ApiPaginationResponse<Supplement[]> & { effectCode: string; };
-
 export type SearchSupplementsByKeywordResponse = ApiPaginationResponse<Supplement[]>;
 
 export type UpdateSupplementStatusResponse = ApiResponse<SupplementStatus>;
+
+export type UpdateHealthItemInListResponse = ApiResponse<UpdateHealthItemInListResult>;

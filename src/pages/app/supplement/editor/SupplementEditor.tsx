@@ -16,7 +16,11 @@ export default function SupplementEditor() {
     //const { showAlert } = useAlert();
     const { updateLoading } = useLoading();
     const navigate = useNavigate();
-    const { supplements, getSupplements, loadMoreSupplements, pagination, addUserHealthItem } = useSupplementsWithMyFlag();
+    const {
+        supplements,
+        getSupplements, loadMoreSupplements, addHealthItemInList, removeHealthItemFromList,
+        pagination,
+    } = useSupplementsWithMyFlag();
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
@@ -84,11 +88,6 @@ export default function SupplementEditor() {
                             justifyContent: 'space-between',
                             marginBottom: '18px',
                         }}>
-
-                            {/* <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B' }}>내 영양제 리스트</h2>
-                            <span
-                                style={{ fontSize: '16px', color: '#8B95A1', cursor: 'pointer' }}
-                            >편집 ›</span> */}
                         </div>
 
                         {/* 영양제 리스트 */}
@@ -122,10 +121,16 @@ export default function SupplementEditor() {
                                             e.currentTarget.style.transform = 'translateY(0)';
                                             e.currentTarget.style.borderColor = '#E8ECF0';
                                         }}
-                                        onClick={() => addUserHealthItem(supplement.id)}
+                                        onClick={() => {
+                                            if (supplement.isInList) {
+                                                removeHealthItemFromList(supplement.id);
+                                            } else {
+                                                addHealthItemInList(supplement.id);
+                                            }
+                                        }}
                                     >
                                         {/* 체크 표시 - isInMyList가 0(false)인 경우에만 표시 */}
-                                        {supplement.isInMyList && (
+                                        {supplement.isInList && (
                                             <div style={{
                                                 position: 'absolute',
                                                 top: '8px',

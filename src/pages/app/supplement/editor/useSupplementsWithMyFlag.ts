@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import {
     getSupplementsWithMyFlag as getSupplementsWithMyFlagApi,
-    addUserHealthItem as addUserHealthItemApi
+    addHealthItemInList as addHealthItemInListApi,
+    removeHealthItemFromList as removeHealthItemFromListApi
 } from '../../../../network/api/supplementApis';
 import type { SupplementWithMyFlag } from '../../../../types/remote/Supplements';
 import { type Pagination } from '../../../../types/remote/Pagination';
@@ -66,23 +67,48 @@ function useSupplementsWithMyFlag() {
 
     /**
      * 사용자 영양제 리스트에 아이템 추가
-     * @param supplementId 추가할 영양제 ID
+     * @param id 추가할 영양제 ID
      */
-    const addUserHealthItem = async (supplementId: number) => {
+    const addHealthItemInList = async (id: number) => {
         try {
             setLoading(true);
-            const result = await addUserHealthItemApi(supplementId);
-            
-            // 로컬 상태 업데이트 - isInMyList를 true로 변경
+            const res = await addHealthItemInListApi(id);
+            const resultId = res.id
+
+            // 로컬 상태 업데이트 - isInList를 true로 변경
             setSupplements(prev =>
                 prev.map(supplement =>
-                    supplement.id === supplementId
-                        ? { ...supplement, isInMyList: true }
+                    supplement.id === resultId
+                        ? { ...supplement, isInList: true }
                         : supplement
                 )
             );
-            
-            return result;
+        } catch (error) {
+            setError(error as Error);
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    /**
+     * 사용자 영양제 리스트에서 아이템 제거
+     * @param id 제거할 영양제 ID
+     */
+    const removeHealthItemFromList = async (id: number) => {
+        try {
+            setLoading(true);
+            const res = await removeHealthItemFromListApi(id);
+            const resultId = res.id;
+
+            // 로컬 상태 업데이트 - isInList를 false로 변경
+            setSupplements(prev =>
+                prev.map(supplement =>
+                    supplement.id === resultId
+                        ? { ...supplement, isInList: false }
+                        : supplement
+                )
+            );
         } catch (error) {
             setError(error as Error);
             throw error;
@@ -99,7 +125,8 @@ function useSupplementsWithMyFlag() {
         error,
         getSupplements,
         loadMoreSupplements,
-        addUserHealthItem,
+        addHealthItemInList,
+        removeHealthItemFromList,
     }
 }
 
