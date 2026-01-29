@@ -1,7 +1,4 @@
-import useAuth from "../../../../network/auth/useAuth";
 import { useEffect, useState, useRef, useCallback } from "react";
-import useSignOut from '../../../../hook/useSignOut';
-import useAlert from "../../../../components/alert/useAlert";
 import useLoading from "../../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../../components/layouts';
@@ -12,14 +9,13 @@ import useSupplementsWithMyFlag from "./useSupplementsWithMyFlag";
  */
 export default function SupplementEditor() {
     //const { user } = useAuth();
-    const { signOut, isLoading, error } = useSignOut();
     //const { showAlert } = useAlert();
     const { updateLoading } = useLoading();
     const navigate = useNavigate();
     const {
         supplements,
         getSupplements, loadMoreSupplements, addHealthItemInList, removeHealthItemFromList,
-        pagination,
+        pagination, isLoading
     } = useSupplementsWithMyFlag();
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
@@ -129,8 +125,8 @@ export default function SupplementEditor() {
                                             }
                                         }}
                                     >
-                                        {/* 체크 표시 - isInMyList가 0(false)인 경우에만 표시 */}
-                                        {supplement.isInList && (
+                                        {/* 체크 표시 (항상 공간 차지, 값이 1/0이어도 boolean처럼 처리) */}
+                                        {Number(supplement.isInList) === 1 ? (
                                             <div style={{
                                                 position: 'absolute',
                                                 top: '8px',
@@ -150,7 +146,22 @@ export default function SupplementEditor() {
                                                     fontWeight: 'bold',
                                                 }}>✓</span>
                                             </div>
+                                        ) : (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '8px',
+                                                left: '8px',
+                                                width: '24px',
+                                                height: '24px',
+                                                borderRadius: '50%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                zIndex: 1,
+                                                backgroundColor: 'transparent',
+                                            }} />
                                         )}
+
                                         {/* 이미지 */}
                                         {supplement.imageUrl ? (
                                             <div style={{
@@ -172,6 +183,7 @@ export default function SupplementEditor() {
                                                 />
                                             </div>
                                         ) : (
+                                            // 이미지가 없을 때 기본 아이콘
                                             <div style={{
                                                 width: '100%',
                                                 aspectRatio: '1 / 1',
