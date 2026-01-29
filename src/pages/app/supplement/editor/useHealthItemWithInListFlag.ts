@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import {
-    getSupplementsWithMyFlag as getSupplementsWithMyFlagApi,
+    getHealthItemsWithInListFlag as getMyHealthItemsApi,
     addHealthItemInList as addHealthItemInListApi,
     removeHealthItemFromList as removeHealthItemFromListApi
 } from '../../../../network/api/supplementApis';
@@ -10,7 +10,7 @@ import { type Pagination } from '../../../../types/remote/Pagination';
 /**
  * 영양제 리스트 (내 리스트 포함 여부 플래그 포함) 데이터 로드 및 상태 관리 훅
  */
-function useSupplementsWithMyFlag() {
+function useHealthItemWithInListFlag() {
     const [supplements, setSupplements] = useState<SupplementWithMyFlag[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -27,7 +27,7 @@ function useSupplementsWithMyFlag() {
     ) => {
         try {
             setLoading(true);
-            const resData = await getSupplementsWithMyFlagApi({ page, limit });
+            const resData = await getMyHealthItemsApi({ page, limit });
             const supplements = resData.data;
             const pagination = resData.pagination;
             setPagination(pagination);
@@ -51,7 +51,7 @@ function useSupplementsWithMyFlag() {
         try {
             setLoading(true);
             const nextPage = currentPage + 1;
-            const resData = await getSupplementsWithMyFlagApi({ page: nextPage, limit });
+            const resData = await getMyHealthItemsApi({ page: nextPage, limit });
             const newSupplements = resData.data;
             const newPagination = resData.pagination;
 
@@ -130,4 +130,4 @@ function useSupplementsWithMyFlag() {
     }
 }
 
-export default useSupplementsWithMyFlag;
+export default useHealthItemWithInListFlag;

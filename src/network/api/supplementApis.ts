@@ -112,7 +112,7 @@ export async function removeHealthItemFromList(id: number): Promise<UpdateHealth
  * 전체 영양제 리스트 가져오기 (내 리스트 포함 여부 플래그 포함)
  * isInMyList 필드가 포함된 응답 반환
  */
-export async function getSupplementsWithMyFlag(
+export async function getHealthItemsWithInListFlag(
     params: PaginationParams
 ): Promise<SupplementsWithMyFlagResponse> {
     const { page = 1, limit = 20 } = params;

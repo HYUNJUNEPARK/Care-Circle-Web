@@ -8,7 +8,7 @@ import SignUp from './pages/signup/SignUp';
 import NotActive from './pages/notactive/NotActive';
 import DashBoard from './pages/dashboard/DashBoard';
 import SupplementList from './pages/app/supplement/list/SupplementList';
-import SupplementEditor from './pages/app/supplement/editor/SupplementEditor';
+import HealthItemEditor from './pages/app/supplement/editor/HealthItemEditor';
 
 function App() {
 
@@ -23,7 +23,7 @@ function App() {
         <Route path={PATH.NOT_ACTIVE} element={<NotActive />} />
         <Route path={PATH.DASH_BOARD} element={<DashBoard />} />
         <Route path={PATH.MY_SUPPLEMENTS} element={<SupplementList />} />
-        <Route path={PATH.MANAGE_SUPPLEMENTS} element={<SupplementEditor />} />
+        <Route path={PATH.MANAGE_SUPPLEMENTS} element={<HealthItemEditor />} />
       </Routes>
     </BrowserRouter>
   )

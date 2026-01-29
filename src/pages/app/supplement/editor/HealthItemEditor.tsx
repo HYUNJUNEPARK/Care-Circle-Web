@@ -3,12 +3,12 @@ import HeartActionOverlay from '../../../../components/alert/HeartActionOverlay'
 //import useLoading from "../../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../../components/layouts';
-import useSupplementsWithMyFlag from "./useSupplementsWithMyFlag";
+import useHealthItemWithInListFlag from "./useHealthItemWithInListFlag";
 
 /**
  * 영양 아이템 리스트 선택 페이지
  */
-export default function SupplementEditor() {
+export default function HealthItemEditor() {
     //const { user } = useAuth();
     //const { showAlert } = useAlert();
     //const { updateLoading } = useLoading();
@@ -17,7 +17,7 @@ export default function SupplementEditor() {
         supplements,
         getSupplements, loadMoreSupplements, addHealthItemInList, removeHealthItemFromList,
         pagination
-    } = useSupplementsWithMyFlag();
+    } = useHealthItemWithInListFlag();
 
     // 하트 액션 오버레이 상태
     const [heartAction, setHeartAction] = useState<null | 'add' | 'remove'>(null);
