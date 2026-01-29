@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from "react";
-import useLoading from "../../../../components/loading/loading/useLoading";
+import HeartActionOverlay from '../../../../components/alert/HeartActionOverlay';
+//import useLoading from "../../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../../components/layouts';
 import useSupplementsWithMyFlag from "./useSupplementsWithMyFlag";
@@ -10,13 +11,16 @@ import useSupplementsWithMyFlag from "./useSupplementsWithMyFlag";
 export default function SupplementEditor() {
     //const { user } = useAuth();
     //const { showAlert } = useAlert();
-    const { updateLoading } = useLoading();
+    //const { updateLoading } = useLoading();
     const navigate = useNavigate();
     const {
         supplements,
         getSupplements, loadMoreSupplements, addHealthItemInList, removeHealthItemFromList,
-        pagination, isLoading
+        pagination
     } = useSupplementsWithMyFlag();
+
+    // 하트 액션 오버레이 상태
+    const [heartAction, setHeartAction] = useState<null | 'add' | 'remove'>(null);
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
@@ -25,16 +29,16 @@ export default function SupplementEditor() {
         getSupplements(1);
     }, []);
 
-    useEffect(() => {
-        updateLoading(isLoading);
-    }, [isLoading]);
+    // useEffect(() => {
+    //     updateLoading(isLoading);
+    // }, [isLoading]);
 
     // 무한 스크롤 콜백
     const handleLoadMore = useCallback(() => {
-        if (pagination?.hasNext && !isLoading) {
+        if (pagination?.hasNext) {
             loadMoreSupplements();
         }
-    }, [pagination, isLoading, loadMoreSupplements]);
+    }, [pagination, loadMoreSupplements]);
 
     // Intersection Observer 설정
     useEffect(() => {
@@ -117,11 +121,19 @@ export default function SupplementEditor() {
                                             e.currentTarget.style.transform = 'translateY(0)';
                                             e.currentTarget.style.borderColor = '#E8ECF0';
                                         }}
-                                        onClick={() => {
+                                        onClick={async () => {
                                             if (supplement.isInList) {
-                                                removeHealthItemFromList(supplement.id);
+                                                try {
+                                                    await removeHealthItemFromList(supplement.id);
+                                                    setHeartAction('remove');
+                                                    setTimeout(() => setHeartAction(null), 1200);
+                                                } catch {}
                                             } else {
-                                                addHealthItemInList(supplement.id);
+                                                try {
+                                                    await addHealthItemInList(supplement.id);
+                                                    setHeartAction('add');
+                                                    setTimeout(() => setHeartAction(null), 1200);
+                                                } catch {}
                                             }
                                         }}
                                     >
@@ -321,6 +333,8 @@ export default function SupplementEditor() {
                     </div>
                 </div>
             </Body>
+            {/* 하트 액션 오버레이 */}
+            {heartAction && <HeartActionOverlay action={heartAction} />}
         </Container>
     );
 };
