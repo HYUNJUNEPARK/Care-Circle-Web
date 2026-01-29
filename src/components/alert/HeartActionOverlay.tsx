@@ -20,7 +20,7 @@ function HeartActionOverlay({
                 alignItems: 'center',
                 justifyContent: 'center',
                 zIndex: 9999,
-                backgroundColor: 'rgba(0,0,0,0.15)',
+                background: 'rgba(0,0,0,0.4)',
             }}
         >
             <div

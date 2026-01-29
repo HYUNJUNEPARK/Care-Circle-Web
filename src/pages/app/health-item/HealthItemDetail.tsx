@@ -32,18 +32,20 @@ export default function HealthItemDetail({
             justifyContent: 'center',
             padding: '24px',
         }}>
-            <div style={{
-                background: '#fff',
-                borderRadius: '20px',
-                width: '100%',
-                maxWidth: 400,
-                boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
-                padding: '24px 20px 20px 20px',
-                position: 'relative',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}>
+            <div
+                style={{
+                    background: '#fff',
+                    borderRadius: '20px',
+                    aspectRatio: '1 / 1',
+                    width: 'min(100vw, 400px)',
+                    height: 'min(100vw, 400px)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.18)',
+                    padding: '24px 20px 20px 20px',
+                    position: 'relative',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}>
                 <button
                     onClick={onClose}
                     style={{
