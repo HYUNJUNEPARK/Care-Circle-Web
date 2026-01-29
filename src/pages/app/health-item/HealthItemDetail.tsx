@@ -1,5 +1,5 @@
 
-interface SupplementDetailProps {
+interface HealthItemDetailProps {
     supplement: {
         id: string;
         name: string;
@@ -12,12 +12,12 @@ interface SupplementDetailProps {
 }
 
 /**
- * 
+ * 건강 아이템 상세보기 컴포넌트
  */
-export default function SupplementDetail({
+export default function HealthItemDetail({
     supplement,
     onClose
-}: SupplementDetailProps) {
+}: HealthItemDetailProps) {
     return (
         <div style={{
             position: 'fixed',

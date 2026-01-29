@@ -1,50 +1,44 @@
-import { useEffect, useRef, useCallback, useState } from "react";
-import SupplementDetail from "./SupplementDetail";
-import useAlert from "../../../../components/alert/useAlert";
-import useLoading from "../../../../components/loading/loading/useLoading";
+import { useEffect, useState, useRef, useCallback } from "react";
+import HeartActionOverlay from '../../../../components/alert/HeartActionOverlay';
+//import useLoading from "../../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
 import { Body, Container, Header } from '../../../../components/layouts';
-import useSupplements from "./useSupplements";
-import { PATH } from "../../../../constants/paths";
+import useHealthItemsWithInListFlag from "./useHealthItemsWithInListFlag";
 
 /**
- * 내 영양 아이템 페이지
+ * 영양 아이템 리스트 선택 페이지
  */
-export default function SupplementList() {
-    const { showAlert } = useAlert();
-    const { updateLoading } = useLoading();
+export default function HealthItemEditor() {
+    //const { user } = useAuth();
+    //const { showAlert } = useAlert();
+    //const { updateLoading } = useLoading();
     const navigate = useNavigate();
-    const { supplements, pagination, getUserSupplements, loadMoreSupplements, isLoading, error } = useSupplements();
+    const {
+        supplements,
+        getSupplements, loadMoreSupplements, addHealthItemInList, removeHealthItemFromList,
+        pagination
+    } = useHealthItemsWithInListFlag();
+
+    // 하트 액션 오버레이 상태
+    const [heartAction, setHeartAction] = useState<null | 'add' | 'remove'>(null);
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
-    // 상세보기 상태
-    const [selectedSupplement, setSelectedSupplement] = useState<any | null>(null);
-
     //
     useEffect(() => {
-        getUserSupplements(1, 20);
+        getSupplements(1);
     }, []);
 
-    useEffect(() => {
-        updateLoading(isLoading);
-    }, [isLoading]);
+    // useEffect(() => {
+    //     updateLoading(isLoading);
+    // }, [isLoading]);
 
-    useEffect(() => {
-        if (error) {
-            showAlert({
-                title: 'Error',
-                message: error.message || 'An unknown error has occurred.',
-            });
-        }
-    }, [error]);
-
-    //무한 스크롤 콜백
+    // 무한 스크롤 콜백
     const handleLoadMore = useCallback(() => {
-        if (pagination?.hasNext && !isLoading) {
+        if (pagination?.hasNext) {
             loadMoreSupplements();
         }
-    }, [pagination, isLoading, loadMoreSupplements]);
+    }, [pagination, loadMoreSupplements]);
 
     // Intersection Observer 설정
     useEffect(() => {
@@ -71,7 +65,7 @@ export default function SupplementList() {
     return (
         <Container>
             <Header
-                title="영양 관리"
+                title="편집"
                 style={{
                     background: '#F7F9FC',
                 }}
@@ -94,12 +88,6 @@ export default function SupplementList() {
                             justifyContent: 'space-between',
                             marginBottom: '18px',
                         }}>
-
-                            <h2 style={{ fontSize: '16px', fontWeight: '600', color: '#333D4B' }}>내 영양 리스트</h2>
-                            <span
-                                style={{ fontSize: '16px', color: '#8B95A1', cursor: 'pointer' }}
-                                onClick={() => navigate(PATH.MANAGE_SUPPLEMENTS)}
-                            >편집 ›</span>
                         </div>
 
                         {/* 영양제 리스트 */}
@@ -121,6 +109,7 @@ export default function SupplementList() {
                                             transition: 'all 0.3s',
                                             cursor: 'pointer',
                                             border: '1px solid #E8ECF0',
+                                            position: 'relative',
                                         }}
                                         onMouseEnter={(e) => {
                                             e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 70, 255, 0.15)';
@@ -132,8 +121,59 @@ export default function SupplementList() {
                                             e.currentTarget.style.transform = 'translateY(0)';
                                             e.currentTarget.style.borderColor = '#E8ECF0';
                                         }}
-                                        onClick={() => setSelectedSupplement(supplement)}
+                                        onClick={async () => {
+                                            if (supplement.isInList) {
+                                                try {
+                                                    await removeHealthItemFromList(supplement.id);
+                                                    setHeartAction('remove');
+                                                    setTimeout(() => setHeartAction(null), 1200);
+                                                } catch {}
+                                            } else {
+                                                try {
+                                                    await addHealthItemInList(supplement.id);
+                                                    setHeartAction('add');
+                                                    setTimeout(() => setHeartAction(null), 1200);
+                                                } catch {}
+                                            }
+                                        }}
                                     >
+                                        {/* 체크 표시 (항상 공간 차지, 값이 1/0이어도 boolean처럼 처리) */}
+                                        {Number(supplement.isInList) === 1 ? (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '8px',
+                                                left: '8px',
+                                                width: '24px',
+                                                height: '24px',
+                                                backgroundColor: '#0046FF',
+                                                borderRadius: '50%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                zIndex: 1,
+                                            }}>
+                                                <span style={{
+                                                    color: 'white',
+                                                    fontSize: '14px',
+                                                    fontWeight: 'bold',
+                                                }}>✓</span>
+                                            </div>
+                                        ) : (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '8px',
+                                                left: '8px',
+                                                width: '24px',
+                                                height: '24px',
+                                                borderRadius: '50%',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                zIndex: 1,
+                                                backgroundColor: 'transparent',
+                                            }} />
+                                        )}
+
                                         {/* 이미지 */}
                                         {supplement.imageUrl ? (
                                             <div style={{
@@ -155,6 +195,7 @@ export default function SupplementList() {
                                                 />
                                             </div>
                                         ) : (
+                                            // 이미지가 없을 때 기본 아이콘
                                             <div style={{
                                                 width: '100%',
                                                 aspectRatio: '1 / 1',
@@ -292,13 +333,8 @@ export default function SupplementList() {
                     </div>
                 </div>
             </Body>
-        {/* 상세보기 모달 */}
-        {selectedSupplement && (
-            <SupplementDetail
-                supplement={selectedSupplement}
-                onClose={() => setSelectedSupplement(null)}
-            />
-        )}
+            {/* 하트 액션 오버레이 */}
+            {heartAction && <HeartActionOverlay action={heartAction} />}
         </Container>
     );
-}
+};

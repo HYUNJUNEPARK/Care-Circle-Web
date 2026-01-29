@@ -12,7 +12,7 @@ import { type Pagination } from '../../../../types/remote/Pagination';
 /**
  * 영양제 관련 데이터 로드 및 상태 관리 훅
  */
-function useSupplements() {
+function useHealthItemList() {
     const [supplements, setSupplements] = useState<Supplement[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -199,4 +199,4 @@ function useSupplements() {
 
 }
 
-export default useSupplements;
+export default useHealthItemList;

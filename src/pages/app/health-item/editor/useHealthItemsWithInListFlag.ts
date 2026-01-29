@@ -10,7 +10,7 @@ import { type Pagination } from '../../../../types/remote/Pagination';
 /**
  * 영양제 리스트 (내 리스트 포함 여부 플래그 포함) 데이터 로드 및 상태 관리 훅
  */
-function useHealthItemWithInListFlag() {
+function useHealthItemsWithInListFlag() {
     const [supplements, setSupplements] = useState<SupplementWithMyFlag[]>([]);
     const [isLoading, setLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
@@ -130,4 +130,4 @@ function useHealthItemWithInListFlag() {
     }
 }
 
-export default useHealthItemWithInListFlag;
+export default useHealthItemsWithInListFlag;
