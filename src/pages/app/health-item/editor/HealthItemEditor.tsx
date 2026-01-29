@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useCallback } from "react";
+import HealthItemDetail from '../HealthItemDetail';
 import HeartActionOverlay from '../../../../components/alert/HeartActionOverlay';
 //import useLoading from "../../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
@@ -9,9 +10,6 @@ import useHealthItemsWithInListFlag from "./useHealthItemsWithInListFlag";
  * 영양 아이템 리스트 선택 페이지
  */
 export default function HealthItemEditor() {
-    //const { user } = useAuth();
-    //const { showAlert } = useAlert();
-    //const { updateLoading } = useLoading();
     const navigate = useNavigate();
     const {
         supplements,
@@ -21,6 +19,8 @@ export default function HealthItemEditor() {
 
     // 하트 액션 오버레이 상태
     const [heartAction, setHeartAction] = useState<null | 'add' | 'remove'>(null);
+    // 상세보기 모달 상태
+    const [selectedDetailSupplement, setSelectedDetailSupplement] = useState<any | null>(null);
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
 
@@ -213,21 +213,51 @@ export default function HealthItemEditor() {
 
                                         {/* 영양제 정보 */}
                                         <div>
-                                            <h3 style={{
-                                                fontSize: '16px',
-                                                fontWeight: '600',
-                                                color: '#333D4B',
+                                            <div style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
                                                 marginBottom: '6px',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                display: '-webkit-box',
-                                                WebkitLineClamp: 2,
-                                                WebkitBoxOrient: 'vertical',
-                                                lineHeight: '1.4',
                                                 minHeight: '44px',
                                             }}>
-                                                {supplement.name}
-                                            </h3>
+                                                <h3 style={{
+                                                    fontSize: '16px',
+                                                    fontWeight: '600',
+                                                    color: '#333D4B',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    display: '-webkit-box',
+                                                    WebkitLineClamp: 2,
+                                                    WebkitBoxOrient: 'vertical',
+                                                    lineHeight: '1.4',
+                                                    margin: 0,
+                                                }}>
+                                                    {supplement.name}
+                                                </h3>
+                                                <button
+                                                    style={{
+                                                        background: 'none',
+                                                        border: 'none',
+                                                        padding: 0,
+                                                        marginLeft: '8px',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        height: '24px',
+                                                    }}
+                                                    aria-label="상세보기"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setSelectedDetailSupplement(supplement);
+                                                    }}
+                                                >
+                                                    {/* 돋보기 SVG 아이콘 */}
+                                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle cx="9" cy="9" r="7" stroke="#8B95A1" strokeWidth="2" />
+                                                        <line x1="14.2929" y1="14.7071" x2="18" y2="18.4142" stroke="#8B95A1" strokeWidth="2" strokeLinecap="round" />
+                                                    </svg>
+                                                </button>
+                                            </div>
 
                                             {/* 효능 태그 */}
                                             {supplement.effects && (
@@ -335,6 +365,13 @@ export default function HealthItemEditor() {
             </Body>
             {/* 하트 액션 오버레이 */}
             {heartAction && <HeartActionOverlay action={heartAction} />}
+            {/* 상세보기 모달 */}
+            {selectedDetailSupplement && (
+                <HealthItemDetail
+                    supplement={selectedDetailSupplement}
+                    onClose={() => setSelectedDetailSupplement(null)}
+                />
+            )}
         </Container>
     );
 };
