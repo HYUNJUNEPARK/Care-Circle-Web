@@ -1,6 +1,5 @@
-//import useAuth from "../../../network/auth/useAuth";
-import { useEffect, useRef, useCallback } from "react";
-//import useSignOut from '../../../hook/useSignOut';
+import { useEffect, useRef, useCallback, useState } from "react";
+import SupplementDetail from "./SupplementDetail";
 import useAlert from "../../../../components/alert/useAlert";
 import useLoading from "../../../../components/loading/loading/useLoading";
 import { useNavigate } from "react-router-dom";
@@ -12,14 +11,15 @@ import { PATH } from "../../../../constants/paths";
  * 내 영양 아이템 페이지
  */
 export default function SupplementList() {
-    //const { user } = useAuth();
-    //const { signOut, isLoading, error } = useSignOut();
     const { showAlert } = useAlert();
     const { updateLoading } = useLoading();
     const navigate = useNavigate();
     const { supplements, pagination, getUserSupplements, loadMoreSupplements, isLoading, error } = useSupplements();
     const observerRef = useRef<IntersectionObserver | null>(null);
     const loadMoreTriggerRef = useRef<HTMLDivElement | null>(null);
+
+    // 상세보기 상태
+    const [selectedSupplement, setSelectedSupplement] = useState<any | null>(null);
 
     //
     useEffect(() => {
@@ -132,7 +132,7 @@ export default function SupplementList() {
                                             e.currentTarget.style.transform = 'translateY(0)';
                                             e.currentTarget.style.borderColor = '#E8ECF0';
                                         }}
-                                        onClick={() => console.log('Supplement clicked:', supplement.id)}
+                                        onClick={() => setSelectedSupplement(supplement)}
                                     >
                                         {/* 이미지 */}
                                         {supplement.imageUrl ? (
@@ -292,6 +292,13 @@ export default function SupplementList() {
                     </div>
                 </div>
             </Body>
+        {/* 상세보기 모달 */}
+        {selectedSupplement && (
+            <SupplementDetail
+                supplement={selectedSupplement}
+                onClose={() => setSelectedSupplement(null)}
+            />
+        )}
         </Container>
     );
-};
+}
